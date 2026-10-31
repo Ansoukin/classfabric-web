@@ -190,6 +190,11 @@ def home():
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">除了这些…</h2>'
           '<div class="blk rv"><div class="copy"><span class="tag gr">#可靠</span><h3>出现问题，也能恢复</h3><p>内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。</p></div>' + rec_vis + '</div></div></section>\n')
 
+    # steps
+    st = [('1', '下载', '前往下载页，获取适用于 Windows 的最新版本。'), ('2', '运行', '按文件类型安装或解压后启动，主界面会出现在屏幕上方。'), ('3', '接着用', '如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。')]
+    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><div class="steps3">' +
+          ''.join('<div class="st rv d%d"><i>%s</i><h4>%s</h4><p>%s</p></div>' % (k, a, b, c) for k, (a, b, c) in enumerate(st)) + '</div></div></section>\n')
+
     # relation
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2><div class="rel">'
           '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版，既不是它的完美替代品，也不是竞品。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
