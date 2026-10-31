@@ -1142,3 +1142,56 @@ select.in2{appearance:auto}
 .chips3 span:hover{background:rgba(255,255,255,.1)}
 .chips3 span:active{background:rgba(255,255,255,.16)}
 .tb2 span{padding-bottom:3px}
+
+/* ===== V13 多样化版式 ===== */
+html,body{overflow-x:clip}
+/* a. 叠字：文案压在壁纸大图上 */
+.blk.scene-over{display:block;position:relative}
+.scene-over .panel{min-height:clamp(420px,46vw,620px);border-radius:24px}
+.scene-over .panel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(4,10,24,.82));pointer-events:none;z-index:1}
+.scene-over .copy{position:absolute;z-index:3;left:clamp(20px,4vw,56px);bottom:clamp(20px,4vw,52px);max-width:min(560px,calc(100% - 40px))}
+.scene-over .copy h3{font-size:clamp(30px,4.6vw,64px);color:#fff!important;letter-spacing:-.04em}
+.scene-over .copy p{color:rgba(255,255,255,.86)!important}
+.scene-over .copy .tag{filter:none}
+/* b. 居中 + 胶囊切换 */
+.blk.ctr>.copy{text-align:center;margin-inline:auto}
+.blk.ctr>.copy>h3,.blk.ctr>.copy>p{margin-inline:auto;max-width:720px}
+.blk.ctr>.copy h3{font-size:clamp(34px,5vw,68px)}
+.blk.ctr .subs{display:flex!important;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:26px}
+.blk.ctr .sub-i{display:flex;align-items:center;gap:10px;padding:10px 20px;border-radius:999px;width:auto}
+.blk.ctr .sub-i p{display:none}
+.blk.ctr .sub-i h4{margin:0;font-size:15px}
+/* c. 通栏壁纸带 */
+.blk.band{display:block;position:relative;width:100vw;margin-left:calc(50% - 50vw);margin-bottom:clamp(70px,9vw,130px)}
+.band .panel{border-radius:0;border-inline:0;padding-top:clamp(190px,24vw,330px);box-shadow:none}
+.band .panel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,10,24,.7),transparent 52%);pointer-events:none}
+.band .copy{position:absolute;z-index:3;top:clamp(26px,4vw,60px);left:max(24px,calc((100vw - 1180px)/2));right:24px;max-width:640px}
+.band .copy h3{font-size:clamp(32px,5vw,68px);color:#fff!important;letter-spacing:-.04em}
+.band .copy p{color:rgba(255,255,255,.88)!important}
+.band .copy .subs{display:none}
+.band .panel>div:last-child{max-width:1500px;margin-inline:auto}
+/* d. 调课：对话框放大 */
+.zoomed .swwrap{zoom:1.2}
+/* 自动化：大字流程 */
+.flow{display:flex;gap:clamp(10px,2.4vw,34px);align-items:center;justify-content:center;flex-wrap:wrap;font-size:clamp(26px,5vw,72px);font-weight:800;letter-spacing:-.05em;line-height:1.1;margin:0 0 clamp(40px,6vw,90px);text-align:center}
+.flow i{font-style:normal;opacity:.35;font-weight:300}
+.flow b{background:linear-gradient(90deg,var(--g1,#5aa9ff),var(--g2,#8e7bff));-webkit-background-clip:text;background-clip:text;color:transparent}
+.flow .f2{background-image:linear-gradient(90deg,#8e7bff,#d36bff)}.flow .f3{background-image:linear-gradient(90deg,#ff8a5c,#ffc24a)}
+/* 组件/插件：只露出窗口上半部 */
+.blk.crop>.panel{max-height:clamp(400px,48vw,560px)}
+.blk.crop>.panel>div:last-child{padding-bottom:0}
+/* 主题：三张大卡 */
+.themes3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2vw,28px);margin:0 0 clamp(40px,5vw,70px)}
+.themes3 figure{margin:0;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--bg2);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.themes3 figure:hover{transform:translateY(-6px) scale(1.01)}
+.themes3 img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.themes3 figcaption{padding:14px 18px;font-weight:700;font-size:17px}
+@media(max-width:720px){
+ .themes3{grid-template-columns:1fr;gap:12px}
+ .flow i{display:none}
+ .scene-over .panel{min-height:480px}
+ .zoomed .swwrap{zoom:1}
+ .blk.band .copy{position:relative;top:auto;left:auto;padding:0 24px;margin-bottom:0}
+ .band .panel{padding-top:24px}
+ .band .panel::after{display:none}
+}

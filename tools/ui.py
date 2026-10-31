@@ -64,7 +64,7 @@ def cb(on, text):
 
 def titlebar(title, ver=None, isl=None, icon=True):
     return ('<div class="wt">' + ('<img class="ico" src="/assets/img/icon-32.png" alt="">' if icon else '') + title +
-            ('<span class="w-title-island">%s</span>' % isl if isl else '') +
+            '' +
             ('<span class="ver">%s</span>' % ver if ver else '') +
             '<span class="ctl" style="margin-left:%s"><i>%s</i><i>%s</i><i class="x">%s</i></span></div>' % (
                 '0' if ver else 'auto',
