@@ -1200,3 +1200,48 @@ html,body{overflow-x:clip}
  .band .copy p{color:var(--muted)!important}
  .band .panel{padding-top:16px}
 }
+
+/* ===== V14 动效与大字 ===== */
+.mani{padding:clamp(90px,14vw,200px) 0 0}
+.mtxt{margin:0;font-size:clamp(30px,6.2vw,82px);line-height:1.18;font-weight:800;letter-spacing:-.04em;max-width:15em;text-wrap:balance}
+.mtxt .mw{opacity:.22;transition:opacity .35s,color .35s}
+.mtxt .mw.on{opacity:1}
+.mtxt .mw.on.mhl{background:linear-gradient(90deg,#5aa9ff,#a78bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* 大字传送带 */
+.bigmq{overflow:hidden;margin:clamp(60px,9vw,130px) 0 0;display:grid;gap:clamp(4px,1vw,14px);user-select:none}
+.bigmq .t{display:flex;width:max-content;gap:.5em;align-items:center;font-size:clamp(44px,9vw,128px);font-weight:800;letter-spacing:-.05em;line-height:1.08;white-space:nowrap}
+.bigmq .r1 .t{animation:bmq 60s linear infinite;color:transparent;-webkit-text-stroke:1.5px var(--faint,#7b8499)}
+.bigmq .r2 .t{animation:bmq 70s linear infinite reverse;background:linear-gradient(90deg,#5aa9ff,#a78bff 40%,#ff8a5c 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bigmq i{font-style:normal;opacity:.4;-webkit-text-stroke:0}
+@keyframes bmq{to{transform:translateX(-33.3333%)}}
+/* 插件卡传送带 */
+.pmq{overflow:hidden;width:100vw;margin-left:calc(50% - 50vw);margin-bottom:clamp(40px,6vw,80px);-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.pmq .t{display:flex;gap:14px;width:max-content;animation:bmq 50s linear infinite}
+.pmq:hover .t{animation-play-state:paused}
+.pc{display:flex;align-items:center;gap:14px;padding:14px 22px 14px 14px;border:1px solid var(--line);background:var(--bg2);border-radius:14px;min-width:260px}
+.pc .av{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:19px;flex:none}
+.pc b{display:block;font-size:16px}.pc small{color:var(--muted);font-size:13px}
+/* 光斑跟随 */
+.cd,.sub-i,.themes3 figure,.step,.pc{position:relative;--mx:50%;--my:50%}
+.cd::before,.sub-i::before,.themes3 figure::before,.pc::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(360px circle at var(--mx) var(--my),rgba(120,170,255,.16),transparent 60%);z-index:1}
+.cd:hover::before,.sub-i:hover::before,.themes3 figure:hover::before,.pc:hover::before{opacity:1}
+@media(hover:none){.cd::before,.sub-i::before{display:none}}
+@media(prefers-reduced-motion:reduce){.bigmq .t,.pmq .t{animation:none}.mtxt .mw{opacity:1}}
+/* ===== 移动端可读性 ===== */
+@media(max-width:720px){
+ body{font-size:16.5px}
+ .copy p{font-size:16.5px;line-height:1.75}
+ .copy .tag,.tag{font-size:13.5px}
+ .sub-i p,.cd p{font-size:15px;line-height:1.7}
+ .fcard b{font-size:16px}.fcard .tx span{font-size:13.5px}
+ .claim{font-size:clamp(30px,8.4vw,44px)}
+ /* 子特性横向滑动卡 */
+ .blk .subs:not(.ctr .subs){display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:-24px;padding:4px 24px 12px;scrollbar-width:none}
+ .blk .subs:not(.ctr .subs)::-webkit-scrollbar{display:none}
+ .blk .subs:not(.ctr .subs) .sub-i{flex:0 0 82%;scroll-snap-align:center}
+ .steps3,.themes3{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:-24px;padding:4px 24px 12px;scrollbar-width:none}
+ .steps3>*,.themes3>*{flex:0 0 80%;scroll-snap-align:center}
+ .mtxt{font-size:clamp(30px,9vw,44px)}
+ .bigmq .t{font-size:clamp(40px,13vw,64px)}
+ .e2tabs{padding-inline:12px}
+}

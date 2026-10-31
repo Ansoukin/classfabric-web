@@ -104,6 +104,11 @@ def home():
           '<svg class="cursor" id="hCur" viewBox="0 0 24 24"><path d="M4 2.5v17l4.6-4.4 3 6.9 2.9-1.3-3-6.8h6.5z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg>'
           '</div></div></section>\n')
 
+    h += '<section class="mani"><div class="wrap"><p class="mtxt" id="mtxt">' + ''.join('<span class="mw">%s</span>' % c for c in "积极同步上游。无缝沿用配置。再多一点点，属于我们自己的增强。") + '</p></div></section>\n'
+    def bigmq(a, b):
+        r1 = ''.join('<span>%s</span><i>·</i>' % t for t in a) * 3
+        r2 = ''.join('<span>%s</span><i>·</i>' % t for t in b) * 3
+        return '<div class="bigmq" aria-hidden="true"><div class="r1"><div class="t">' + r1 + '</div></div><div class="r2"><div class="t">' + r2 + '</div></div></div>\n'
     # claim 1
     def fc(icn, t, d='', trail=''):
         return '<div class="fcard">%s<div class="tx"><b>%s</b>%s</div>%s</div>' % (ic(icn), t, ('<span>%s</span>' % d) if d else '', trail)
@@ -175,6 +180,7 @@ def home():
     h += '</div></section>\n'
 
     # claim 3
+    h += bigmq(['组件','主题','插件','自动化','外观'], ['拖动','搭配','安装','触发','个性化'])
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
     wid_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
     h += ('<div class="blk full crop rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
@@ -183,6 +189,7 @@ def home():
     h += ('<div class="themes3 rv">' + ''.join('<figure><img src="/assets/img/theme-%s.webp" alt="%s主题" loading="lazy"><figcaption>%s</figcaption></figure>' % (k, n, n) for k, n in [('classic', '经典'), ('fluent', 'Fluent'), ('rect', 'Rectangles')]) + '</div>')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag o">#主题</span><h3>自由的主题系统</h3><p>内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。</p></div>' + thm_vis + '</div>')
     plg_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window('plugins', 1242, 590), 1242, 'position:relative;width:100%') + '</div>', '20%', '20%', '230%', '')
+    h += '<div class="pmq rv"><div class="t">' + ''.join('<div class="pc"><span class="av" style="background:%s">%s</span><div><b>%s</b><small>%s</small></div></div>' % (c,a,n,au) for n,a,c,au in [('UIAccess 提权', 'U', '#6a6a6a', 'HelloWRC'), ('随机抽选', '随', '#4a8fd8', '社区'), ('像素流动', '像', '#a05bd6', '社区'), ('GSVIsland', 'G', '#e0a23a', '社区'), ('OmniTTS', 'O', '#3aa8a0', '社区'), ('SystemTools', 'S', '#d65b7a', '社区')])*3 + '</div></div>\n'
     h += ('<div class="blk full crop rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
     h += '</div></section>\n'
 
@@ -194,6 +201,7 @@ def home():
           '<div class="gframe" id="gframe" title="点击放大">' + gi + '</div></div></div></section>\n')
 
     # claim 4
+    h += bigmq(['更多天气源','托盘菜单','恢复模式','持续同步'], ['OpenWeather','和风天气','SFTP 备份','云端同步'])
     wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
     ln = ('<div class="cd s3 rv d1"><h4>多语言 <span style="font-size:13px;color:var(--faint);font-weight:500">实验中</span></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
           '<div class="vis"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div style="font-size:12.5px;color:var(--faint);margin-top:8px">适配进度 约 40%</div></div></div>')
