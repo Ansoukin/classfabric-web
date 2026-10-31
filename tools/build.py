@@ -106,14 +106,14 @@ def home():
 
     # claim 1
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
-          '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 有了新功能与修复，ClassFabric 会尽快同步，让你不必等到下一次发版。</p>'
+          '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p>'
           '<div class="panel pad" style="padding:20px 18px 14px"><svg class="syn" viewBox="0 0 300 150" fill="none"><text x="0" y="14" fill="#aaa49a" font-size="12" font-family="sans-serif">ClassIsland</text><text x="0" y="146" fill="#aaa49a" font-size="12" font-family="sans-serif">ClassFabric</text>'
           '<path class="ln" d="M70 10H300" stroke="#62b3f2" stroke-width="2"/><path class="ln" d="M70 142H300" stroke="#ff6f7d" stroke-width="2"/><g fill="#62b3f2"><circle cx="110" cy="10" r="4.5"/><circle cx="170" cy="10" r="4.5"/><circle cx="230" cy="10" r="4.5"/><circle cx="285" cy="10" r="4.5"/></g>'
           '<g stroke="#ffb15c" stroke-width="1.8" stroke-linecap="round"><path d="M110 14C110 70 130 90 150 138"/><path d="M230 14C230 70 250 90 270 138"/></g><g fill="#ff6f7d"><circle cx="150" cy="142" r="4.5"/><circle cx="270" cy="142" r="4.5"/><circle cx="210" cy="142" r="4.5"/></g></svg></div></div>'
-          '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。安装 ClassFabric 后，原有的课表、自动化、插件与主题可直接沿用，无需重新配置。</p>'
+          '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p>'
           '<div class="panel pad" style="padding:16px"><div class="mig" id="mig">'
           '<div>' + ic('cal') + '课表与档案<em>已沿用</em></div><div>' + ic('bolt') + '自动化<em>已沿用</em></div><div>' + ic('plug') + '插件<em>已沿用</em></div><div>' + ic('brush') + '主题<em>已沿用</em></div></div></div></div>'
-          '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）、更好的插件预览等改进，并持续扩充。</p>'
+          '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p>'
           '<div class="panel pad" style="padding:18px"><div class="chips-row"><span class="chip on">' + ic('cloud').replace('<svg', '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"') + '更多天气源</span><span class="chip">多语言 · 实验中</span><span class="chip">插件详情预览</span><span class="chip">持续同步上游</span></div></div></div>'
           '</div></div></section>\n')
 
@@ -151,27 +151,27 @@ def home():
           '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>临时启用课表</h4><p>可在当日或未来某一天临时启用另一个课表，应对调休与换课。</p></div></div>'
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
     # 自动化
-    auto_vis = panel_wall('<div style="padding:5% 4% 3%">' + fit(settings_window('auto', 1500, 640), 1500, 'position:relative;width:100%') + '</div>', '84%', '60%', '230%', '')
+    auto_vis = panel_wall('<div style="padding:3.5% 3%"><img class="rs" src="/assets/img/shot-auto-c.webp" width="1920" height="680" alt="ClassFabric 界面截图" loading="lazy"></div>', '84%', '60%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
-          '<p style="font-size:14.5px;color:var(--muted)">点击右侧的「添加行动」，查看可用的行动。</p></div>' + auto_vis + '</div>')
+          '</div>' + auto_vis + '</div>')
     h += '</div></section>\n'
 
     # claim 3
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
-    wid_vis = panel_wall('<div style="padding:5% 4% 3%">' + fit(settings_window('widgets', 1500, 720), 1500, 'position:relative;width:100%') + '</div>', '8%', '44%', '230%', '')
+    wid_vis = panel_wall('<div style="padding:3.5% 3%"><img class="rs" src="/assets/img/shot-widgets.webp" width="1242" height="551" alt="ClassFabric 界面截图" loading="lazy"></div>', '8%', '44%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
           '<p>进入「编辑模式」，可以直接在主界面上拖动调整组件。</p></div>' + wid_vis + '</div>')
     thm_vis = panel_wall('<div style="padding:5% 4% 3%">' + fit(settings_window('themes', 1500, 640), 1500, 'position:relative;width:100%') + '</div>', '50%', '90%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag o">#主题</span><h3>自由的主题系统</h3><p>内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。</p></div>' + thm_vis + '</div>')
-    plg_vis = panel_wall('<div style="padding:5% 4% 3%">' + fit(settings_window('plugins', 1500, 720), 1500, 'position:relative;width:100%') + '</div>', '20%', '20%', '230%', '')
+    plg_vis = panel_wall('<div style="padding:3.5% 3%"><img class="rs" src="/assets/img/shot-plugins.webp" width="1242" height="551" alt="ClassFabric 界面截图" loading="lazy"></div>', '20%', '20%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
     h += '</div></section>\n'
 
     # gallery
-    G = [('shot-widgets', '组件', '在「组件」页挑选并排列主界面上显示的内容。'), ('shot-plugins', '插件', '内置插件市场，可浏览、搜索与安装，详情页可预览更多内容。'), ('shot-auto', '自动化', '设置「当 XX 发生」「满足 XX」时执行的行动。'), ('shot-timeline', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('shot-subjects', '科目', '自定义科目的名称、图标与主题色。')]
+    G = [('shot-timeline', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('shot-subjects', '科目', '自定义科目的名称、图标与主题色。')]
     gt = ''.join('<button role="tab" data-g="%d"%s>%s</button>' % (i, ' class="on" aria-selected="true"' if i == 0 else '', g[1]) for i, g in enumerate(G))
     gi = ''.join('<img class="gimg%s" data-cap="%s" src="/assets/img/%s.webp" alt="ClassFabric %s界面截图" loading="lazy" width="1920" height="1040">' % (' on' if i == 0 else '', g[2], g[0], g[1]) for i, g in enumerate(G))
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">来自<span class="g">真实界面</span>的每一处细节</h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
+    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">档案编辑，<span class="g">所见即所得</span></h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
           '<div class="gframe" id="gframe" title="点击放大">' + gi + '</div><p class="gcap" id="gcap">' + G[0][2] + '</p></div></div></section>\n')
 
     # claim 4
@@ -204,10 +204,7 @@ def home():
           '<div class="no"><h4>可能不适合，如果……</h4><p>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</p></div></div></div></div></section>\n')
 
     # final
-    h += ('<section class="final2"><img class="fisl rv" src="/assets/img/isl-3.webp" alt="" width="491" height="36">'
-          '<div class="dlg rv d1" role="group" aria-label="立即体验 ClassFabric"><div class="dt"><img src="/assets/img/icon-32.png" alt="" width="16" height="16"><span>ClassFabric</span><span class="ctl"><i>&#8211;</i><i>&#9633;</i><i>&#10005;</i></span></div>'
-          '<div class="db"><h2>立即体验 ClassFabric</h2><p>更多功能留给您自行探索！</p><div class="cta"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></div>'
-          '<div class="tbar"><span class="win"><i></i><i></i><i></i><i></i></span><span class="ic"><b style="background:#4aa3ff"></b><b style="background:#4b4b4f"></b><b style="background:#ffb340"></b><b style="background:#3fbf7a"></b><b style="background:#ef6b5f"></b></span><span class="clk">10:12<br>2026/10/29</span></div></section>\n')
+    h += ('<section class="final3"><div class="wrap"><h2 class="rv">立即体验 ClassFabric</h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
     h += '</main>\n'
     return h + FOOT
 
