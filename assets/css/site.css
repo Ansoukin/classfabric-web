@@ -1066,3 +1066,79 @@ select.in2{appearance:auto}
  .e2act{display:none}
  .ed2 .w-title-island{display:none}
 }
+
+/* ===== 档案编辑：按真实界面校准（时间表） ===== */
+.e2act b{width:1px;height:22px;background:#3e3e3e}
+.e2act span{gap:10px}
+.e2tool{height:48px;gap:2px;padding:0 14px;background:#272727;border-bottom:0;font-weight:500}
+.e2tool span{padding:7px 12px;border-radius:5px;gap:10px}
+.e2tool span.dim{opacity:.4}
+.e2tool b{background:#3c3c3c;height:24px;margin:0 8px}
+.e2tool svg{width:16px;height:16px}
+.e2tool span:last-child{margin-left:0}
+.tlv{background:#272727}
+.tlv .llist{width:250px;padding:0;border-right:0;display:flex;flex-direction:column}
+.tlv .ltool{display:flex;gap:6px;height:48px;align-items:center;padding:0 8px;font-weight:500;font-size:13px}
+.tlv .ltool span{display:flex;gap:10px;align-items:center;padding:7px 10px;border-radius:5px;cursor:pointer}
+.tlv .ltool span:hover{background:rgba(255,255,255,.07)}.tlv .ltool em{font-style:normal}
+.tlv .li2{margin:2px 4px;padding:11px 14px;border-radius:5px;background:rgba(255,255,255,.08);font-weight:500;font-size:13.5px}
+.tlv .li2.on::before{left:0;top:10px;bottom:10px;width:3px}
+.tlv .lbot{margin:auto 4px 4px;display:flex;justify-content:space-between;align-items:center;height:48px;padding:0 16px;background:#323232;border:1px solid #3a3a3a;border-radius:5px;font-weight:600;font-size:13.5px}
+.cvw{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;background:#272727}
+.cvw .cvs{background:#272727;flex:1}
+.cvs::-webkit-scrollbar{width:8px}.cvs::-webkit-scrollbar-thumb{background:#6a6a6a;border-radius:4px}
+.cvin{margin:0;padding:0}
+.hl{left:46px;right:14px;border-top:2px solid #666}
+.hl.mn{border-top:1px solid #3d3d3d}
+.hl span{left:-46px;top:-9px;background:transparent;padding:0;font-weight:700;font-size:13px;color:#fff;width:40px;text-align:center}
+.tb3{left:50px;right:14px;padding:0;border-radius:0;display:block;border:0}
+.tb3.k{background:#476680;color:#8cc8ff;border:0}
+.tb3.b{background:#8a8a8a;color:#fff;display:flex;align-items:center}
+.tb3.k::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#6cb2ee}
+.tb3 .l1{display:flex;align-items:center;gap:6px;font-size:15px;padding:2px 6px;font-weight:500;line-height:1.2}
+.tb3 .l2{display:flex;align-items:center;gap:8px;font-size:15px;padding:2px 6px 0 22px;font-weight:500}
+.tb3 svg{width:14px;height:14px;stroke-width:1.6}
+.tb3.b .l1{color:#fff}
+.tb3.sel{outline:0;box-shadow:0 0 0 1px #000,0 0 0 2px #fff;z-index:3}
+.tb3 .del{position:absolute;right:8px;top:50%;margin-top:-16px;width:40px;height:32px;display:grid;place-items:center;background:#1f1f1f;border-radius:5px;color:#ff6a6a;cursor:pointer}
+.tb3.b .del{width:36px;height:26px;margin-top:-13px}
+.tb3 .hd{left:50%;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#fff;border:3px solid #6cb2ee;box-shadow:none;cursor:ns-resize}
+.tb3 .hd::after{left:-14px;right:-14px;top:-14px;bottom:-14px}
+.tb3 .hd.t{top:-8px}.tb3 .hd.b{bottom:-8px}
+.addbar{position:absolute;bottom:auto;margin:0;left:calc(50% + 24px);transform:translateX(-50%);width:max-content;display:flex;align-items:center;gap:2px;padding:4px;background:rgba(36,36,36,.92);border:0;border-radius:6px;box-shadow:none;z-index:4;font-size:13.5px;font-weight:500}
+.addbar>span{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:5px;cursor:pointer}
+.addbar .ab0{color:#cfcfcf;cursor:default;gap:6px}.addbar .ab0 svg{width:12px;height:12px}
+.addbar .ab:hover{background:rgba(98,179,242,.14)}
+.addbar svg{width:15px;height:15px}
+.zbar{height:44px;display:flex;align-items:center;gap:6px;padding:0 14px;flex:none;background:#272727;font-size:13px;font-weight:500}
+.zbar .sp{flex:1}.zbar em{font-style:normal;min-width:44px;text-align:center}
+.zbar .zi{width:30px;height:30px;display:grid;place-items:center;border-radius:5px;cursor:pointer}
+.zbar .zi:hover{background:rgba(255,255,255,.08)}
+.zbar .zb{width:38px;height:30px;display:grid;place-items:center;background:var(--blue);color:#06233b;border-radius:5px}
+.sd3{width:380px;background:#272727;border-left:0;padding:8px 14px 16px 16px}
+.sd3 h5{font-size:22px;margin:6px 0 6px}
+.sd3 label{font-weight:500;margin:10px 0 4px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#454545;border-radius:5px;overflow:hidden;border-bottom:1px solid #9a9a9a}
+.tri input{height:30px;text-align:center;border:0;background:#323232;color:#fff;font:inherit;font-size:13.5px;outline:0;min-width:0}
+.tri input:focus{background:#3a3a3a;box-shadow:inset 0 -2px var(--blue)}
+.pl2{display:flex;gap:6px}
+.pl2 span{display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;border-radius:999px;background:#2f2f2f;border:1px solid #444;cursor:pointer;font-size:13px;font-weight:500}
+.pl2 span.on{background:#62b3f2;border-color:#62b3f2;color:#06233b}
+.pl2 svg{width:14px;height:14px}
+.sd3 .hint{margin:8px 0 10px;font-size:12.5px;color:#cfcfcf;line-height:1.5}
+.sd3 hr{border:0;border-top:1px solid #3a3a3a;margin:12px 0}
+.sd3 .sh{display:flex;align-items:center;gap:10px;font-weight:600;font-size:13.5px;margin:4px 0 8px}
+.sd3 .selw .in2{height:34px}
+.sd3 .ov{display:flex;align-items:center;gap:10px;padding:10px 14px;margin-top:6px;font-weight:500;cursor:pointer;border-radius:5px}
+.sd3 .ov:hover{background:rgba(255,255,255,.06)}
+.mo2{display:flex;align-items:center;gap:12px;min-height:48px;padding:4px 14px;background:#323232;border:1px solid #3a3a3a;border-radius:5px;margin-bottom:3px;font-weight:600;font-size:13.5px}
+.mo2>span:first-of-type{flex:1}.mo2 .lay{opacity:.8}.mo2 .tg{cursor:pointer}.mo2 em{display:grid;place-items:center;font-style:normal}
+.mo2 em svg{width:12px;height:12px}
+@container (max-width:900px){.tlv .llist{width:150px}.sd3{width:300px}}
+@container (max-width:680px){.tlv .llist{width:auto}.sd3{width:auto}.e2act{display:none}}
+/* 课表右侧科目：真实界面为无边框的纯文字网格 */
+.chips3{grid-template-columns:repeat(7,1fr);gap:2px 0}
+.chips3 span{background:transparent;border:0;padding:8px 0;border-radius:4px;font-size:16px;font-weight:600}
+.chips3 span:hover{background:rgba(255,255,255,.1)}
+.chips3 span:active{background:rgba(255,255,255,.16)}
+.tb2 span{padding-bottom:3px}

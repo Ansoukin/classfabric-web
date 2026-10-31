@@ -19,6 +19,24 @@
     plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
     undo: '<svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5M4 12h10a6 6 0 0 1 0 12"/></svg>',
     clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    book: '<svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 3v7l2-1.5 2 1.5V3"/></svg>',
+    hist: '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4M12 8v4l3 2"/></svg>',
+    split: '<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="6" rx="1"/><rect x="5" y="14" width="14" height="6" rx="1"/><path d="M3 12h18"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>',
+    copy: '<svg viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="12" rx="2"/><path d="M5 16V6a2 2 0 0 1 2-2h8"/></svg>',
+    redo: '<svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5M20 12H10a6 6 0 0 0 0 12"/></svg>',
+    minus: '<svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>',
+    dots: '<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>',
+    up: '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>',
+    list: '<svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+    cal2: '<svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 9h14"/></svg>',
+    fit: '<svg viewBox="0 0 24 24"><path d="M5 4h14M12 8v8M9 13l3 3 3-3M5 20h14"/></svg>',
+    zin: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M11 8v6M8 11h6"/></svg>',
+    zout: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M8 11h6"/></svg>',
+    loc: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+    gear: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>',
+    layers: '<svg viewBox="0 0 24 24"><path d="M12 4l8 4-8 4-8-4zM4 12l8 4 8-4"/></svg>',
+    cloud: '<svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.7-1A4.5 4.5 0 0 1 17 18z"/></svg>',
     shield: '<svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>'
   };
   function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
@@ -158,7 +176,7 @@
   /* ============ 档案编辑（可交互 · 可拖拽时间轴） ============ */
   function initEditor(root){
     var body = root.querySelector('.e2body');
-    var PX = 1.7, T0 = 7*60+30, T1 = 14*60+30;
+    var PX = 1.8, T0 = 6*60, T1 = 18*60;
     var subj = [['语文','语','#e5576b'],['数学','数','#5a78d8'],['英语','英','#7e62d3'],['物理','物','#3a9ae2'],['化学','化','#2fb2a1'],['生物','生','#4faf53'],['政治','政','#df4f6d'],['历史','历','#c58b3d'],['地理','地','#8bb347'],['信息技术','信','#2f9cc9'],['体育','体','#f0872e'],['自习','自','#6c7d9d']];
     subj = subj.map(function(x,i){return {n:x[0],a:x[1],c:x[2],o:x[0]==='体育'}});
     var blocks = [], t = 8*60;
@@ -206,22 +224,27 @@
     }
     function tlView(){
       var H = (T1-T0)*PX, lines='';
-      for (var m=T0;m<=T1;m+=30) lines += '<div class="hl" style="top:'+(m-T0)*PX+'px"><span>'+hm(m)+'</span></div>';
+      for (var m=T0;m<=T1;m+=15){ var mj = m%30===0; lines += '<div class="hl'+(mj?'':' mn')+'" style="top:'+(m-T0)*PX+'px">'+(mj?'<span>'+hm(m)+'</span>':'')+'</div>'; }
       var bl = blocks.map(function(b,i){
-        var sel = i===st.tl, h=(b.e-b.s)*PX;
-        return '<div class="tb3 '+b.k+(sel?' sel':'')+'" data-i="'+i+'" style="top:'+(b.s-T0)*PX+'px;height:'+h+'px">'+
-          (b.k==='k' ? '<span>'+hm(b.s)+':00 - '+hm(b.e)+':00</span><span class="du">'+('0'+Math.floor((b.e-b.s)/60)).slice(-2)+':'+('0'+(b.e-b.s)%60).slice(-2)+':00</span>' : '<span>'+I.clock+hm(b.s)+':00 - '+hm(b.e)+':00</span>')+
-          (sel?'<i class="hd t" data-h="s"></i><i class="hd b" data-h="e"></i>':'')+'</div>'; }).join('');
+        var sel = i===st.tl, d=b.e-b.s;
+        return '<div class="tb3 '+b.k+(sel?' sel':'')+'" data-i="'+i+'" style="top:'+(b.s-T0)*PX+'px;height:'+d*PX+'px">'+
+          (b.k==='k' ? '<div class="l1">'+I.book+'<span>'+hm(b.s)+':00 - '+hm(b.e)+':00</span></div><div class="l2">'+I.hist+'<span>'+dur(d)+'</span></div>' : '<div class="l1">'+I.clock+'<span>'+hm(b.s)+':00 - '+hm(b.e)+':00</span></div>')+
+          (sel?'<span class="del" data-a="del">'+I.trash+'</span><i class="hd t" data-h="s"></i><i class="hd b" data-h="e"></i>':'')+'</div>'; }).join('');
       var b = blocks[st.tl] || blocks[0];
-      return toolbar([['addk','上课','','plus'],['addb','课间','','plus'],['sep','分割线','dim',''],'|',['dup','创建副本','','doc'],['undo','撤销','','undo'],['redo','重做','',''],['del','删除','','trash'],'|',['refresh','刷新','','sync'],['info','时间表信息','','info']]) +
-        '<div class="e2v tlv"><div class="llist"><div class="li2 on">新时间表</div></div><div class="cvs"><div class="cvin" style="height:'+(H+20)+'px">'+lines+bl+'</div>'+
-        '<div class="addbar"><span>添加</span><span class="b2" data-a="addk">上课</span><span class="b2" data-a="addb">课间</span></div></div>'+
-        '<div class="side2"><h5>编辑时间点</h5><label>开始时间</label><input type="time" class="in2" data-ts value="'+hm(b.s)+'"><label>结束时间</label><input type="time" class="in2" data-te value="'+hm(b.e)+'">'+
-        '<label>类型</label><div class="seg2"><span class="'+(b.k==='k'?'on':'')+'" data-ty="k">上课</span><span class="'+(b.k==='b'?'on':'')+'" data-ty="b">课间休息</span></div>'+
-        '<div class="cbx2'+(b.hide?' on':'')+'" data-hide><i>'+I.check+'</i>默认隐藏</div>'+
-        (b.k==='k' ? '<label>默认课程</label><select class="in2" data-def><option value="">（无）</option>'+subj.map(function(s){return '<option'+(b.def===s.n?' selected':'')+'>'+esc(s.n)+'</option>';}).join('')+'</select>' : '<label>课间名称</label><input class="in2" data-bn value="'+esc(b.name||'课间休息')+'">')+
-        '<label>更多选项</label><div class="mo">上课提醒设置<span class="tg"><i></i><span>关</span></span></div><div class="mo">课程显示设置<span class="tg"><i></i><span>关</span></span></div></div></div>';
+      var bar = b ? '<div class="addbar" style="top:'+((b.e-T0)*PX+16)+'px"><span class="ab0">'+I.chev+'添加</span><span class="ab" data-a="addk">'+I.book+'上课</span><span class="ab" data-a="addb">'+I.clock+'课间</span><span class="ab x">'+I.x+'</span></div>' : '';
+      function tri(w,v){ return '<div class="tri">'+['h','m','s'].map(function(k,j){ var n=[Math.floor(v/60),('0'+v%60).slice(-2),'00'][j]; return '<input data-tp="'+w+k+'" value="'+n+'" inputmode="numeric">'; }).join('')+'</div>'; }
+      return '<div class="e2tool">'+[['addk','上课','book'],['addb','课间','clock'],['sep','分割线','split'],['act','行动','bolt'],'|',['dup','创建副本','copy'],['undo','','undo'],['redo','','redo'],'|',['del','删除','minus'],['refresh','刷新','sync'],'|',['info','时间表信息','info'],'|',['more','','dots']].map(function(x){ return x==='|'?'<b></b>':'<span class="'+(x[0]==='undo'&&!st.hist.length||x[0]==='redo'&&!st.redo.length?'dim':'')+'" data-a="'+x[0]+'">'+I[x[2]]+(x[1]?'<em>'+x[1]+'</em>':'')+'</span>'; }).join('')+'</div>'+
+        '<div class="e2v tlv"><div class="llist"><div class="ltool"><span>'+I.plus+'<em>添加</em></span><span>'+I.copy+'<em>复制</em></span></div><div class="li2 on">新时间表</div><div class="lbot"><span>时间点时长</span>'+I.up+'</div></div>'+
+        '<div class="cvw"><div class="cvs"><div class="cvin" style="height:'+(H+20)+'px">'+lines+bl+bar+'</div></div>'+
+        '<div class="zbar"><span class="zi">'+I.list+'</span><span class="zi">'+I.cal2+'</span><span class="sp"></span><span class="zb on">'+I.fit+'</span><span class="zi" data-z="-1">'+I.zout+'</span><em>'+Math.round(PX/0.006)+'%</em><span class="zi" data-z="1">'+I.zin+'</span><span class="zi">'+I.loc+'</span></div></div>'+
+        '<div class="side2 sd3"><h5>编辑时间点</h5><label>开始时间</label>'+tri('s',b.s)+'<label>结束时间</label>'+tri('e',b.e)+
+        '<label>类型</label><div class="pl2"><span class="'+(b.k==='k'?'on':'')+'" data-ty="k">'+I.book+'上课</span><span class="'+(b.k==='b'?'on':'')+'" data-ty="b">'+I.clock+'课间休息</span></div>'+
+        (b.k==='k' ? '<div class="cbx2'+(b.hide?' on':'')+'" data-hide><i>'+I.check+'</i>默认隐藏</div><p class="hint">若默认隐藏一个时间点，那么只有在处于此时间点时，此时间点才会显示。</p><hr><div class="sh">'+I.book+'默认课程</div><div class="selw"><select class="in2" data-def><option value=""></option>'+subj.map(function(s){return '<option'+(b.def===s.n?' selected':'')+'>'+esc(s.n)+'</option>';}).join('')+'</select></div><div class="ov">'+I.up+'覆盖现有课程</div>'
+                    : '<label>课间名称</label><input class="in2" data-bn value="'+esc(b.name||'')+'">')+
+        '<hr><div class="sh">'+I.gear+'更多选项</div>'+
+        [['上课提醒设置','layers',0],['课程显示设置','book',0],['天气提醒设置','cloud',1]].map(function(x){ return '<div class="mo2">'+I[x[1]]+'<span>'+x[0]+'</span>'+(x[2]?'':'<i class="lay">'+I.layers+'</i>')+'<span class="tg"><i></i><span>关</span></span><em>'+I.chev+'</em></div>'; }).join('')+'</div></div>';
     }
+    function dur(d){ return ('0'+Math.floor(d/60)).slice(-2)+':'+('0'+d%60).slice(-2)+':00'; }
     function sjView(){
       var rows = subj.map(function(s,i){ return '<div class="sr'+(i===st.sj?' on':'')+'" data-si="'+i+'"><span>'+I.doc+'</span><span class="sw3" style="background:'+s.c+'"></span><span>'+esc(s.n)+'</span><span>'+esc(s.a)+'</span><span><i class="cb3'+(s.o?' on':'')+'" data-so="'+i+'">'+(s.o?I.check:'')+'</i></span></div>'; }).join('');
       var c = subj[st.sj] || subj[0];
@@ -234,7 +257,7 @@
       var y = keep && body.querySelector('.cvs') ? body.querySelector('.cvs').scrollTop : 0;
       body.innerHTML = st.v==='grid' ? gridView() : st.v==='tl' ? tlView() : st.v==='sj' ? sjView() : swView();
       if (st.v==='sw') initSwap(body.querySelector('[data-app="swap"]'));
-      var cv = body.querySelector('.cvs'); if (cv) cv.scrollTop = y;
+      var cv = body.querySelector('.cvs'); if (cv) cv.scrollTop = keep ? y : (7*60+20-T0)*PX;
     }
     root.querySelectorAll('.e2tabs > span').forEach(function(sp){ sp.addEventListener('click', function(){
       root.querySelectorAll('.e2tabs > span').forEach(function(x){x.classList.toggle('on',x===sp)}); st.v = sp.dataset.v; st.pop=false; render(); }); });
@@ -243,7 +266,9 @@
     body.addEventListener('click', function(e){
       var t = e.target, el;
       if ((el=t.closest('[data-a]'))){ var a = el.dataset.a, b = cur();
-        if (a==='addk'||a==='addb'){ snap(); var last = blocks[blocks.length-1], s = last? last.e : 8*60, k = a==='addk'?'k':'b', d = k==='k'?40:10; if (s+d>T1) return; blocks.push({s:s,e:s+d,k:k}); st.tl = blocks.length-1; render(true); }
+        if (a==='addk'||a==='addb'){ snap(); var s = b? b.e : 8*60, k = a==='addk'?'k':'b', d = k==='k'?40:10; if (s+d>T1) return; var nb={s:s,e:s+d,k:k}; blocks.splice(st.tl+1,0,nb);
+          var sh = 0; for (var q=st.tl+2;q<blocks.length;q++){ var o=blocks[q]; if (o.s < blocks[q-1].e) { sh = blocks[q-1].e - o.s; o.s+=sh; o.e+=sh; } } st.tl++; render(true); }
+        else if (a==='sep'||a==='act'||a==='info'||a==='more'){ }
         else if (a==='dup' && b){ snap(); var n = {s:b.e,e:b.e+(b.e-b.s),k:b.k}; if (n.e>T1) return; blocks.splice(st.tl+1,0,n); st.tl++; render(true); }
         else if (a==='del' && st.v==='tl' && b){ snap(); blocks.splice(st.tl,1); st.tl=Math.max(0,st.tl-1); render(true); }
         else if (a==='undo' && st.hist.length){ st.redo.push(JSON.stringify(blocks)); blocks = JSON.parse(st.hist.pop()); st.tl=Math.min(st.tl,blocks.length-1); render(true); }
@@ -259,6 +284,7 @@
       if ((el=t.closest('td.c'))){ st.cell=[+el.dataset.d,+el.dataset.r]; render(); return; }
       if ((el=t.closest('[data-sub]'))){ var c=st.cell; if(!sched[c[0]]) return; sched[c[0]][c[1]] = el.dataset.sub; var n=classes().length;
         if (st.auto) st.cell=[c[0], Math.min(n-1,c[1]+1)]; render(); return; }
+      if ((el=t.closest('[data-z]'))){ var z=Math.round(PX/0.006)+(+el.dataset.z)*50; z=Math.max(100,Math.min(500,z)); PX=z*0.006; render(true); return; }
       if (t.closest('[data-auto]')){ st.auto=!st.auto; render(); return; }
       if ((el=t.closest('[data-new]'))){ pp.target=+el.dataset.new; pp.name='新课表'; pp.days=days.map(function(x,i){return i===pp.target}); st.pop=true; render(); return; }
       if ((el=t.closest('[data-rule]'))){ pp.rule=+el.dataset.rule; render(); return; }
@@ -272,14 +298,14 @@
     function clampBlock(){ blocks.sort(function(a,b){return a.s-b.s}); }
     body.addEventListener('input', function(e){
       var t=e.target, b=cur();
-      if (t.matches('[data-ts],[data-te]') && t.value){ var v=pm(t.value); if (t.matches('[data-ts]')) { if(v<b.e-4 && v>=T0) b.s=v; } else if (v>b.s+4 && v<=T1) b.e=v;
-        var cv=body.querySelector('.cvin'); if(cv) { redrawBlocks(); } return; }
+      if (t.matches('[data-tp]')){ var w=t.dataset.tp.charAt(0), tri=t.parentNode, hh=+tri.children[0].value||0, mm=+tri.children[1].value||0, v=hh*60+mm;
+        if (w==='s'){ if(v<b.e-4 && v>=T0) b.s=v; } else if (v>b.s+4 && v<=T1) b.e=v; return; }
       if (t.matches('[data-sn]')) { var o=subj[st.sj].n; subj[st.sj].n=t.value; Object.keys(sched).forEach(function(k){ sched[k]=sched[k].map(function(x){return x===o?t.value:x}); }); var row=body.querySelector('.sr.on'); if(row) row.children[2].textContent=t.value; return; }
       if (t.matches('[data-sa]')) { subj[st.sj].a=t.value; var r=body.querySelector('.sr.on'); if(r) r.children[3].textContent=t.value; return; }
       if (t.matches('[data-pn]')) pp.name=t.value;
       if (t.matches('[data-bn]')) b.name=t.value;
     });
-    body.addEventListener('change', function(e){ var t=e.target; if (t.matches('[data-def]')) cur().def=t.value; });
+    body.addEventListener('change', function(e){ var t=e.target; if (t.matches('[data-def]')) cur().def=t.value; if (t.matches('[data-tp]')) render(true); });
     function redrawBlocks(){ var y=body.querySelector('.cvs').scrollTop; var side=body.querySelector('[data-ts]'); var fs=document.activeElement; render(true); var again = fs && fs.matches && fs.matches('[data-ts],[data-te]') ? body.querySelector(fs.matches('[data-ts]')?'[data-ts]':'[data-te]') : null; if(again) again.focus(); }
     // 拖拽手柄：改变上沿/下沿，相邻块共享边界时同步移动
     var drag=null;
@@ -297,8 +323,8 @@
         if (next && next.s===drag.e0){ hi2=next.e-MIN; } else if (next){ hi2=next.s; }
         v2=Math.max(lo2,Math.min(hi2,v2)); b.e=v2; if (next && next.s===drag.e0) next.s=v2; }
       var cv=body.querySelector('.cvin'); blocks.forEach(function(x,i){ var el=cv.querySelector('.tb3[data-i="'+i+'"]'); if(!el) return; el.style.top=(x.s-T0)*PX+'px'; el.style.height=(x.e-x.s)*PX+'px';
-        var sp=el.children; if(x.k==='k'){ sp[0].textContent=hm(x.s)+':00 - '+hm(x.e)+':00'; sp[1].textContent=('0'+Math.floor((x.e-x.s)/60)).slice(-2)+':'+('0'+(x.e-x.s)%60).slice(-2)+':00'; } else sp[0].innerHTML=I.clock+hm(x.s)+':00 - '+hm(x.e)+':00'; });
-      var ts=body.querySelector('[data-ts]'), te=body.querySelector('[data-te]'); if(ts){ts.value=hm(b.s);te.value=hm(b.e);}
+        var sp=el.children; if(x.k==='k'){ sp[0].lastChild.textContent=hm(x.s)+':00 - '+hm(x.e)+':00'; sp[1].lastChild.textContent=dur(x.e-x.s); } else sp[0].lastChild.textContent=hm(x.s)+':00 - '+hm(x.e)+':00'; var bar=cv.querySelector('.addbar'); if(bar) bar.style.top=((blocks[drag.i].e-T0)*PX+16)+'px'; });
+      var tp=body.querySelectorAll('[data-tp]'); if(tp.length){ tp[0].value=Math.floor(b.s/60); tp[1].value=('0'+b.s%60).slice(-2); tp[3].value=Math.floor(b.e/60); tp[4].value=('0'+b.e%60).slice(-2); }
     });
     function end(){ if(drag){ drag=null; render(true); } }
     body.addEventListener('pointerup', end); body.addEventListener('pointercancel', end);
