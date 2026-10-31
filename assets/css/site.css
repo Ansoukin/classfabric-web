@@ -1195,3 +1195,8 @@ html,body{overflow-x:clip}
  .band .panel{padding-top:24px}
  .band .panel::after{display:none}
 }
+@media(max-width:720px){
+ .band .copy h3{color:var(--fg)!important}
+ .band .copy p{color:var(--muted)!important}
+ .band .panel{padding-top:16px}
+}
