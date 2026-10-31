@@ -1,162 +1,274 @@
-/* ClassFabric website — vanilla JS, progressive enhancement only. */
 (function () {
   'use strict';
-  var d = document, root = d.documentElement;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var REPO = 'Ansoukin/ClassFabric';
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
-  function $(s, c) { return (c || d).querySelector(s); }
-  function $$(s, c) { return Array.prototype.slice.call((c || d).querySelectorAll(s)); }
 
-  root.classList.add('js');
-
-  /* theme */
-  var saved = store('cf-theme');
-  if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
-  var tbtn = $('#theme');
-  if (tbtn) tbtn.addEventListener('click', function () {
-    var cur = root.getAttribute('data-theme') ||
-      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    var next = cur === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next); store('cf-theme', next);
-  });
-
-  /* nav */
-  var nav = $('.nav');
-  function onScroll() { if (nav) nav.classList.toggle('scrolled', window.scrollY > 8); }
-  onScroll(); addEventListener('scroll', onScroll, { passive: true });
-  var mb = $('#menu'), links = $('.links');
-  if (mb && links) mb.addEventListener('click', function () {
-    var o = links.classList.toggle('open'); mb.setAttribute('aria-expanded', o);
-  });
-
-  /* reveal on scroll */
-  var rv = $$('.rv');
-  if ('IntersectionObserver' in window && !reduce) {
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    rv.forEach(function (el) { io.observe(el); });
-  } else rv.forEach(function (el) { el.classList.add('in'); });
-
-  /* island demo: plays only while on screen */
-  $$('.isl-stack[data-demo]').forEach(function (stack) {
-    var states = $$('.isl', stack), i = -1, timer = null, running = false;
-    function show(n) {
-      states.forEach(function (s, k) { s.classList.toggle('on', k === n); });
-    }
-    function step() {
-      i = (i + 1) % states.length; show(i);
-      var ms = parseInt(states[i].getAttribute('data-ms'), 10) || 3000;
-      timer = setTimeout(step, ms);
-    }
-    if (reduce || !('IntersectionObserver' in window)) { show(0); return; }
-    show(0);
-    var vio = new IntersectionObserver(function (es) {
-      var vis = es[0].isIntersecting;
-      if (vis && !running) { running = true; i = -1; step(); }
-      else if (!vis && running) { running = false; clearTimeout(timer); }
-    }, { threshold: 0.35 });
-    vio.observe(stack.closest('.hero-stage, .stage') || stack);
-  });
-
-  /* GitHub release info for download buttons */
-  function fmtSize(b) { return b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB'; }
-  function applyRelease(r) {
-    if (!r) return;
-    var tag = r.tag_name || '';
-    $$('[data-ver]').forEach(function (el) { el.textContent = tag; });
-    var date = (r.published_at || '').slice(0, 10);
-    $$('[data-date]').forEach(function (el) { el.textContent = date; });
-    $$('[data-releaselink]').forEach(function (a) { if (r.html_url) a.href = r.html_url; });
-    var assets = (r.assets || []).filter(function (a) { return !/\.(sha256|sig|txt|blockmap)$/i.test(a.name); });
-    var win = assets.filter(function (a) { return /win|windows|x64|x86|arm64|\.exe$|\.msi$|\.zip$/i.test(a.name); });
-    var primary = win[0] || assets[0];
-    $$('[data-dl]').forEach(function (a) { if (primary) a.href = primary.browser_download_url; });
-    var list = $('#assets');
-    if (list) {
-      list.innerHTML = '';
-      if (!assets.length) { list.innerHTML = '<div class="none">这个版本暂时没有可下载的文件，请到 GitHub Releases 查看。</div>'; return; }
-      assets.forEach(function (a) {
-        var el = d.createElement('a'); el.href = a.browser_download_url; el.rel = 'noopener';
-        var n = d.createElement('span'); n.textContent = a.name;
-        var s = d.createElement('span'); s.textContent = fmtSize(a.size);
-        el.appendChild(n); el.appendChild(s); list.appendChild(el);
-      });
-    }
-  }
-  if ($('[data-ver],[data-dl],#assets')) {
-    var cached = null;
-    try { cached = JSON.parse(sessionStorage.getItem('cf-rel') || 'null'); } catch (e) {}
-    if (cached) applyRelease(cached);
-    else if (window.fetch) {
-      fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=8', { headers: { Accept: 'application/vnd.github+json' } })
-        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-        .then(function (a) {
-          var r = (a || []).filter(function (x) { return !x.draft; })[0];
-          if (r) { try { sessionStorage.setItem('cf-rel', JSON.stringify(r)); } catch (e) {} applyRelease(r); }
-          else { var l = $('#assets'); if (l) l.innerHTML = '<div class="none">还没有发布版本，请稍后再来，或到 GitHub 查看进展。</div>'; }
-        })
-        .catch(function () { var l = $('#assets'); if (l) l.innerHTML = '<div class="none">暂时无法读取版本信息，请点击上方按钮前往 GitHub Releases 下载。</div>'; });
-    }
-  }
-
-  /* language (translate.js, loaded only when needed) */
-  var LANGS = { zh: 'chinese_simplified', tw: 'chinese_traditional', en: 'english' };
-  var CDNS = [
-    'https://cdn.jsdelivr.net/npm/i18n-jsautotranslate@3.18.66/translate.js',
-    'https://cdn.staticfile.net/i18n-jsautotranslate/3.18.66/translate.js',
-    'https://unpkg.com/i18n-jsautotranslate@3.18.66/translate.js'
-  ];
-  function loadTranslate(done) {
-    if (window.translate) return done(true);
-    var k = 0;
-    (function next() {
-      if (k >= CDNS.length) return done(false);
-      var s = d.createElement('script'); s.src = CDNS[k++]; s.async = true;
-      s.onload = function () { done(!!window.translate); };
-      s.onerror = function () { s.remove(); next(); };
-      d.head.appendChild(s);
-    })();
-  }
-  function setLang(code) {
-    store('cf-lang', code);
-    markLang(code);
-    if (code === 'zh' && !window.translate) return;
-    loadTranslate(function (ok) {
-      if (!ok) return;
-      try {
-        translate.selectLanguageTag.show = false;
-        translate.service.use('client.edge');
-        translate.language.setLocal('chinese_simplified');
-        translate.listener.start();
-        translate.changeLanguage(LANGS[code]);
-      } catch (e) { /* translation is optional */ }
+  /* ---------- fit scaling ---------- */
+  function fitAll() {
+    var mobile = window.innerWidth <= 760;
+    $$('.fitbox').forEach(function (b) {
+      var f = b.firstElementChild; if (!f) return;
+      var dw = +(mobile && b.dataset.dwm ? b.dataset.dwm : b.dataset.dw);
+      var w = b.clientWidth || b.parentNode.clientWidth;
+      if (!w) return;
+      var s = w / dw;
+      f.style.transform = 'scale(' + s + ')';
+      f.style.transformOrigin = '0 0';
+      f.style.width = dw + 'px';
+      b.style.height = (f.offsetHeight * s) + 'px';
     });
   }
-  function markLang(code) {
-    $$('.langmenu button').forEach(function (b) { b.setAttribute('aria-checked', b.getAttribute('data-lang') === code); });
+  window.addEventListener('resize', fitAll);
+  window.addEventListener('load', fitAll);
+  fitAll();
+
+  /* ---------- helpers ---------- */
+  function inView(el, cb, th) {
+    if (!('IntersectionObserver' in window)) { cb(); return; }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); cb(); } });
+    }, { threshold: th || 0.25 });
+    io.observe(el);
   }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  /* ---------- reveal ---------- */
+  var rv = $$('.rv');
+  if ('IntersectionObserver' in window) {
+    var rio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    rv.forEach(function (e) { rio.observe(e); });
+  } else rv.forEach(function (e) { e.classList.add('in'); });
+
+  /* ---------- island stacks ---------- */
+  function cycle(stack, getList) {
+    var token = 0;
+    function show(el) {
+      $$('.isl', stack).forEach(function (i) { i.classList.remove('on'); });
+      void el.offsetWidth;
+      el.classList.add('on');
+    }
+    async function run() {
+      var my = ++token;
+      while (my === token) {
+        var list = getList();
+        for (var i = 0; i < list.length; i++) {
+          if (my !== token) return;
+          show(list[i]);
+          await sleep(+list[i].dataset.ms || 3000);
+        }
+      }
+    }
+    return { start: run, stop: function () { token++; } };
+  }
+  var remC = null, curGroup = 0;
+  $$('.isl-stack[data-demo]').forEach(function (st) {
+    var all = $$('.isl', st);
+    var kind = st.dataset.demo;
+    var c = cycle(st, function () {
+      return kind === 'rem' ? all.filter(function (i) { return +i.dataset.g === curGroup; }) : all;
+    });
+    if (kind === 'rem') remC = c;
+    inView(st, function () { if (kind === 'hero') return; c.start(); }, 0.3);
+    if (kind === 'hero') st._c = c;
+  });
+  var tabs = $$('#remTabs .sub-i');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.classList.remove('on'); });
+      t.classList.add('on'); curGroup = +t.dataset.g;
+      if (remC) remC.start();
+    });
+  });
+
+  /* ---------- editor tabs / grid ---------- */
+  $$('.editor, .ed').forEach(function (ed) {
+    var ts = $$('[data-tab]', ed), vs = $$('[data-v]', ed);
+    ts.forEach(function (t) {
+      t.addEventListener('click', function () {
+        ts.forEach(function (x) { x.classList.toggle('on', x === t); });
+        vs.forEach(function (v) { v.classList.toggle('on', v.dataset.v === t.dataset.tab); });
+      });
+    });
+    var cells = $$('td.c[data-i]', ed), chips = $$('.chips span[data-s]', ed), cur = null;
+    cells.forEach(function (c) {
+      c.addEventListener('click', function () {
+        cells.forEach(function (x) { x.classList.remove('sel'); });
+        c.classList.add('sel'); cur = c;
+      });
+    });
+    chips.forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        chips.forEach(function (x) { x.classList.remove('on'); });
+        ch.classList.add('on');
+        if (cur) { cur.textContent = ch.dataset.s; cur.dataset.s = ch.dataset.s; }
+      });
+    });
+  });
+
+  /* ---------- automation flyout ---------- */
+  var btnAct = $('#btnAct'), flyAct = $('#flyAct');
+  if (btnAct && flyAct) btnAct.addEventListener('click', function () { flyAct.classList.toggle('open'); });
+
+  /* ---------- swap dialog ---------- */
+  var sw = $('#swap');
+  if (sw) {
+    var mid = $('#swMid'), hint = $('#swHint'), done = $('#swDone'), ok = $('#swOk'), perm = $('#swPerm'), back = $('#swBack'), cancel = $('#swCancel');
+    var picks = $$('.pick', sw), first = null, second = null;
+    var isl = $('#swIslIn');
+    function say(t) { if (isl) { isl.className = 'isl static bar on'; isl.innerHTML = t; } }
+    function reset() {
+      first = second = null; done.style.display = 'none'; mid.style.display = 'flex';
+      picks.forEach(function (p) { p.style.background = ''; });
+      hint.textContent = '→ 选择要调换的课程。';
+      ok.style.display = perm.style.display = back.style.display = 'none';
+      say('课程「换课」演示：选择两节课进行调换');
+    }
+    picks.forEach(function (p) {
+      p.addEventListener('click', function () {
+        if (!first) { first = p; p.style.background = 'rgba(98,179,242,.35)'; hint.textContent = '→ 选择要与「' + p.dataset.n + '」交换的课程。'; back.style.display = 'inline-flex'; }
+        else if (p !== first && !second) {
+          second = p; p.style.background = 'rgba(98,179,242,.35)';
+          hint.textContent = '→ 确认换课：' + first.dataset.n + ' ⇄ ' + p.dataset.n;
+          ok.style.display = 'inline-flex'; perm.style.display = 'inline-flex';
+        }
+      });
+    });
+    ok.addEventListener('click', function () {
+      mid.style.display = 'none'; done.style.display = 'flex';
+      done.lastChild.nodeType === 3 && (done.lastChild.textContent = '已交换：' + first.dataset.n + ' 与 ' + second.dataset.n + ' 的位置对调');
+      ok.style.display = perm.style.display = 'none';
+      say('已换课：' + first.dataset.n + ' ⇄ ' + second.dataset.n);
+    });
+    back.addEventListener('click', reset); cancel.addEventListener('click', reset);
+    reset();
+  }
+
+  /* ---------- hero demo ---------- */
+  var desk = $('#heroDesk');
+  if (desk) {
+    var cur = $('#hCur'), tray = $('#hTrayIco'), win = $('.hwin', desk), tmenu = $('.htray', desk), hisl = $('.hisl', desk);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function pos(el, fx, fy) {
+      var d = desk.getBoundingClientRect(), r = el.getBoundingClientRect();
+      return [r.left - d.left + r.width * (fx == null ? .5 : fx), r.top - d.top + r.height * (fy == null ? .5 : fy)];
+    }
+    function move(el, fx, fy) { var p = pos(el, fx, fy); cur.style.transform = 'translate(' + p[0] + 'px,' + p[1] + 'px)'; return sleep(950); }
+    function click() { cur.classList.remove('click'); void cur.offsetWidth; cur.classList.add('click'); return sleep(350); }
+    desk.classList.add('stage0');
+    var hstack = $('.isl-stack', desk);
+    function setState(s) { // 0: nothing, 1: tray menu, 2: window, 3: island
+      tmenu.style.opacity = s === 1 ? 1 : 0;
+      win.style.opacity = s === 2 ? 1 : (s === 3 ? 0 : 0);
+      win.style.transform = s === 2 ? 'none' : 'translateY(10px) scale(.98)';
+      hisl.style.opacity = s === 3 ? 1 : 0;
+    }
+    [win, tmenu, hisl].forEach(function (e) { e.style.transition = 'opacity .45s,transform .45s'; });
+    async function loop() {
+      cur.style.transform = 'translate(' + (desk.clientWidth * .55) + 'px,' + (desk.clientHeight * .55) + 'px)';
+      cur.classList.add('on');
+      for (;;) {
+        setState(0); if (hstack._c) hstack._c.stop();
+        await sleep(800);
+        await move(tray, .5, .5); await click();
+        setState(1); await sleep(600);
+        var mi = $('.mi[data-k="edit"]', tmenu);
+        await move(mi, .3, .5); mi.classList.add('hl'); await click();
+        setState(2); mi.classList.remove('hl'); await sleep(900);
+        var cells = $$('td.c[data-i]', win), chips = $$('.chips span[data-s]', win);
+        for (var i = 0; i < Math.min(cells.length, 5); i++) {
+          await move(cells[i], .5, .5); await click(); cells[i].click();
+          var s = (cells[i].dataset.s || '语数英物化')[0];
+          var ch = chips.filter(function (c) { return c.dataset.s === '语数英物化'[i]; })[0] || chips[i];
+          if (ch) { await move(ch, .5, .5); await click(); ch.click(); }
+        }
+        await sleep(700);
+        setState(3); if (hstack._c) hstack._c.start();
+        await sleep(19000);
+      }
+    }
+    if (!reduce) inView(desk, loop, 0.3); else { setState(3); }
+  }
+
+  /* ---------- progress bar ---------- */
+  var b40 = $('#bar40 i');
+  if (b40) inView(b40, function () { b40.style.width = '40%'; });
+  var mig = $('#mig');
+  if (mig) inView(mig, function () { $$('div', mig).forEach(function (d, i) { setTimeout(function () { d.classList.add('ok'); }, 300 + i * 350); }); });
+
+  /* ---------- nav ---------- */
+  var nav = $('#nav');
+  function sc() { nav && nav.classList.toggle('solid', window.scrollY > 20); }
+  window.addEventListener('scroll', sc, { passive: true }); sc();
+  var menu = $('#menu'), links = $('#links');
+  if (menu) menu.addEventListener('click', function () {
+    var o = links.classList.toggle('open'); menu.setAttribute('aria-expanded', o);
+  });
+
+  /* ---------- release info ---------- */
+  var cache = null;
+  try { cache = JSON.parse(localStorage.getItem('cf_rel') || 'null'); } catch (e) { }
+  function fmt(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB'; }
+  function fillRel(r) {
+    $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; });
+    $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); });
+    $$('[data-releaselink]').forEach(function (e) { e.href = r.html_url; });
+    var box = $('#assets');
+    if (box) {
+      var as = r.assets || [];
+      box.innerHTML = as.length ? as.map(function (a) {
+        return '<a href="' + a.browser_download_url + '" rel="noopener"><span>' + a.name + '</span><em>' + fmt(a.size) + '</em></a>';
+      }).join('') : '<div class="none">该版本暂无文件，请前往 GitHub 查看。</div>';
+    }
+  }
+  if (cache && cache.r && Date.now() - cache.t < 36e5) fillRel(cache.r);
+  else if (window.fetch && ($('[data-ver]') || $('#assets'))) {
+    fetch('https://api.github.com/repos/' + REPO + '/releases/latest').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (r) { fillRel(r); try { localStorage.setItem('cf_rel', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
+      .catch(function () {
+        $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; });
+        var box = $('#assets'); if (box) box.innerHTML = '<div class="none">暂时无法读取版本信息，请前往 <a href="https://github.com/' + REPO + '/releases" rel="noopener">GitHub Releases</a> 下载。</div>';
+      });
+  }
+
+  /* ---------- language ---------- */
   var lb = $('#lang'), lm = $('.langmenu');
   if (lb && lm) {
     lb.addEventListener('click', function (e) { e.stopPropagation(); lm.classList.toggle('open'); });
-    d.addEventListener('click', function () { lm.classList.remove('open'); });
-    $$('button', lm).forEach(function (b) {
-      b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); lm.classList.remove('open'); });
-    });
-    var cur = store('cf-lang') || 'zh'; markLang(cur);
-    if (cur !== 'zh') setLang(cur);
+    document.addEventListener('click', function () { lm.classList.remove('open'); });
+    var CDN = ['https://cdn.jsdelivr.net/npm/i18n-jsautotranslate@3.18.3/translate.js', 'https://cdn.staticfile.net/i18n-jsautotranslate/3.18.3/translate.js', 'https://unpkg.com/i18n-jsautotranslate@3.18.3/translate.js'];
+    function load(i, cb) {
+      if (window.translate) return cb(true);
+      if (i >= CDN.length) return cb(false);
+      var s = document.createElement('script'); s.src = CDN[i]; s.onload = function () { cb(true); }; s.onerror = function () { load(i + 1, cb); };
+      document.head.appendChild(s);
+    }
+    function apply(l) {
+      try { localStorage.setItem('cf_lang', l); } catch (e) { }
+      $$('button', lm).forEach(function (b) { b.setAttribute('aria-checked', b.dataset.lang === l); });
+      if (l === 'zh') { if (window.translate) { translate.changeLanguage('chinese_simplified'); } return; }
+      load(0, function (ok) {
+        if (!ok) return;
+        translate.selectLanguageTag.show = false; translate.language.setLocal('chinese_simplified');
+        translate.service.use('client.edge'); translate.listener.start();
+        translate.changeLanguage(l === 'tw' ? 'chinese_traditional' : 'english');
+      });
+    }
+    $$('button', lm).forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.lang); lm.classList.remove('open'); }); });
+    var saved = null; try { saved = localStorage.getItem('cf_lang'); } catch (e) { }
+    if (saved && saved !== 'zh') apply(saved);
   }
 
-  /* about: toc highlight */
+  /* ---------- toc highlight ---------- */
   var toc = $$('.toc a');
   if (toc.length && 'IntersectionObserver' in window) {
-    var secs = toc.map(function (a) { return $(a.getAttribute('href')); }).filter(Boolean);
     var tio = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         if (e.isIntersecting) toc.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id); });
       });
     }, { rootMargin: '-20% 0px -70% 0px' });
-    secs.forEach(function (s) { tio.observe(s); });
+    $$('.prose section[id]').forEach(function (s) { tio.observe(s); });
   }
 })();
