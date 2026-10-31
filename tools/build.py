@@ -151,19 +151,19 @@ def home():
           '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>临时启用课表</h4><p>可在当日或未来某一天临时启用另一个课表，应对调休与换课。</p></div></div>'
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
     # 自动化
-    auto_vis = panel_wall('<div style="padding:3.5% 3%"><img class="rs" src="/assets/img/shot-auto-c.webp" width="1920" height="680" alt="ClassFabric 界面截图" loading="lazy"></div>', '84%', '60%', '230%', '')
+    auto_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window("auto", 1920, 700), 1920, 'position:relative;width:100%') + '</div>', '84%', '60%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
           '</div>' + auto_vis + '</div>')
     h += '</div></section>\n'
 
     # claim 3
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
-    wid_vis = panel_wall('<div style="padding:3.5% 3%"><img class="rs" src="/assets/img/shot-widgets.webp" width="1242" height="551" alt="ClassFabric 界面截图" loading="lazy"></div>', '8%', '44%', '230%', '')
+    wid_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window('widgets', 1242, 590), 1242, 'position:relative;width:100%') + '</div>', '8%', '44%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
           '<p>进入「编辑模式」，可以直接在主界面上拖动调整组件。</p></div>' + wid_vis + '</div>')
     thm_vis = panel_wall('<div style="padding:5% 4% 3%">' + fit(settings_window('themes', 1500, 640), 1500, 'position:relative;width:100%') + '</div>', '50%', '90%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag o">#主题</span><h3>自由的主题系统</h3><p>内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。</p></div>' + thm_vis + '</div>')
-    plg_vis = panel_wall('<div style="padding:3.5% 3%"><img class="rs" src="/assets/img/shot-plugins.webp" width="1242" height="551" alt="ClassFabric 界面截图" loading="lazy"></div>', '20%', '20%', '230%', '')
+    plg_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window('plugins', 1242, 590), 1242, 'position:relative;width:100%') + '</div>', '20%', '20%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
     h += '</div></section>\n'
 

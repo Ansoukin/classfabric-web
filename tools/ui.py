@@ -45,6 +45,7 @@ P = {
  'import': '<path d="M12 4v10M8 10l4 4 4-4M5 19h14"/>',
  'list': '<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
  'monitor': '<rect x="3.5" y="4.5" width="17" height="11" rx="2"/><path d="M9 20h6M12 15.5V20"/>',
+ 'play': '<circle cx="12" cy="12" r="8"/><path d="M10.5 9l4 3-4 3z"/>',
  'window': '<rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 9.5h17"/>',
  'x': '<path d="M6 6l12 12M18 6L6 18"/>',
  'search': '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
@@ -129,7 +130,7 @@ def pg_auto():
      '<div class="arow on"><span style="flex:1">新自动化</span>' + tg(True) + '</div>'
      '</div>'
      '<div class="rgt" style="position:relative">'
-     '<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px"><div class="inp" style="width:130px;flex:none">新自动化</div>' + cb(True, '启用恢复') + '<span class="btnw" style="margin-left:4px">触发</span><span class="btnw">恢复</span></div>'
+     '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;font-size:14px"><div class="inp" style="width:148px;flex:none;height:32px;font-weight:600">新自动化</div>' + cb(True, '启用恢复') + '<span class="btnw" style="margin-left:2px;background:#303a46;border-color:transparent;font-weight:600">' + ic('play') + '触发</span><span style="opacity:.7">' + ic('play') + '</span><span style="display:flex;gap:6px;align-items:center;font-weight:600;margin-left:8px">' + ic('undo') + '恢复</span><span style="width:1px;height:20px;background:#555;margin:0 4px"></span>' + ic('doc') + '<span style="color:#ff6f7d;margin-left:6px">' + ic('trash') + '</span></div>'
      '<div class="hdr">' + ic('bolt') + '当事件触发时' + ic('chev', 'chev') + '</div>'
      '<div class="bd" style="min-height:76px"><span class="sel" id="selTrig" style="width:112px;margin-right:6px">&nbsp;' + ic('chev') + '</span><div style="margin-top:12px;color:var(--blue);display:flex;gap:6px;align-items:center;font-size:12.5px">' + ic('plus') + '添加触发器</div></div>'
      '<div class="hdr">' + ic('shield') + '并且满足规则集时' + tg(False) + ic('chev', 'chev') + '</div>'
@@ -143,7 +144,7 @@ def pg_auto():
 def flyout_trig():
     items = ['规则集更新时', '收到信号时', '调用 Uri 时', '从托盘菜单运行时', 'cron', '应用启动时', '应用退出时', '上课时', '课间休息时', '放学时', '当前时间状态变化时', '特定时间点前']
     ico = ['shield', 'bell', 'import', 'list', 'sync', 'window', 'exit', 'school', 'clock', 'power', 'clock', 'clock']
-    return '<div class="fly open" id="flyTrig" style="left:18px;top:128px;width:150px">' + ''.join('<div class="mi">%s%s</div>' % (ic(i), t) for i, t in zip(ico, items)) + '</div>'
+    return '<div class="fly open" id="flyTrig" style="left:5px;top:122px;width:182px">' + ''.join('<div class="mi">%s%s</div>' % (ic(i), t) for i, t in zip(ico, items)) + '</div>'
 
 def flyout_act():
     h = '<div class="fly" id="flyAct" style="left:-6px;top:150px;width:130px">'
@@ -166,18 +167,27 @@ def pg_widgets():
             '<div class="ibar"><span class="dot">i</span>新功能：现在可以使用「编辑模式」更加直观地编辑主界面上的组件！<span class="btnw" style="margin-left:auto">进入编辑模式</span></div></div>')
 
 def pg_plugins():
-    rows = [('随机抽选', '1.3K', '2', '桌面抽人悬浮窗。点击抽取名单中的一人，屏幕中央弹出大字；支持拍照抽人，从合影中检测人脸随机抽取。', '#3b82c4', '抽'),
-            ('像素流动', '1.3K', '0', '仿 Claude Code UltraCode 的像素流动动画，替换提醒的遮罩层与正文层背景。', '#4b6a8e', '像'),
-            ('UIAccess 提权', '9.7K', '17', '本插件可以为 ClassIsland 提升 UIAccess 令牌，使其可以置顶到全屏 UWP 应用和系统界面上。', '#6a6a6a', 'U'),
-            ('GSVIsland', '3.4K', '5', '使语音服务适配 GPT-SoVITS 推理特化包（GSVI）的 API。', '#c9a24a', 'G'),
-            ('OmniTTS', '403', '3', '多引擎文字转语音服务。', '#2fa6a0', 'O')]
-    r = ''.join('<div class="row%s"><span class="ic" style="background:%s">%s</span><div style="min-width:0"><b>%s<small>↓ %s ★ %s</small></b><span>%s</span></div></div>' % (' on' if n == 'UIAccess 提权' else '', c, ch, n, d, s, t) for n, d, s, t, c, ch in rows)
-    return ('<div class="pg" style="display:flex;flex-direction:column"><h2>插件</h2>'
-            '<div class="inp" style="margin-bottom:8px;color:#bbb;gap:8px">' + ic('search') + '搜索插件…</div><div class="tabs" style="margin:0 0 6px"><span class="on">市场</span><span>已安装</span></div>'
-            '<div class="mk"><div class="ls">' + r + '</div>'
-            '<div class="dt"><h3><span class="ic" style="width:42px;height:42px;border-radius:9px;background:#6a6a6a;display:grid;place-items:center;font-size:18px">U</span>UIAccess 提权</h3>'
-            '<div class="meta">2.0.0.0 ｜ 项目主页 ｜ HelloWRC, Doubx690i</div><span class="btnw acc">安装</span>'
-            '<div class="shot"></div><p><b>注意事项：</b>您需要以管理员身份运行才能正常使用本插件的功能；本插件进行的操作涉及敏感操作，可能会触发安全软件拦截，建议将工作目录添加到排除名单中，以避免误报。</p></div></div></div>')
+    def icon(kind):
+        if kind == 'win':
+            return '<span class="pi"><i style="left:3px;top:6px;width:28px;height:18px;background:#3d8fd8"></i><i style="left:10px;top:13px;width:28px;height:20px;background:#d9d9d9"></i><i style="left:15px;top:19px;width:6px;height:6px;background:#3d8fd8"></i></span>'
+        if kind == 'ua':
+            return '<span class="pi" style="background:#fff;border-radius:11px"><svg viewBox="0 0 24 24" style="stroke:#222;width:30px;height:30px;margin:9px"><rect x="3" y="5" width="18" height="12" rx="3"/><circle cx="15" cy="15" r="4.5" fill="#222"/><path d="M15 17.3v-4.4M13.2 14.6l1.8-1.8 1.8 1.8" stroke="#fff"/></svg></span>'
+        if kind == 'gsv':
+            return '<span class="pi" style="border-radius:50%;background:radial-gradient(circle at 50% 40%,#f3d9a8 0 38%,#d9b45a 40% 62%,#3a3a5a 64%)"></span>'
+        return '<span class="pi"><svg viewBox="0 0 24 24" style="stroke:#2fd1b8;stroke-width:2.2;width:38px;height:38px;margin:5px"><path d="M3 18a9 9 0 0118 0"/><path d="M8 18a4 4 0 018 0"/></svg></span>'
+    rows = [('win', '随机抽选', '1.3K', '2', '桌面抽人悬浮窗。点击抽取名单中的一人，屏幕中央弹出大字；支持拍照抽人，从合影中检测人脸随机抽取。名单为纯文本，一行一个名字。'),
+            ('win', '像素流动', '1.3K', '0', '仿 Claude Code UltraCode 的像素流动动画，替换提醒的遮罩层与正文层背景。配色跟随应用主题色，倒计时以彩带长度表示剩余时间。'),
+            ('ua', 'UIAccess 提权', '9.7K', '17', '本插件可以为 ClassIsland 提升 UIAccess 令牌，使 ClassIsland 可以置顶到全屏 UWP 应用和系统界面上。'),
+            ('gsv', 'GSVIsland', '3.4K', '5', '使 ClassIsland 的语音服务适配 GPT-SoVITS 推理特化包（GSVI）的 API'),
+            ('om', 'OmniTTS', '403', '3', '多引擎文字转语音服务。')]
+    dl = '<span class="dlb"><svg viewBox="0 0 24 24"><path d="M12 5v10M8 12l4 4 4-4"/></svg></span>'
+    r = ''.join('<div class="row%s">%s<div class="rt"><b>%s<small><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>%s <svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M12 3l2.7 5.8 6.3.8-4.6 4.4 1.2 6.2L12 17.1 6.4 20.2l1.2-6.2L3 9.6l6.3-.8z"/></svg>%s</small></b><span>%s</span></div>%s</div>' % (' on' if n == 'UIAccess 提权' else '', icon(k), n, d, st, t, dl) for k, n, d, st, t in rows)
+    return ('<div class="pg pl-pg"><h2>插件</h2><div class="plw"><div class="pll"><div class="inp srch">' + ic('search') + '搜索插件...</div>'
+            '<div class="ptabs"><span class="on">市场</span><span>已安装</span><span class="rf">' + ic('sync') + '刷新</span><span>···</span></div><div class="lst">' + r + '</div></div>'
+            '<div class="plr"><div class="ph">' + icon('ua').replace('class="pi"', 'class="pi big"') + '<div><h3>UIAccess 提权</h3><div class="pm">2.0.0.0 <u>|</u> <a>项目主页</a> <u>|</u> HelloWRC, Doubx690i <u>|</u> ' + ic('info') + ' 未加载</div><span class="inst">' + ic('dl') + ' 安装</span></div></div>'
+            '<div class="ptabs sm"><span class="on">概览</span><span>依赖项</span></div>'
+            '<div class="md"><div class="mshot"></div><h1>UIAccess 提权</h1><blockquote>提权方法及核心由 Doubx690i(Dubi906w/kriastans) 提供。</blockquote>'
+            '<p>本插件可以为 ClassIsland 提升 UIAccess 令牌，使 ClassIsland 可以置顶到全屏 UWP 应用和系统界面上。</p><p><b>注意事项:</b> - 您需要以管理员身份运行 ClassIsland 才能正常使用本插件的功能。- 本插件进行的操作涉及敏感操作，可能会触发安全软件拦截。建议将 ClassIsland 工作目录添加到安全软件的排除名单中，以避免误报。</p><h1 style="font-size:22px">截图</h1></div></div></div></div>')
 
 def pg_themes():
     def tc(img, name, on):

@@ -643,3 +643,68 @@ h1 .g{white-space:nowrap}
 .final3 p{margin:0 0 40px;font-size:clamp(17px,2vw,22px);color:var(--muted)}
 .final3 .btn{padding:14px 28px;font-size:16px}
 .final3{padding-bottom:clamp(80px,10vw,130px)}
+
+/* 真实度校准：字重与字号对齐 Windows 渲染 */
+.w{font-weight:500}
+.w b{font-weight:700}
+.lib b{font-size:14px;font-weight:700}
+.lib span{font-size:12.5px;font-weight:500}
+.lib div{padding:10px 12px;gap:10px}
+.lib svg{width:28px;height:28px}
+.sc .tx b{font-size:14.5px}
+.sc .tx span{font-size:12.5px}
+.nv .it{font-weight:600}
+/* 插件页（对照 2.1.1.3 实机） */
+.pl-pg{display:flex;flex-direction:column}
+.plw{display:flex;gap:12px;flex:1;min-height:0}
+.pll{width:466px;flex:none;display:flex;flex-direction:column;min-width:0}
+.srch{height:36px;background:#323232;border:1px solid #3f3f3f;border-bottom-color:#8a8a8a;gap:8px;font-size:14px;color:#ddd;margin-bottom:8px}
+.ptabs{display:flex;gap:18px;font-size:14px;color:#c8c8c8;align-items:center;height:30px;padding:0 8px}
+.ptabs .on{color:#fff;border-bottom:2px solid var(--blue);padding-bottom:3px}
+.ptabs .rf{margin-left:auto;display:flex;gap:6px;align-items:center}
+.ptabs.sm{height:34px;margin-top:6px}
+.lst{flex:1;overflow:hidden}
+.lst .row{display:flex;gap:12px;align-items:center;padding:8px 10px;border-radius:5px;height:84px;position:relative}
+.lst .row.on{background:#323232}
+.lst .row.on::before{content:"";position:absolute;left:0;top:26px;bottom:26px;width:3px;border-radius:2px;background:var(--blue)}
+.pi{width:48px;height:48px;flex:none;position:relative;display:block}
+.pi i{position:absolute;border-radius:2px;display:block}
+.pi.big{width:60px;height:60px;border-radius:12px}.pi.big svg{width:38px;height:38px;margin:11px}
+.rt{flex:1;min-width:0}
+.rt b{display:flex;justify-content:space-between;font-size:16px;font-weight:600}
+.rt b small{font-size:13px;font-weight:500;display:flex;gap:4px;align-items:center;color:#fff}
+.rt b small svg{width:13px;height:13px}
+.rt span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.35;color:#e3e3e3;margin-top:1px}
+.dlb{width:26px;height:26px;border-radius:50%;border:1.5px solid #62b3f2;display:grid;place-items:center;color:#62b3f2;flex:none}.dlb svg{width:14px;height:14px}
+.plr{flex:1;min-width:0;border-left:1px solid #343434;padding-left:12px;overflow:hidden}
+.ph{display:flex;gap:14px;align-items:flex-start}
+.ph h3{margin:0;font-size:24px;font-weight:600}
+.pm{font-size:14px;margin:6px 0 8px;display:flex;gap:7px;align-items:center;flex-wrap:wrap}.pm u{text-decoration:none;opacity:.7}.pm a{color:#62b3f2;text-decoration:underline}.pm svg{width:14px;height:14px}
+.inst{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 20px;background:#62b3f2;color:#06233b;border-radius:5px;font-size:14px;font-weight:600}
+.md{font-size:16px;line-height:1.35}
+.md h1{font-size:28px;margin:10px 0 8px;font-weight:600}
+.md blockquote{margin:0 0 14px;padding-left:10px;border-left:3px solid #5a5a5a;font-size:17px}
+.md p{margin:0 0 12px;font-size:16px}
+.mshot{height:12px;background:linear-gradient(90deg,#0e2a4a,#163a64 30%,#0d2038);border:1px solid #333}
+/* 自动化页（对照 2.1.1.3 实机） */
+.nv .it{flex:none}
+.auto{gap:9px}
+.auto .lft{width:50.2%;flex:none}
+.auto .sc{min-height:66px}
+.auto .sc .tx b{font-size:14.5px}
+.auto .arow{height:42px;font-size:14px;font-weight:600;padding:0 14px}
+.auto .arow.on{border-left:0;position:relative}
+.auto .arow.on::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:2px;background:var(--blue)}
+.hdr{height:38px;font-size:14px;background:#26384b}
+.hdr svg{width:15px;height:15px}
+.bd{background:#2d2d2d;font-size:14px;font-weight:500;margin-bottom:12px}
+.fly{background:#2b2b2b;border-color:#3c3c3c;padding:6px}
+.fly .mi{height:32px;font-size:14px;font-weight:600;gap:10px}
+.fly .mi svg{width:15px;height:15px;opacity:1}
+.nvtop{height:56px;padding-top:30px;align-items:center}
+.hdr .chev{transform:rotate(180deg)}
+.w-title-island{height:30px;font-size:15px;font-weight:600;padding:0 18px;background:#121212;border-radius:6px;top:1px}
+.w-title-island span{font-weight:600}
+.wt .ver{font-size:14px;margin-right:12px;font-weight:500}
+.wt .ver::after{content:"  ···";margin-left:18px;letter-spacing:1px}
+.blk.full>.panel{width:min(1520px,100vw - 32px);position:relative;left:50%;transform:translateX(-50%)}
