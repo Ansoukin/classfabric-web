@@ -7,14 +7,14 @@ from ui import ic, tg, cb, pg_auto, pg_plugins, pg_themes, titlebar, TITLE_ISL
 def sc(icon, title, desc='', trail='', cls=''):
     return '<div class="sc %s"><span style="width:22px;display:grid;place-items:center">%s</span><div class="tx"><b>%s</b>%s</div>%s</div>' % (cls, ic(icon) if icon else '', title, ('<span>%s</span>' % desc) if desc else '', trail)
 
-def combo(text, w=120, icon=''):
-    return '<span class="sel" style="min-width:%dpx">%s%s%s</span>' % (w, ic(icon) if icon else '', text, ic('chev'))
+def combo(text, w=120, icon='', opts=''):
+    return '<span class="sel" style="min-width:%dpx"%s>%s<span class="v">%s</span>%s</span>' % (w, (' data-o="%s"' % opts) if opts else '', ic(icon) if icon else '', text, ic('chev'))
 
 def slider(v):
     return '<span class="sld" data-sld><i style="width:%d%%"></i><b style="left:%d%%"></b></span>' % (v, v)
 
 def num(v, w=150):
-    return '<span class="num" style="min-width:%dpx"><span data-edit contenteditable="true" spellcheck="false">%s</span><em>%s%s</em></span>' % (w, v, ic('chev').replace('<path d="M6 9l6 6 6-6"/>', '<path d="M6 15l6-6 6 6"/>'), ic('chev'))
+    return '<span class="num" style="min-width:%dpx"><span data-edit contenteditable="true" spellcheck="false">%s</span><em><i data-s="1">%s</i><i data-s="-1">%s</i></em></span>' % (w, v, ic('chev').replace('<path d="M6 9l6 6 6-6"/>', '<path d="M6 15l6-6 6 6"/>'), ic('chev'))
 
 def field(label, value, disabled=False):
     return '<div class="fld2"><label>%s</label><div class="inp" contenteditable="true" spellcheck="false">%s</div></div>' % (label, value)
@@ -61,7 +61,7 @@ def page_widgets():
            ('clock', '时钟', '显示现在的时间，支持精确到秒。'), ('sun', '天气简报', '显示当前的天气概况和气象预警。'), ('timer', '倒计时', '显示距离某一天的倒计时。'), ('carousel', '轮播容器', '轮播多个组件。'),
            ('scroll', '滚动容器', '滚动显示组件内的内容。'), ('group', '分组容器', '将多个组件组合到一个组件中显示。'), ('stack', '堆叠容器', '将多个容器堆叠显示。')]
     g = ''.join('<div class="li" data-w="%s">%s<span class="tx"><b>%s</b><span>%s</span></span></div>' % (t, ic(i), t, d) for i, t, d in lib)
-    return ('<div class="pgc"><div class="wtop"><div><h2>组件</h2><p class="sub2">以下组件将显示在主界面上，从组件库拖动组件以添加组件。</p></div>'
+    return ('<div class="pg pgc"><div class="wtop"><div><h2>组件</h2><p class="sub2">以下组件将显示在主界面上，从组件库拖动组件以添加组件。</p></div>'
             '<div class="cfg"><label>配置方案</label><div class="cfgr">' + combo('Default', 150) + '<span class="ib">' + ic('sync') + '</span><span class="ib">' + ic('plus') + '</span><span class="ib">' + ic('folder') + '</span></div></div></div>'
             '<div class="rowbar"><span class="ins"></span><div class="chips2" id="wchips"><span class="wc on">' + ic('cal') + '日期</span><span class="wc">' + ic('doc') + '课程表</span></div>'
             '<div class="rtools"><span class="ib">' + ic('layout') + '</span><span class="ib acc">' + ic('bell') + '</span><span class="ib">' + ic('plus') + '</span><span class="ib red">' + ic('trash') + '</span></div></div>'
@@ -73,19 +73,19 @@ def page_widgets():
 # ---------------------------------------------------------------- 外观
 def page_appearance():
     def sec(icon, t): return '<div class="sech">%s%s</div>' % (ic(icon), t)
-    return ('<div class="pgc"><h2>外观</h2>' + sec('gear', '基本') +
+    return ('<div class="pg pgc"><h2>外观</h2>' + sec('gear', '基本') +
             sc('search', '界面缩放', '主界面的缩放大小。', slider(18)) + sc('brush', '背景颜色', '主界面背景颜色，禁用时将根据应用主题自动选择颜色。', tg(False)) +
             sc('layout', '背景不透明度', '主界面背景的不透明度。', slider(50)) + sc('window', '圆角半径', '主界面圆角半径，调至最大数值时左右边缘为半圆。', slider(42)) +
             sc('layout', '行间隔', '主界面行间间隔。', slider(2) + num('5', 126)) + sc('split', '分体主界面', '启用后组件会分开。', tg(False)) +
-            sec('brush', '主题') + sc('sun', '应用主题', '控制应用的明暗主题。', combo('黑暗', 92, 'sun')) + sc('brush', '主题色来源', '控制应用选取主题色的途径。', combo('系统', 92, 'monitor')) +
-            sec('text', '字体') + sc('text', '自定义字体', '自定义主界面显示课表的字体。', combo('HarmonyOS Sans SC（默认）', 240)) + sc('text', '自定义字重', '自定义主界面显示的字体的字重，需要对应字体支持。', combo('Medium', 98)) +
+            sec('brush', '主题') + sc('sun', '应用主题', '控制应用的明暗主题。', combo('黑暗', 92, 'sun', '黑暗|明亮|跟随系统')) + sc('brush', '主题色来源', '控制应用选取主题色的途径。', combo('系统', 92, 'monitor', '系统|壁纸|自定义')) +
+            sec('text', '字体') + sc('text', '自定义字体', '自定义主界面显示课表的字体。', combo('HarmonyOS Sans SC（默认）', 240)) + sc('text', '自定义字重', '自定义主界面显示的字体的字重，需要对应字体支持。', combo('Medium', 98, '', 'Light|Regular|Medium|Bold')) +
             sc('text', '字体大小', '调整主界面上各类字体的大小。', '<span class="car2">' + ic('chev') + '</span>') + sc('text', '字体颜色', '调整字体颜色，将覆盖主题默认值。', tg(False)) + '</div>')
 
 # ---------------------------------------------------------------- 窗口
 def page_window():
     pos = ''.join('<span class="dock%s" data-dock="%d" style="%s"></span>' % (' on' if i == 1 else '', i, st) for i, st in enumerate(
         ['left:8%;top:10%', 'left:46%;top:10%', 'right:8%;top:10%', 'left:8%;bottom:20%', 'left:46%;bottom:20%', 'right:8%;bottom:20%']))
-    return ('<div class="pgc"><h2>窗口</h2><div class="sech">' + ic('monitor') + '窗口停靠位置</div>'
+    return ('<div class="pg pgc"><h2>窗口</h2><div class="sech">' + ic('monitor') + '窗口停靠位置</div>'
             '<div class="dockrow"><div class="scr2">' + pos + '<span class="tb"></span></div><div class="dockf"><div class="two2"><div><label>向右偏移</label>' + num('0', 100) + '</div><div><label>向下偏移</label>' + num('0', 100) + '</div></div>'
             '<label>显示器</label><div class="sel wide">' + ic('monitor') + '( x )' + ic('chev') + '</div><div class="rf">' + ic('sync') + '刷新显示器列表</div>'
             '<p class="ds">应用会以左图的位置显示在指定的显示器上。如果指定的显示器不存在，那么应用会显示在主显示器上。</p></div></div>'
@@ -104,17 +104,23 @@ NAVX = [('gear', '通用', 'g', None), ('gear', '基本', 's', None), ('clock', 
         ('bell', '提醒', 'i', 'remind'), ('cloud', '天气', 'i', None), ('bolt', '自动化', 'i', 'auto'), ('sync', '更新', 'i', None), ('hr',),
         ('plug', '插件', 'i', 'plugins'), ('brush', '主题', 'i', 'themes'), ('hr',), ('info', '关于 ClassFabric', 'i', None)]
 
-def settings_app(active='remind', island='周四 10/29　今天没有课程。', ver='2.1.1.4'):
-    nav = '<nav class="nv"><div class="nvtop"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' + ic('search') + '</nav>'.replace('</nav>', '') + '</div>'
+def settings_app(island='周六 10/31　今天没有课程。', ver='2.1.1.4'):
+    nav = '<nav class="nv"><div class="nvtop"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' + ic('search') + '</div>'
     for it in NAVX:
-        if it[0] == 'hr': nav += '<hr>'; continue
+        if it[0] == 'hr':
+            nav += '<hr>'; continue
         ico, t, kind, pg = it
-        cls = 'it' + (' sb' if kind == 's' else '') + (' on' if pg == active else '') + ('' if pg else ' off')
+        cls = 'it' + (' sb' if kind == 's' else '') + ('' if pg else ' off')
         chev = '<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>' if kind == 'g' else ''
-        nav += '<div class="%s"%s>%s%s%s</div>' % (cls, (' data-go="%s"' % pg) if pg else '', ic(ico), t, chev)
+        nav += '<div class="%s"%s><span class="ni">%s</span><span class="nt">%s</span>%s</div>' % (cls, (' data-go="%s"' % pg) if pg else '', ic(ico), t, chev)
     nav += '</nav>'
-    pages = {'remind': page_remind(), 'widgets': page_widgets(), 'appearance': page_appearance(), 'window': page_window(), 'auto': pg_auto(), 'plugins': pg_plugins(), 'themes': pg_themes()}
-    body = ''.join('<section class="pgx%s" data-p="%s">%s</section>' % (' on' if k == active else '', k, v if k in ('widgets', 'appearance', 'window') or v.startswith('<div class="pg') else '<div class="pg">' + v + '</div>') for k, v in pages.items())
-    body = body.replace('<section class="pgx on" data-p="remind"><div class="pg">', '<section class="pgx on" data-p="remind"><div class="pg">')
-    return ('<div class="app"><div class="w sapp" data-app="settings">' + titlebar('应用设置', ver, '<span>%s</span>' % island.split('　')[0] + '<span style="font-weight:400">%s</span>' % island.split('　')[1]) +
-            '<div class="wb">' + nav + '<div class="pgs">' + body + '</div></div></div></div>')
+    pages = {'remind': page_remind(), 'widgets': page_widgets(), 'appearance': page_appearance(), 'window': page_window(),
+             'auto': pg_auto(), 'plugins': pg_plugins(), 'themes': pg_themes()}
+    body = ''
+    for k, v in pages.items():
+        if not v.startswith('<div class="pg'):
+            v = '<div class="pg">' + v + '</div>'
+        body += '<section class="pgx" data-p="%s">%s</section>' % (k, v)
+    a, b = island.split('\u3000')
+    return ('<div class="w sapp">' + titlebar('应用设置', ver, '<span>%s</span><span style="font-weight:400">%s</span>' % (a, b)) +
+            '<div class="wb">' + nav + '<div class="pgs">' + body + '</div></div></div>')

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, sys, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ui2
 from ui import *
 
 OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -153,7 +154,7 @@ def home():
             '<button class="sub-i" data-g="2" style="text-align:left;cursor:pointer;color:inherit">' + ic('clock') + '<div><h4>课间休息</h4><p>在下课时发出提醒，并显示本节课间的时长与下一节课。</p></div></button></div>')
     rem_vis = ('<div class="panel" style="--wx:60%;--wy:34%;--ws:200%"><div class="wp"></div><div style="position:relative;padding:20px 0 0">'
                + fit('<div style="display:flex;justify-content:center;width:1000px"><div class="isl-stack" data-demo="rem" id="remIsl" style="font-size:20px">' + REM_STATES + '</div></div>', 1000, 'position:relative;width:100%', 560)
-               + '<div style="padding:18px 0 0 8%;position:relative;margin-bottom:-24px">' + fit(settings_window('remind', 1500, 640), 1500, 'position:relative;width:100%') + '</div></div></div>')
+               + '<div style="padding:18px 4% 0;position:relative;margin-bottom:-24px"><div class="app" data-app="settings" data-start="remind" data-h="600"></div></div></div></div>')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag o">#提醒</span><h3>醒目的提醒系统</h3><p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>' + tabs + '</div>' + rem_vis + '</div>')
     # 课表
     subs = ('<div class="subs"><div class="sub-i">' + ic('cal') + '<div><h4>灵活的课表启用规则</h4><p>可为课表设置每周、某一天或循环启用的规则，支持多周轮换，到日期自动切换。</p></div></div>'
@@ -174,10 +175,10 @@ def home():
 
     # claim 3
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
-    wid_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window('widgets', 1242, 590), 1242, 'position:relative;width:100%') + '</div>', '8%', '44%', '230%', '')
+    wid_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
           '<p>进入「编辑模式」，可以直接在主界面上拖动调整组件。</p></div>' + wid_vis + '</div>')
-    thm_vis = panel_wall('<div style="padding:5% 4% 3%">' + fit(settings_window('themes', 1500, 640), 1500, 'position:relative;width:100%') + '</div>', '50%', '90%', '230%', '')
+    thm_vis = panel_wall('<div style="padding:5% 4% 3%"><div class="app" data-app="settings" data-start="appearance" data-h="620"></div></div>', '50%', '90%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag o">#主题</span><h3>自由的主题系统</h3><p>内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。</p></div>' + thm_vis + '</div>')
     plg_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window('plugins', 1242, 590), 1242, 'position:relative;width:100%') + '</div>', '20%', '20%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
@@ -222,6 +223,7 @@ def home():
     # final
     h += ('<section class="final3"><div class="wrap"><h2 class="rv">立即体验 ClassFabric</h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
     h += '</main>\n'
+    h += '<template id="tpl-settings">' + ui2.settings_app() + '</template>'
     return h + FOOT
 
 # ------------------------------------------------------------------ download

@@ -90,4 +90,59 @@
     render();
   }
   $$('[data-app="swap"]').forEach(initSwap);
+
+  /* ============ 应用设置（可交互） ============ */
+  var CHEV_UP = null;
+  function initSettings(host){
+    var tpl = document.getElementById('tpl-settings'); if(!tpl) return;
+    host.appendChild(tpl.content.cloneNode(true));
+    var root = host.querySelector('.sapp');
+    if (host.dataset.h) root.style.setProperty('--h', host.dataset.h + 'px');
+    function go(k){
+      root.querySelectorAll('.pgx').forEach(function(p){p.classList.toggle('on', p.dataset.p===k)});
+      root.querySelectorAll('.nv .it[data-go]').forEach(function(n){n.classList.toggle('on', n.dataset.go===k)});
+    }
+    go(host.dataset.start || 'remind');
+    function sel(prov){
+      root.querySelectorAll('.prov').forEach(function(p){p.classList.toggle('on', p===prov)});
+      var i = +prov.dataset.prov, names=['上下课提醒','放学提醒','天气预警','行动提醒'];
+      var pg = prov.closest('.pgx'); pg.querySelectorAll('.chan').forEach(function(c){c.hidden = i!==0});
+      var d = pg.querySelector('.rdetail'); d.hidden=false; pg.querySelector('.rempty').hidden=true;
+      d.querySelector('h3').textContent = names[i];
+      d.querySelectorAll('.scr[data-pane="b"] .exp').forEach(function(e){e.hidden = i!==0});
+      var inf = d.querySelector('.info'); if(inf) inf.hidden = false;
+    }
+    root.addEventListener('click', function(e){
+      var t = e.target;
+      var n = t.closest('.nv .it[data-go]'); if(n){ go(n.dataset.go); return; }
+      var pv = t.closest('.prov'); if(pv){ sel(pv); return; }
+      var ch = t.closest('.ch-h'); if(ch){ ch.closest('.chan').classList.toggle('shut'); return; }
+      var ci = t.closest('.ci'); if(ci){ ci.parentNode.querySelectorAll('.ci').forEach(function(x){x.classList.toggle('on',x===ci)}); return; }
+      var tb = t.closest('[data-tabs] > span'); if(tb){
+        var bar = tb.parentNode, scope = bar.parentNode; bar.querySelectorAll('span').forEach(function(x){x.classList.toggle('on',x===tb)});
+        scope.querySelectorAll(':scope > [data-pane]').forEach(function(p){p.hidden = p.dataset.pane !== tb.dataset.t}); return; }
+      var tgl = t.closest('.tg'); if(tgl){ e.stopPropagation(); tgl.classList.toggle('on'); var l=tgl.querySelector('span'); if(l && /^[开关]$/.test(l.textContent)) l.textContent = tgl.classList.contains('on')?'开':'关';
+        var sc = tgl.closest('.sc'); if(sc && /特殊高级设置/.test(sc.textContent)){ var dv=sc.nextElementSibling; if(dv) dv.classList.toggle('live', tgl.classList.contains('on')); } return; }
+      var cbx = t.closest('.cb'); if(cbx){ cbx.classList.toggle('on'); return; }
+      var eh = t.closest('.eh'); if(eh){ eh.parentNode.classList.toggle('open'); return; }
+      var sg = t.closest('.num em i'); if(sg){ var nn = sg.closest('.num').querySelector('[data-edit]'); var v=parseInt(nn.textContent,10)||0; nn.textContent = Math.max(0, v + (+sg.dataset.s)*(v>=100?10:1)); return; }
+      var so = t.closest('.sel[data-o]'); if(so){ var o = so.dataset.o.split('|'), vv = so.querySelector('.v'), k = o.indexOf(vv.textContent); vv.textContent = o[(k+1)%o.length]; return; }
+      var dk = t.closest('.dock'); if(dk){ dk.parentNode.querySelectorAll('.dock').forEach(function(x){x.classList.toggle('on',x===dk)}); return; }
+      var li = t.closest('.li'); if(li){
+        var box = root.querySelector('#wchips') || li.closest('.pgx').querySelector('.chips2'); var sp = document.createElement('span'); sp.className='wc';
+        sp.innerHTML = li.querySelector('svg').outerHTML + li.querySelector('.tx b').textContent; box.appendChild(sp); selChip(sp); return; }
+      var wc = t.closest('.wc'); if(wc){ selChip(wc); return; }
+      var rd = t.closest('.ib.red'); if(rd){ var cur = rd.closest('.pgx').querySelector('.wc.on'); if(cur) cur.remove(); return; }
+      var x = t.closest('.ibar .x'); if(x){ x.parentNode.remove(); return; }
+    });
+    function selChip(c){ c.parentNode.querySelectorAll('.wc').forEach(function(x){x.classList.toggle('on',x===c)}); }
+    // 滑块
+    root.querySelectorAll('[data-sld]').forEach(function(s){
+      function set(ev){ var r=s.getBoundingClientRect(), p=Math.max(0,Math.min(100,(ev.clientX-r.left)/r.width*100)); s.firstElementChild.style.width=p+'%'; s.lastElementChild.style.left=p+'%';
+        var nb = s.parentNode.querySelector('.num [data-edit]'); if(nb) nb.textContent = Math.round(p/100*20); }
+      s.addEventListener('pointerdown', function(ev){ s.setPointerCapture(ev.pointerId); set(ev); s.onpointermove=set; });
+      s.addEventListener('pointerup', function(){ s.onpointermove=null; });
+    });
+  }
+  $$('[data-app="settings"]').forEach(initSettings);
 })();

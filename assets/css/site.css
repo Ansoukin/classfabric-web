@@ -826,3 +826,146 @@ h1 .g{white-space:nowrap}
 .sw2 .cbx i svg{width:13px;height:13px;stroke-width:2.4}
 .sw2 .mid.done{gap:10px;font-size:18px;font-weight:700;color:#bfe6ff}
 @media(max-width:560px){.sw2 h2{font-size:22px}.sw2 .ls{min-width:32px;padding:0 8px;font-size:16px}.sw2 .mid.two{flex-wrap:wrap}}
+
+/* ===== V12 交互式应用设置（容器查询响应式） ===== */
+.app{container-type:inline-size;width:100%;margin-inline:auto}
+.w.sapp{width:100%;--dh:640px}
+.sapp .wb{height:var(--h,660px)}
+.sapp .nv{width:284px;transition:width .2s}
+.sapp .nv .it{cursor:default;gap:14px}
+.sapp .nv .it[data-go]{cursor:pointer}
+.sapp .nv .it[data-go]:hover{background:rgba(255,255,255,.06)}
+.sapp .nv .it.on{background:rgba(255,255,255,.09)}
+.sapp .nv .it .ni{display:grid;place-items:center;width:16px}
+.sapp .nv .it.off{opacity:.55}
+.sapp .pgs{flex:1;min-width:0;display:flex;background:#272727;border-top-left-radius:8px;overflow:hidden}
+.sapp .pgx{display:none;flex:1;min-width:0}
+.sapp .pgx.on{display:flex}
+.sapp .pg{overflow:auto;scrollbar-width:thin;scrollbar-color:#555 transparent;border-radius:0}
+.sapp .pgs .pg{background:transparent}
+.sapp .pg.pgc{padding:14px max(14px,calc((100% - 960px)/2))}
+.sapp h2{font-size:28px}
+.sapp .tg{cursor:pointer}.sapp .cb{cursor:pointer}.sapp .sel{cursor:pointer}
+.sapp .sel .v{flex:1}
+.sapp .sel:hover,.sapp .num:hover{background:#323232}
+.sapp .sel:focus-within,.sapp .num:focus-within{border-bottom-color:var(--blue)}
+.sapp .num span[data-edit]{outline:0;min-width:2ch;flex:1;user-select:text;-webkit-user-select:text}
+.sapp .num em i{display:grid;place-items:center;width:22px;height:22px;border-radius:4px;cursor:pointer;font-style:normal}
+.sapp .num em i:hover{background:rgba(255,255,255,.1)}
+.sapp .inp{outline:0;user-select:text;-webkit-user-select:text;cursor:text;white-space:nowrap}
+.sapp .inp:focus{border-bottom:2px solid var(--blue)}
+.sapp .fld2{margin:8px 0}.sapp .fld2 label{display:block;font-size:12.5px;margin-bottom:6px;font-weight:500}
+.sapp .sc svg{width:16px;height:16px}
+
+/* 两栏 · 提醒 */
+.sapp .two{display:flex;flex:1;min-width:0;height:100%;padding:14px 0 0 12px}
+.sapp .two h2{margin:0 0 12px}
+.sapp .rcol{width:46%;flex:none;min-width:0;overflow:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:#555 transparent}
+.sapp .rcol.rr{flex:1;width:auto;border-left:1px solid #383838;padding:0 14px}
+.sapp .rcol.rr h3{font-size:20px;font-weight:600;margin:2px 0 6px}
+.sapp .scr{overflow:auto;max-height:calc(var(--h,660px) - 140px);scrollbar-width:thin}
+.sapp .tabs2x{display:flex;gap:22px;font-size:14px;color:#bdbdbd;margin:10px 0 12px;font-weight:500}
+.sapp .tabs2x span{padding:2px 0 5px;position:relative;cursor:pointer;display:flex;align-items:center;gap:6px}
+.sapp .tabs2x span:hover{color:#fff}
+.sapp .tabs2x span.on{color:#fff}
+.sapp .tabs2x span.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--blue)}
+.sapp .tabs2x .pill svg{width:13px;height:13px;color:#e8c56a}
+.sapp .tabs2x .ring{width:12px;height:12px;border-radius:50%;border:2px solid #e8c56a}
+.sapp .prov{display:flex;align-items:center;gap:14px;min-height:52px;padding:6px 14px;border-radius:5px;cursor:pointer;position:relative}
+.sapp .prov:hover{background:rgba(255,255,255,.05)}
+.sapp .prov.on{background:rgba(255,255,255,.09)}
+.sapp .prov.on::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:2px;background:var(--blue)}
+.sapp .prov .tx b{display:block;font-weight:600;font-size:14px}.sapp .prov .tx span{display:block;font-size:12.5px;color:#c6c6c6;margin-top:1px}
+.sapp .prov svg{width:16px;height:16px}
+.sapp .chan{margin:2px 0 4px 0}
+.sapp .ch-h{display:flex;align-items:center;justify-content:space-between;height:34px;padding:0 14px;background:#323232;border:1px solid #3a3a3a;border-radius:5px;font-size:13px;cursor:pointer}
+.sapp .car svg{width:12px;height:12px;transition:transform .2s}
+.sapp .chan.shut .ch-h .car svg,.sapp .exp:not(.open) .car svg{transform:rotate(-90deg)}
+.sapp .chan.shut .ch-b{display:none}
+.sapp .ci{display:flex;align-items:center;gap:10px;min-height:46px;padding:4px 14px 4px 28px;border-radius:5px;cursor:pointer;position:relative}
+.sapp .ci:hover{background:rgba(255,255,255,.05)}
+.sapp .ci.on{background:rgba(255,255,255,.09)}
+.sapp .ci.on::before{content:"";position:absolute;left:12px;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--blue)}
+.sapp .ci svg{display:none}
+.sapp .ci .tx b{display:block;font-weight:600;font-size:13.5px}.sapp .ci .tx span{display:block;font-size:12px;color:#c6c6c6}
+.sapp .info{display:flex;align-items:center;gap:10px;background:#2f2f2f;border:1px solid #3a3a3a;border-radius:5px;padding:8px 12px;font-size:12.5px;margin-bottom:8px}
+.sapp .info svg{color:var(--blue)}.sapp .info .btnw{margin-left:auto;height:28px}
+.sapp .exp{background:#323232;border:1px solid #3a3a3a;border-radius:5px;margin-bottom:4px}
+.sapp .eh{display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 14px;cursor:pointer}
+.sapp .eh .tx{flex:1;min-width:0}.sapp .eh .tx b{display:block;font-weight:600;font-size:14px}.sapp .eh .tx span{display:block;font-size:12.5px;color:#c6c6c6;margin-top:1px}
+.sapp .eb{display:none;border-top:1px solid #3a3a3a;padding:8px 14px 12px;background:#2c2c2c}
+.sapp .exp.open .eb{display:block}
+.sapp .eb .sc{background:transparent;border:0;padding-left:0;padding-right:0}
+.sapp .row1{padding:6px 0}
+.sapp .row2{display:flex;align-items:center;gap:14px;min-height:56px}
+.sapp .row2 .tx{flex:1;min-width:0}.sapp .row2 .tx b{display:block;font-weight:600;font-size:13.5px}.sapp .row2 .tx span{display:block;font-size:12px;color:#c6c6c6}
+.sapp .row2 .u{font-style:normal;font-size:12.5px;width:1.5em}
+.sapp .dis{opacity:.45;pointer-events:none;margin-top:4px}
+.sapp .dis.live{opacity:1;pointer-events:auto}
+.sapp .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;height:100%;min-height:220px;color:#c6c6c6}
+.sapp .empty svg{width:56px;height:56px;stroke-width:1.2;color:#8a8a8a}
+.sapp .empty b{font-size:14px;font-weight:500;color:#cfcfcf}
+.sapp .rempty{height:100%}
+
+/* 组件 */
+.sapp .wtop{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.sapp .wtop h2{margin:0 0 4px}.sapp .sub2{margin:0 0 12px;font-size:13px;color:#c6c6c6}
+.sapp .cfg label{display:block;font-size:12.5px;margin-bottom:4px}
+.sapp .cfgr{display:flex;gap:6px;align-items:center}
+.sapp .ib{width:32px;height:32px;display:grid;place-items:center;border-radius:5px;background:#343434;border:1px solid #444;flex:none;cursor:pointer}
+.sapp .ib:hover{background:#3d3d3d}.sapp .ib.acc{color:var(--blue)}.sapp .ib.red{color:#ff99a4}
+.sapp .rowbar{display:flex;align-items:center;gap:10px;min-height:76px;padding:10px 12px;margin:6px 0 4px;background:#1f1f1f;border:1px solid #3a3a3a;border-radius:6px;position:relative;flex-wrap:wrap}
+.sapp .chips2{display:flex;gap:8px;flex:1;flex-wrap:wrap;align-items:center;min-height:40px}
+.sapp .ins{position:absolute;left:4px;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--blue);opacity:.0}
+.sapp .wc{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:5px;background:#3a3a3a;border:1px solid #4a4a4a;font-size:13.5px;cursor:pointer;font-weight:600}
+.sapp .wc:hover{background:#444}.sapp .wc.on{outline:2px solid var(--blue);outline-offset:1px}
+.sapp .rtools{display:flex;gap:6px;margin-left:auto}
+.sapp .grp{font-size:13px;color:#c6c6c6;margin:8px 0 6px;font-weight:600}
+.sapp .lib2{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px}
+.sapp .li{display:flex;align-items:center;gap:14px;padding:10px 14px;min-height:60px;background:#323232;border:1px solid #3a3a3a;border-radius:5px;cursor:pointer}
+.sapp .li:hover{background:#3a3a3a}
+.sapp .li .tx b{display:block;font-size:13.5px;font-weight:600}.sapp .li .tx span{display:block;font-size:12px;color:#c6c6c6;margin-top:1px}
+.sapp .li svg{width:18px;height:18px}
+.sapp .pgc .ibar{position:sticky;bottom:0;background:#303030}
+.sapp .ibar .x{margin-left:auto;width:24px;height:24px;display:grid;place-items:center;cursor:pointer}
+.sapp .ibar .x svg{width:12px;height:12px}
+
+/* 外观 / 窗口 */
+.sapp .sech{display:flex;align-items:center;gap:10px;margin:14px 0 8px;font-size:14px;font-weight:600}
+.sapp .sech:first-of-type{margin-top:6px}
+.sapp .sld{position:relative;width:min(240px,34cqw);height:20px;flex:none;cursor:pointer;touch-action:none}
+.sapp .sld::before{content:"";position:absolute;left:0;right:0;top:8px;height:4px;border-radius:2px;background:#8a8a8a}
+.sapp .sld i{position:absolute;left:0;top:8px;height:4px;border-radius:2px;background:var(--blue)}
+.sapp .sld b{position:absolute;top:0;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:#323232;border:1px solid #666;box-shadow:inset 0 0 0 5px var(--blue)}
+.sapp .car2 svg{width:12px;height:12px;transform:rotate(-90deg)}
+.sapp .dockrow{display:flex;gap:22px;flex-wrap:wrap;margin:6px 0 10px}
+.sapp .scr2{position:relative;width:260px;height:150px;border:1px solid #555;border-radius:6px;background:#1c1c1c;flex:none;overflow:hidden}
+.sapp .scr2 .tb{position:absolute;left:0;right:0;bottom:0;height:12px;background:#2d2d2d;border-top:1px solid #444}
+.sapp .dock{position:absolute;width:20px;height:20px;border-radius:50%;border:2px solid #9a9a9a;cursor:pointer;background:#272727}
+.sapp .dock:hover{border-color:#fff}
+.sapp .dock.on{border-color:var(--blue);background:var(--blue);box-shadow:inset 0 0 0 4px #272727}
+.sapp .dockf{flex:1;min-width:220px;max-width:420px}
+.sapp .dockf label{display:block;font-size:12.5px;margin:8px 0 4px}
+.sapp .two2{display:flex;gap:10px}.sapp .two2>div{flex:1}
+.sapp .sel.wide{display:flex;width:100%}
+.sapp .rf{display:flex;align-items:center;gap:8px;color:var(--blue);font-size:12.5px;margin:8px 0;cursor:pointer}
+.sapp .ds{font-size:12px;color:#c6c6c6;margin:6px 0}
+.sapp .eh .up{display:flex;align-items:center;gap:10px;font-size:12.5px}
+
+/* 紧凑：窗口较窄时 */
+@container (max-width:900px){
+ .sapp .nv{width:52px;padding:0 4px 8px}
+ .sapp .nv .nt,.sapp .nv .chev,.sapp .nvtop svg:last-child{display:none}
+ .sapp .nv .it,.sapp .nv .it.sb{padding:0;justify-content:center;gap:0}
+ .sapp .nvtop{padding:30px 0 0;justify-content:center;height:56px}
+ .sapp .nv .it .ni svg{width:16px;height:16px}
+ .sapp .wt .ver{display:none}
+}
+@container (max-width:720px){
+ .sapp .two{flex-direction:column;overflow:auto;padding:12px}
+ .sapp .rcol,.sapp .rcol.rr{width:100%;border:0;padding:0;overflow:visible}
+ .sapp .rcol.rr{margin-top:10px;padding-top:10px;border-top:1px solid #383838}
+ .sapp .scr{max-height:none}
+ .sapp .wt .w-title-island{display:none}
+}
+:root[data-theme=light] .app,html:not([data-theme=dark]) .app{--keep:1}
