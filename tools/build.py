@@ -72,7 +72,7 @@ FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class=
         '<div><h5>项目</h5><ul><li><a href="' + GH + '" rel="noopener">GitHub 仓库</a></li><li><a href="' + GH + '/issues" rel="noopener">反馈问题</a></li><li><a href="/about.html#join">参与贡献</a></li></ul></div>'
         '<div><h5>了解更多</h5><ul><li><a href="/about.html">关于 ClassFabric</a></li><li><a href="/about.html#faq">常见问题</a></li><li><a href="https://classisland.tech" rel="noopener">ClassIsland 官网</a></li></ul></div></div>'
         '<div class="legal">© 2026 ClassFabric　基于 HelloWRC 的 ClassIsland（© 2023–2026 HelloWRC）二次开发，以 GPL-3.0 协议开源。<br>ClassFabric 是个人修改版，并非 ClassIsland 官方项目；ClassIsland 的名称与原有功能归其原作者所有。</div></div></footer>\n'
-        '<script src="/assets/js/site.js" defer></script>\n</body>\n</html>\n')
+        '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n</body>\n</html>\n')
 
 def ld():
     return ('<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ClassFabric","applicationCategory":"EducationApplication","operatingSystem":"Windows 10, Windows 11",'
@@ -162,7 +162,7 @@ def home():
     ed_vis = panel_wall('<div style="padding:4% 3% 0">' + fit(editor_window(1500, 640, True, 'edMain'), 1500, 'position:relative;width:100%') + '</div>', '30%', '60%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击右侧的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
     # 调课
-    swap_vis = panel_wall('<div style="padding:5% 4% 0"><div id="swapIsl" style="display:flex;justify-content:center;margin-bottom:12px">' + fit('<div style="display:flex;justify-content:center;width:640px;font-size:17px"><div class="isl-stack" id="swIsl"><div class="isl static on" id="swIslIn"></div></div></div>', 640, 'position:relative;width:100%') + '</div>' + fit(swap_dialog(), 640, 'position:relative;width:78%;margin:0 auto 5%') + '</div>', '70%', '36%', '210%', '')
+    swap_vis = panel_wall('<div class="swwrap"><div class="sw2 w" data-app="swap"></div></div>', '70%', '36%', '210%', '')
     h += ('<div class="blk rev rv"><div class="copy" style="order:2"><span class="tag gr">#调课</span><h3>提前调整课程</h3><p>支持当日与跨天换课，灵活应对调课情景。可以只换这一次，也可以勾选「永久换课」。</p>'
           '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>临时启用课表</h4><p>可在当日或未来某一天临时启用另一个课表，应对调休与换课。</p></div></div>'
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
