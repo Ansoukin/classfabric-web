@@ -117,8 +117,15 @@ def home():
           '<div class="panel pad" style="padding:18px"><div class="chips-row"><span class="chip on">' + ic('cloud').replace('<svg', '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"') + '更多天气源</span><span class="chip">多语言 · 实验中</span><span class="chip">插件详情预览</span><span class="chip">持续同步上游</span></div></div></div>'
           '</div></div></section>\n')
 
+    # showcase
+    row1 = ''.join('<img src="/assets/img/isl-%d.webp" alt="灵动岛状态 %d" loading="lazy" height="68">' % (i, i) for i in (1, 2, 3, 4))
+    row2 = ''.join('<img src="/assets/img/isl-%d.webp" alt="灵动岛状态 %d" loading="lazy" height="68">' % (i, i) for i in (5, 6, 7, 8))
+    h += ('<section class="sec show"><div class="wrap"><h2 class="claim rv">上课与下课，<span class="g">一目了然</span></h2><p class="claim-note rv">灵动岛会在每个时间点以不同的形态出现。下面的每一张，都是软件的真实界面。</p></div>'
+          '<div class="marq rv" aria-label="灵动岛的各种状态"><div class="row"><div class="trk">' + row1 + row2 + row1 + row2 + '</div></div><div class="row rev"><div class="trk">' + row2 + row1 + row2 + row1 + '</div></div></div>'
+          '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video><figcaption><b>#演示</b>　提醒系统的实际效果。视频素材来自 ClassIsland 官网。</figcaption></figure></div></section>\n')
+
     # claim 2
-    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2><p class="claim-note rv">以下能力继承自上游 ClassIsland，并在 ClassFabric 中完整保留。</p>'
+    h += '<section class="sec light"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2><p class="claim-note rv">以下能力继承自上游 ClassIsland，并在 ClassFabric 中完整保留。</p>'
     # 主界面
     row2 = '<div style="display:flex;gap:10px;justify-content:center;margin-top:14px;font-size:17px;font-family:var(--font)">' + ''.join('<div class="isl static" style="padding:0 1em">%s</div>' % t for t in ['12:30:44', ic('sun') + '&nbsp;9℃', ic('timer') + '&nbsp;元旦 62 天']) + '</div>'
     main_vis = panel_wall(fit('<div style="width:1000px;padding:14px 0 18px"><div style="display:flex;justify-content:center;font-size:19px"><div class="isl-stack">' + static_isl(idle('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"') + '</div></div>' + row2.replace('17px', '19px') + '</div>', 1000, 'position:relative;width:100%', 520), '50%', '2%', '190%', 'pad')
@@ -160,15 +167,23 @@ def home():
     h += ('<div class="blk full rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
     h += '</div></section>\n'
 
+    # gallery
+    G = [('shot-widgets', '组件', '在「组件」页挑选并排列主界面上显示的内容。'), ('shot-plugins', '插件', '内置插件市场，可浏览、搜索与安装，详情页可预览更多内容。'), ('shot-auto', '自动化', '设置「当 XX 发生」「满足 XX」时执行的行动。'), ('shot-timeline', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('shot-subjects', '科目', '自定义科目的名称、图标与主题色。')]
+    gt = ''.join('<button role="tab" data-g="%d"%s>%s</button>' % (i, ' class="on" aria-selected="true"' if i == 0 else '', g[1]) for i, g in enumerate(G))
+    gi = ''.join('<img class="gimg%s" data-cap="%s" src="/assets/img/%s.webp" alt="ClassFabric %s界面截图" loading="lazy" width="1920" height="1040">' % (' on' if i == 0 else '', g[2], g[0], g[1]) for i, g in enumerate(G))
+    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">来自<span class="g">真实界面</span>的每一处细节</h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
+          '<div class="gframe" id="gframe" title="点击放大">' + gi + '</div><p class="gcap" id="gcap">' + G[0][2] + '</p></div></div></section>\n')
+
     # claim 4
     wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
     ln = ('<div class="cd s3 rv d1"><h4>多语言 <span style="font-size:13px;color:var(--faint);font-weight:500">实验中</span></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
           '<div class="vis"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div style="font-size:12.5px;color:var(--faint);margin-top:8px">适配进度 约 40%</div></div></div>')
-    pv = ('<div class="cd s3 rv"><h4>更好的插件预览</h4><p>插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。</p><div class="vis"><div style="display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)">'
+    pv = ('<div class="cd s2 rv"><h4>更好的插件预览</h4><p>插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。</p><div class="vis"><div style="display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)">'
           '<span style="width:46px;height:46px;border-radius:10px;background:#6a6a6a;display:grid;place-items:center;font-weight:800;font-size:20px;flex:none">U</span><div style="flex:1;min-width:0"><b style="display:block">UIAccess 提权</b><span style="font-size:13px;color:var(--muted)">2.0.0.0 · HelloWRC, Doubx690i</span></div><span class="chip on" style="padding:6px 14px">安装</span></div>'
           '<div style="height:70px;margin-top:10px;border-radius:10px;border:1px solid var(--line);background:linear-gradient(90deg,#0d1b2e,#15335a 45%,#0e2240);position:relative;overflow:hidden"><div style="position:absolute;left:10%;right:10%;top:46%;height:7px;border-radius:4px;background:rgba(98,179,242,.55)"></div></div></div></div>')
-    jn = ('<div class="cd s3 rv d1"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="cta" style="justify-content:flex-start"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
-    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + jn + '</div></div></section>\n'
+    jn = ('<div class="cd s2 rv d2"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="cta" style="justify-content:flex-start"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
+    tray = ('<div class="cd s2 rv d1 trayc"><h4>一切，都在托盘里</h4><p>右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。</p><div class="vis"><img src="/assets/img/tray.webp" alt="托盘菜单" loading="lazy" width="187" height="390"></div></div>')
+    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
 
     # 除了这些
     rec_vis = panel_wall('<div style="display:flex;gap:6%;align-items:flex-end;justify-content:center;padding:6% 5% 0">' + fit(recovery(), 420, 'position:relative;width:54%;margin-bottom:-4px') + '</div>', '70%', '70%', '240%', '')
