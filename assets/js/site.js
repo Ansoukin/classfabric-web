@@ -333,3 +333,19 @@
     });
   }
 })();
+
+/* 提醒：滚动讲述（滚动进度 → 切换状态） */
+(function () {
+  var st = document.getElementById('story'); if (!st) return;
+  var tabs = Array.prototype.slice.call(st.querySelectorAll('#remTabs .sub-i')); if (!tabs.length) return;
+  var cur = -1;
+  function tick() {
+    if (window.innerWidth <= 860) return;
+    var r = st.getBoundingClientRect(), total = r.height - window.innerHeight;
+    var p = Math.max(0, Math.min(.999, -r.top / (total > 0 ? total : 1)));
+    var i = Math.floor(p * tabs.length);
+    if (i !== cur) { cur = i; tabs[i].click(); }
+    if (r.top < window.innerHeight && r.bottom > 0 && cur < 0) { cur = 0; tabs[0].click(); }
+  }
+  window.addEventListener('scroll', tick, { passive: true }); window.addEventListener('resize', tick); tick();
+})();

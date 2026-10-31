@@ -118,10 +118,15 @@ def home():
     c_sync = fc('sync', '新功能', 'ClassIsland 发布的新功能', ok) + fc('bolt', '问题修复', 'ClassIsland 的修复与改进', ok) + fc('info', '上游版本', '底层代码与上游保持一致', ok)
     c_mig = fc('cal', '课表与档案', '', used) + fc('bolt', '自动化', '', used) + fc('plug', '插件', '', used) + fc('brush', '主题', '', used)
     c_enh = fc('cloud', '更多天气源', '小米天气 · OpenWeather · 和风天气', on) + fc('text', '多语言', '实验中', on) + fc('plug', '更好的插件预览', '', on) + fc('sync', '持续同步上游', '', on)
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
-          '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p><div class="fstack">' + c_sync + '</div></div>'
-          '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p><div class="fstack">' + c_mig + '</div></div>'
-          '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p><div class="fstack">' + c_enh + '</div></div>'
+    SYNC = ('<svg viewBox="0 0 1000 230" class="syncsvg" role="img" aria-label="上游的更新持续流向 ClassFabric，并叠加我们自己的增强">'
+            '<text x="0" y="22" class="lb">ClassIsland 上游</text><text x="0" y="214" class="lb b">ClassFabric</text>'
+            '<line x1="0" y1="46" x2="1000" y2="46" class="ln"/><line x1="0" y1="176" x2="1000" y2="176" class="ln"/><circle cx="100" cy="46" r="7" class="up"/><path class="fl" d="M100 46 C100 110 140 110 140 176" style="animation-delay:0.0s"/><circle cx="140" cy="176" r="7" class="dn"/><circle cx="260" cy="46" r="7" class="up"/><path class="fl" d="M260 46 C260 110 300 110 300 176" style="animation-delay:0.5s"/><circle cx="300" cy="176" r="7" class="dn"/><circle cx="420" cy="46" r="7" class="up"/><path class="fl" d="M420 46 C420 110 460 110 460 176" style="animation-delay:1.0s"/><circle cx="460" cy="176" r="7" class="dn"/><circle cx="580" cy="46" r="7" class="up"/><path class="fl" d="M580 46 C580 110 620 110 620 176" style="animation-delay:1.5s"/><circle cx="620" cy="176" r="7" class="dn"/><circle cx="740" cy="46" r="7" class="up"/><path class="fl" d="M740 46 C740 110 780 110 780 176" style="animation-delay:2.0s"/><circle cx="780" cy="176" r="7" class="dn"/><circle cx="900" cy="46" r="7" class="up"/><path class="fl" d="M900 46 C900 110 940 110 940 176" style="animation-delay:2.5s"/><circle cx="940" cy="176" r="7" class="dn"/><circle cx="190" cy="176" r="7" class="ours"/><circle cx="350" cy="176" r="7" class="ours"/><circle cx="670" cy="176" r="7" class="ours"/>'
+            '<text x="190" y="152" class="lo" text-anchor="middle">+ 增强</text><text x="350" y="152" class="lo" text-anchor="middle">+ 增强</text><text x="670" y="152" class="lo" text-anchor="middle">+ 增强</text></svg>') 
+    h += ('<section class="sec sync"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2>'
+          '<div class="syncfig rv">' + SYNC + '</div><div class="tri3">'
+          '<div class="rv"><i>01</i><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p></div>'
+          '<div class="rv d1"><i>02</i><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p></div>'
+          '<div class="rv d2"><i>03</i><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p></div>'
           '</div></div></section>\n')
 
     # showcase
@@ -157,10 +162,9 @@ def home():
             '<button class="sub-i on" data-g="0" style="text-align:left;cursor:pointer;color:inherit">' + ic('bell') + '<div><h4>准备上课</h4><p>在上课前一段时间发出提醒，提示做好上课准备。室内课程默认提前 60 秒，室外课程默认提前 600 秒。</p></div></button>'
             '<button class="sub-i" data-g="1" style="text-align:left;cursor:pointer;color:inherit">' + ic('school') + '<div><h4>上课</h4><p>在上课时发出提醒，提示已经上课，并在主界面标出当前课程与剩余时间。</p></div></button>'
             '<button class="sub-i" data-g="2" style="text-align:left;cursor:pointer;color:inherit">' + ic('clock') + '<div><h4>课间休息</h4><p>在下课时发出提醒，并显示本节课间的时长与下一节课。</p></div></button></div>')
-    rem_vis = ('<div class="panel" style="--wx:60%;--wy:34%;--ws:200%"><div class="wp"></div><div style="position:relative;padding:20px 0 0">'
-               + fit('<div style="display:flex;justify-content:center;width:100%"><div class="isl-stack" data-demo="rem" id="remIsl" style="font-size:20px">' + REM_STATES + '</div></div>', 1000, 'position:relative;width:100%', 720)
-               + '<div style="padding:18px 4% 0;position:relative;margin-bottom:-24px"><div class="app" data-app="settings" data-start="remind" data-h="600"></div></div></div></div>')
-    h += ('<div class="blk full ctr rv"><div class="copy"><span class="tag o">#提醒</span><h3>醒目的提醒系统</h3><p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>' + tabs + '</div>' + rem_vis + '</div>')
+    rem_stage = fit('<div style="display:flex;justify-content:center;width:100%"><div class="isl-stack" data-demo="rem" id="remIsl" style="font-size:18px">' + REM_STATES + '</div></div>', 640, 'position:relative;width:100%')
+    h += ('<div class="story" id="story"><div class="pin"><div class="sl"><span class="tag o">#提醒</span><h3>醒目的提醒系统</h3><p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>' + tabs + '</div><div class="sr">' + rem_stage + '<div class="hint">继续向下滚动</div></div></div></div>')
+    h += '<div class="blk full rv remwin"><div class="app" data-app="settings" data-start="remind" data-h="600"></div></div>\n'
     # 课表
     subs = ('<div class="subs"><div class="sub-i">' + ic('cal') + '<div><h4>灵活的课表启用规则</h4><p>可为课表设置每周、某一天或循环启用的规则，支持多周轮换，到日期自动切换。</p></div></div>'
             '<div class="sub-i">' + ic('clock') + '<div><h4>时间与科目的自由定制</h4><p>不同课表可使用不同的时间表，并支持自定义科目，设置科目图标与主题色。</p></div></div>'
@@ -169,7 +173,9 @@ def home():
     h += ('<div class="blk band rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击右侧的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
     # 调课
     swap_vis = panel_wall('<div class="swwrap"><div class="sw2 w" data-app="swap"></div></div>', '70%', '36%', '210%', '')
-    h += ('<div class="blk rev zoomed rv"><div class="copy" style="order:2"><span class="tag gr">#调课</span><h3>提前调整课程</h3><p>支持当日与跨天换课，灵活应对调课情景。可以只换这一次，也可以勾选「永久换课」。</p>'
+    h += ('<div class="blk swapblk rv"><div class="copy"><span class="tag gr">#调课</span><h3>提前调整课程</h3><p>支持当日与跨天换课，灵活应对调课情景。</p>'
+          '<ol class="bign"><li><i>1</i><div><b>选中要换的课</b><span>点一节课，再选目标日期</span></div></li><li><i>2</i><div><b>交换，或替换为别的科目</b><span>两节课对调，或直接换成任意科目</span></div></li>'
+          '<li><i>3</i><div><b>确认，可勾选「永久换课」</b><span>只换这一次，或写入课表</span></div></li></ol>'
           '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>临时启用课表</h4><p>可在当日或未来某一天临时启用另一个课表，应对调休与换课。</p></div></div>'
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
     # 自动化
@@ -183,6 +189,8 @@ def home():
     h += bigmq(['组件','主题','插件','自动化','外观'], ['拖动','搭配','安装','触发','个性化'])
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
     wid_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
+    wbento = '<div class="wbento rv">' + ''.join('<div class="wtile %s">%s<b>%s</b><span>%s</span></div>' % (c, ic(i), n, d) for i, n, d, c in [('doc', '课程表', '显示当前的课程表信息。', 't3r2'), ('cal', '日期', '显示今天的日期和星期。', 't3'), ('clock', '时钟', '显示现在的时间，支持精确到秒。', 't3'), ('sun', '天气简报', '显示当前的天气概况和气象预警。', 't2'), ('timer', '倒计时', '显示距离某一天的倒计时。', 't2'), ('text', '文本', '显示自定义文本。', 't2'), ('carousel', '轮播容器', '轮播多个组件。', 't3'), ('scroll', '滚动容器', '滚动显示组件内的内容。', 't3'), ('group', '分组容器', '将多个组件组合到一个组件中显示。', 't2'), ('stack', '堆叠容器', '将多个容器堆叠显示。', 't2'), ('split', '分割线', '视觉上对组件进行分组。', 't2')]) + '</div>'
+    h += wbento
     h += ('<div class="blk full crop rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
           '<p>进入「编辑模式」，可以直接在主界面上拖动调整组件。</p></div>' + wid_vis + '</div>')
     thm_vis = panel_wall('<div style="padding:5% 4% 3%"><div class="app" data-app="settings" data-start="appearance" data-h="620"></div></div>', '50%', '90%', '230%', '')
