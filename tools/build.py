@@ -204,7 +204,10 @@ def home():
           '<div class="no"><h4>可能不适合，如果……</h4><p>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</p></div></div></div></div></section>\n')
 
     # final
-    h += ('<section class="final"><div class="wrap"><h2 class="rv">立即体验 ClassFabric</h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn white" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
+    h += ('<section class="final2"><img class="fisl rv" src="/assets/img/isl-3.webp" alt="" width="491" height="36">'
+          '<div class="dlg rv d1" role="group" aria-label="立即体验 ClassFabric"><div class="dt"><img src="/assets/img/icon-32.png" alt="" width="16" height="16"><span>ClassFabric</span><span class="ctl"><i>&#8211;</i><i>&#9633;</i><i>&#10005;</i></span></div>'
+          '<div class="db"><h2>立即体验 ClassFabric</h2><p>更多功能留给您自行探索！</p><div class="cta"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></div>'
+          '<div class="tbar"><span class="win"><i></i><i></i><i></i><i></i></span><span class="ic"><b style="background:#4aa3ff"></b><b style="background:#4b4b4f"></b><b style="background:#ffb340"></b><b style="background:#3fbf7a"></b><b style="background:#ef6b5f"></b></span><span class="clk">10:12<br>2026/10/29</span></div></section>\n')
     h += '</main>\n'
     return h + FOOT
 
