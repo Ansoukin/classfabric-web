@@ -79,13 +79,15 @@ NAV = [
  ('plug', '插件'), ('brush', '主题'), ('hr',), ('info', '关于 ClassFabric'),
 ]
 
+SUBIC = {'基本': 'gear', '时钟': 'clock', '存储': 'save', '隐私': 'shield', '翻新与迎新': 'sync', '高级': 'sliders', '组件': 'widgets', '外观': 'brush', '窗口': 'window'}
+
 def nav(on):
-    o = ['<div class="nv">']
+    o = ['<div class="nv"><div class="nvtop">' + '<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' + ic('search') + '</div>']
     for it in NAV:
         if it[0] == 'hr':
             o.append('<hr>'); continue
         if it[0] == 'sub':
-            o.append('<div class="it sub%s">%s</div>' % (' on' if it[1] == on else '', it[1]))
+            o.append('<div class="it sb%s">%s%s</div>' % (' on' if it[1] == on else '', ic(SUBIC.get(it[1], 'gear')), it[1]))
         else:
             chev = '<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>' if len(it) > 2 else ''
             o.append('<div class="it%s">%s%s%s</div>' % (' on' if it[1] == on else '', ic(it[0]), it[1], chev))
