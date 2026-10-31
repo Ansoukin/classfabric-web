@@ -233,33 +233,15 @@
       });
   }
 
-  /* ---------- language ---------- */
-  var lb = $('#lang'), lm = $('.langmenu');
-  if (lb && lm) {
-    lb.addEventListener('click', function (e) { e.stopPropagation(); lm.classList.toggle('open'); });
-    document.addEventListener('click', function () { lm.classList.remove('open'); });
-    var CDN = ['https://cdn.jsdelivr.net/npm/i18n-jsautotranslate@3.18.3/translate.js', 'https://cdn.staticfile.net/i18n-jsautotranslate/3.18.3/translate.js', 'https://unpkg.com/i18n-jsautotranslate@3.18.3/translate.js'];
-    function load(i, cb) {
-      if (window.translate) return cb(true);
-      if (i >= CDN.length) return cb(false);
-      var s = document.createElement('script'); s.src = CDN[i]; s.onload = function () { cb(true); }; s.onerror = function () { load(i + 1, cb); };
-      document.head.appendChild(s);
-    }
-    function apply(l) {
-      try { localStorage.setItem('cf_lang', l); } catch (e) { }
-      $$('button', lm).forEach(function (b) { b.setAttribute('aria-checked', b.dataset.lang === l); });
-      if (l === 'zh') { if (window.translate) { translate.changeLanguage('chinese_simplified'); } return; }
-      load(0, function (ok) {
-        if (!ok) return;
-        translate.selectLanguageTag.show = false; translate.language.setLocal('chinese_simplified');
-        translate.service.use('client.edge'); translate.listener.start();
-        translate.changeLanguage(l === 'tw' ? 'chinese_traditional' : 'english');
-      });
-    }
-    $$('button', lm).forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.lang); lm.classList.remove('open'); }); });
-    var saved = null; try { saved = localStorage.getItem('cf_lang'); } catch (e) { }
-    if (saved && saved !== 'zh') apply(saved);
-  }
+  /* ---------- theme ---------- */
+  var tb = $('#theme');
+  if (tb) tb.addEventListener('click', function () {
+    var cur = document.documentElement.dataset.theme;
+    if (!cur) cur = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    var nx = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = nx;
+    try { localStorage.setItem('cf_theme', nx); } catch (e) { }
+  });
 
   /* ---------- toc highlight ---------- */
   var toc = $$('.toc a');

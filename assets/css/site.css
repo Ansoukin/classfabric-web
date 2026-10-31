@@ -708,3 +708,69 @@ h1 .g{white-space:nowrap}
 .wt .ver{font-size:14px;margin-right:12px;font-weight:500}
 .wt .ver::after{content:"  ···";margin-left:18px;letter-spacing:1px}
 .blk.full>.panel{width:min(1520px,100vw - 32px);position:relative;left:50%;transform:translateX(-50%)}
+
+/* ===== Fluent 卡片（站点内容）===== */
+.fstack{display:grid;gap:6px;margin-top:24px}
+.fcard{display:flex;align-items:center;gap:14px;min-height:58px;padding:10px 16px;background:#2b2b2b;border:1px solid #3a3a3a;border-radius:6px;color:#fff;font-family:var(--ui)}
+.fcard>svg{width:20px;height:20px;color:var(--blue);flex:none}
+.fcard .tx{flex:1;min-width:0}
+.fcard b{display:block;font-size:14.5px;font-weight:600;line-height:1.35}
+.fcard .tx span{display:block;font-size:12.5px;color:var(--muted);line-height:1.4}
+.fcard .ok{display:flex;align-items:center;gap:6px;font-size:13px;color:#6ccb5f;flex:none}
+.fcard .ok svg{width:15px;height:15px}
+.fcard .tg{flex:none}
+/* ===== 灵动岛跑马灯（HTML）===== */
+.marq .mq-i{flex:none}
+.marq .isl-stack{font-size:16px}
+.marq .isl.mask{min-width:23em}
+.marq .isl.bar{min-width:27em}
+.marq .isl.bar.two{min-width:30em}
+.marq .isl .cur::after{animation:none;width:55%}
+.i-sun{display:block}.i-moon{display:none}
+#theme svg{width:19px;height:19px}
+:root[data-theme=light]{--bg:#f4f6fb;--bg2:#fff;--bg3:#eaeef6;--fg:#10141b;--muted:#566075;--faint:#7a8498;--line:rgba(10,30,70,.13);--line2:rgba(10,30,70,.07);--g1:#0a84ff;--g2:#5e5ce6;--g3:#bf5af2;color-scheme:light}
+:root[data-theme=light] .nav.solid{background:#f4f6fb}
+:root[data-theme=light] .hero{background:radial-gradient(900px 480px at 50% -10%,rgba(0,110,255,.14),transparent 70%),var(--bg)}
+:root[data-theme=light] .hero .sub{color:#3a4458}
+:root[data-theme=light] .lockup{background:#fff}
+:root[data-theme=light] .copy p,:root[data-theme=light] .sub-i p,:root[data-theme=light] .st p{color:#4a5368}
+:root[data-theme=light] .btn.glass{background:#fff;border-color:rgba(10,30,70,.22);color:#10141b}
+:root[data-theme=light] .btn.glass:hover{background:#eaeef6}
+:root[data-theme=light] .sec.light{background:#e7ecf6;--bg2:#fff}
+:root[data-theme=light] .cd,:root[data-theme=light] .st,:root[data-theme=light] .sub-i{background:#fff}
+:root[data-theme=light] .sub-i.on{background:#eaf3ff}
+:root[data-theme=light] .fcard{background:#fff;border-color:var(--line);color:#10141b}
+:root[data-theme=light] .gtabs button{background:#fff;color:#4a5368}
+:root[data-theme=light] .gtabs button.on{background:#62b3f2;color:#06233b}
+:root[data-theme=light] .phead h1,:root[data-theme=light] .phead p{color:#fff}
+:root[data-theme=light] .vid{background:#fff}
+:root[data-theme=light] .foot{background:var(--bg3)}
+:root[data-theme=light] .i-sun{display:none!important}
+:root[data-theme=light] .i-moon{display:block!important}
+:root[data-theme=light] .panel{border-color:rgba(10,30,70,.18)}
+:root[data-theme=light] .sec.light .copy p,:root[data-theme=light] .sec.light .sub-i p{color:#4a5368}
+@media(prefers-color-scheme:light){
+:root:not([data-theme=dark]){--bg:#f4f6fb;--bg2:#fff;--bg3:#eaeef6;--fg:#10141b;--muted:#566075;--faint:#7a8498;--line:rgba(10,30,70,.13);--line2:rgba(10,30,70,.07);--g1:#0a84ff;--g2:#5e5ce6;--g3:#bf5af2;color-scheme:light}
+:root:not([data-theme=dark]) .nav.solid{background:#f4f6fb}
+:root:not([data-theme=dark]) .hero{background:radial-gradient(900px 480px at 50% -10%,rgba(0,110,255,.14),transparent 70%),var(--bg)}
+:root:not([data-theme=dark]) .hero .sub{color:#3a4458}
+:root:not([data-theme=dark]) .lockup{background:#fff}
+:root:not([data-theme=dark]) .copy p,:root:not([data-theme=dark]) .sub-i p,:root:not([data-theme=dark]) .st p{color:#4a5368}
+:root:not([data-theme=dark]) .btn.glass{background:#fff;border-color:rgba(10,30,70,.22);color:#10141b}
+:root:not([data-theme=dark]) .btn.glass:hover{background:#eaeef6}
+:root:not([data-theme=dark]) .sec.light{background:#e7ecf6;--bg2:#fff}
+:root:not([data-theme=dark]) .cd,:root:not([data-theme=dark]) .st,:root:not([data-theme=dark]) .sub-i{background:#fff}
+:root:not([data-theme=dark]) .sub-i.on{background:#eaf3ff}
+:root:not([data-theme=dark]) .fcard{background:#fff;border-color:var(--line);color:#10141b}
+:root:not([data-theme=dark]) .gtabs button{background:#fff;color:#4a5368}
+:root:not([data-theme=dark]) .gtabs button.on{background:#62b3f2;color:#06233b}
+:root:not([data-theme=dark]) .phead h1,:root:not([data-theme=dark]) .phead p{color:#fff}
+:root:not([data-theme=dark]) .vid{background:#fff}
+:root:not([data-theme=dark]) .foot{background:var(--bg3)}
+:root:not([data-theme=dark]) .i-sun{display:none!important}
+:root:not([data-theme=dark]) .i-moon{display:block!important}
+:root:not([data-theme=dark]) .panel{border-color:rgba(10,30,70,.18)}
+:root:not([data-theme=dark]) .sec.light .copy p,:root:not([data-theme=dark]) .sec.light .sub-i p{color:#4a5368}
+}
+:root[data-theme=light] .fcard .ok{color:#1a7f37}@media(prefers-color-scheme:light){:root:not([data-theme=dark]) .fcard .ok{color:#1a7f37}}
+.marq .trk{animation-duration:60s}

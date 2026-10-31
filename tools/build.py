@@ -55,15 +55,14 @@ def head(title, desc, path, extra=''):
             '<link rel="icon" href="/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">\n<link rel="apple-touch-icon" href="/assets/img/icon-180.png">\n'
             '<meta property="og:type" content="website">\n<meta property="og:site_name" content="ClassFabric">\n<meta property="og:title" content="%s">\n<meta property="og:description" content="%s">\n'
             '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta name="twitter:card" content="summary_large_image">\n'
-            '<link rel="stylesheet" href="/assets/css/site.css">\n%s</head>\n') % (title, desc, url, title, desc, url, SITE, extra)
+            '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n%s</head>\n') % (title, desc, url, title, desc, url, SITE, extra)
 
 def navbar(cur):
     def a(href, label, key):
         return '<a href="%s"%s>%s</a>' % (href, ' aria-current="page"' if cur == key else '', label)
     return ('<body>\n<header class="nav" id="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/img/icon-64.png" width="26" height="26" alt="">ClassFabric</a>'
             '<nav class="links" id="links" aria-label="主导航">' + a('/', '首页', 'home') + a('/download.html', '下载', 'dl') + a('/about.html', '关于', 'about') + '<a href="' + GH + '" rel="noopener">GitHub 仓库</a></nav>'
-            '<div class="tools"><div class="langbox"><button class="ibtn" id="lang" aria-label="语言 / Language" aria-haspopup="true">' + ic('sun').replace(ic('sun'), '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 4 5.7 4 9s-1.4 6.3-4 9c-2.6-2.7-4-5.7-4-9s1.4-6.3 4-9z"/></svg>') +
-            '</button><div class="langmenu ignore" role="menu"><button data-lang="zh" aria-checked="true">简体中文</button><button data-lang="tw" aria-checked="false">繁體中文</button><button data-lang="en" aria-checked="false">English</button></div></div>'
+            '<div class="tools"><button class="ibtn" id="theme" aria-label="切换明暗主题"><svg class="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 019.5 4 8.5 8.5 0 1020 14.5z"/></svg><svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>'
             '<a class="btn blue sm" href="/download.html">' + ic('dl') + '立即下载</a>'
             '<button class="ibtn menu-btn" id="menu" aria-label="菜单" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></div></header>\n')
 
@@ -105,27 +104,44 @@ def home():
           '</div></div></section>\n')
 
     # claim 1
+    def fc(icn, t, d='', trail=''):
+        return '<div class="fcard">%s<div class="tx"><b>%s</b>%s</div>%s</div>' % (ic(icn), t, ('<span>%s</span>' % d) if d else '', trail)
+    ok = '<span class="ok">' + ic('check') + '已同步</span>'
+    used = '<span class="ok">' + ic('check') + '已沿用</span>'
+    on = '<span class="tg on"><i></i></span>'
+    c_sync = fc('sync', '新功能', 'ClassIsland 发布的新功能', ok) + fc('bolt', '问题修复', 'ClassIsland 的修复与改进', ok) + fc('info', '上游版本', '底层代码与上游保持一致', ok)
+    c_mig = fc('cal', '课表与档案', '', used) + fc('bolt', '自动化', '', used) + fc('plug', '插件', '', used) + fc('brush', '主题', '', used)
+    c_enh = fc('cloud', '更多天气源', '小米天气 · OpenWeather · 和风天气', on) + fc('text', '多语言', '实验中', on) + fc('plug', '更好的插件预览', '', on) + fc('sync', '持续同步上游', '', on)
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
-          '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p>'
-          '<div class="panel pad" style="padding:20px 18px 14px"><svg class="syn" viewBox="0 0 300 150" fill="none"><text x="0" y="14" fill="#aaa49a" font-size="12" font-family="sans-serif">ClassIsland</text><text x="0" y="146" fill="#aaa49a" font-size="12" font-family="sans-serif">ClassFabric</text>'
-          '<path class="ln" d="M70 10H300" stroke="#62b3f2" stroke-width="2"/><path class="ln" d="M70 142H300" stroke="#ff6f7d" stroke-width="2"/><g fill="#62b3f2"><circle cx="110" cy="10" r="4.5"/><circle cx="170" cy="10" r="4.5"/><circle cx="230" cy="10" r="4.5"/><circle cx="285" cy="10" r="4.5"/></g>'
-          '<g stroke="#ffb15c" stroke-width="1.8" stroke-linecap="round"><path d="M110 14C110 70 130 90 150 138"/><path d="M230 14C230 70 250 90 270 138"/></g><g fill="#ff6f7d"><circle cx="150" cy="142" r="4.5"/><circle cx="270" cy="142" r="4.5"/><circle cx="210" cy="142" r="4.5"/></g></svg></div></div>'
-          '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p>'
-          '<div class="panel pad" style="padding:16px"><div class="mig" id="mig">'
-          '<div>' + ic('cal') + '课表与档案<em>已沿用</em></div><div>' + ic('bolt') + '自动化<em>已沿用</em></div><div>' + ic('plug') + '插件<em>已沿用</em></div><div>' + ic('brush') + '主题<em>已沿用</em></div></div></div></div>'
-          '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p>'
-          '<div class="panel pad" style="padding:18px"><div class="chips-row"><span class="chip on">' + ic('cloud').replace('<svg', '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"') + '更多天气源</span><span class="chip">多语言 · 实验中</span><span class="chip">插件详情预览</span><span class="chip">持续同步上游</span></div></div></div>'
+          '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p><div class="fstack">' + c_sync + '</div></div>'
+          '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p><div class="fstack">' + c_mig + '</div></div>'
+          '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p><div class="fstack">' + c_enh + '</div></div>'
           '</div></div></section>\n')
 
     # showcase
-    row1 = ''.join('<img src="/assets/img/isl-%d.webp" alt="灵动岛状态 %d" loading="lazy" height="68">' % (i, i) for i in (1, 2, 3, 4))
-    row2 = ''.join('<img src="/assets/img/isl-%d.webp" alt="灵动岛状态 %d" loading="lazy" height="68">' % (i, i) for i in (5, 6, 7, 8))
-    h += ('<section class="sec show"><div class="wrap"><h2 class="claim rv">上课与下课，<span class="g">一目了然</span></h2><p class="claim-note rv">灵动岛会在每个时间点以不同的形态出现。下面的每一张，都是软件的真实界面。</p></div>'
-          '<div class="marq rv" aria-label="灵动岛的各种状态"><div class="row"><div class="trk">' + row1 + row2 + row1 + row2 + '</div></div><div class="row rev"><div class="trk">' + row2 + row1 + row2 + row1 + '</div></div></div>'
-          '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video><figcaption><b>#演示</b>　提醒系统的实际效果。视频素材来自 ClassIsland 官网。</figcaption></figure></div></section>\n')
+    def sidle(past, cur, fut):
+        return '<div class="isl static on"><span class="pa">%s</span>%s<span class="sep"></span><span class="fu">%s</span></div>' % (''.join('<span class="s p">%s</span>' % c for c in past), cur, ''.join('<span class="s">%s</span>' % c for c in fut))
+    def sbar2(l, ms=''):
+        return '<div class="isl static on bar two"><span>%s</span><span class="nx">下节课是: <em>物理</em><small>10:30-11:10</small></span></div>' % l
+    def smask(t, icn):
+        return '<div class="isl static on mask">%s<span>%s</span>%s</div>' % (ic('info'), t, ic(icn))
+    ST = [sbar2('距上课还剩 <b>16</b> 秒'),
+          '<div class="isl static on bar">准备上课，请回到座位并保持安静，做好上课准备。</div>',
+          smask('上课', 'atom'),
+          sidle('语数英', '<span class="cur">' + ic('clock') + '<span>课间休息</span><small>10:20-10:30</small></span>', '物化生历政地'),
+          smask('即将上课', 'atom'),
+          sidle('语数', '<span class="cur">' + ic('text') + '<span>英语</span><span class="pill">-31s</span></span>', '物化生历政地'),
+          smask('课间休息', 'clock'),
+          sbar2('本节课间休息长 <b>10</b> 分钟')]
+    wrapi = lambda x: '<div class="mq-i"><div class="isl-stack">' + x + '</div></div>'
+    row1 = ''.join(wrapi(x) for x in (ST[0], ST[1], ST[2], ST[3]))
+    row2 = ''.join(wrapi(x) for x in (ST[4], ST[5], ST[6], ST[7]))
+    h += ('<section class="sec show"><div class="wrap"><h2 class="claim rv">上课与下课，<span class="g">一目了然</span></h2></div>'
+          '<div class="marq rv" aria-label="灵动岛的各种状态"><div class="row"><div class="trk">' + row1 * 2 + '</div></div><div class="row rev"><div class="trk">' + row2 * 2 + '</div></div></div>'
+          '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video></figure></div></section>\n')
 
     # claim 2
-    h += '<section class="sec light"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2><p class="claim-note rv">以下能力继承自上游 ClassIsland，并在 ClassFabric 中完整保留。</p>'
+    h += '<section class="sec light"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2>'
     # 主界面
     row2 = '<div style="display:flex;gap:10px;justify-content:center;margin-top:14px;font-size:17px;font-family:var(--font)">' + ''.join('<div class="isl static" style="padding:0 1em">%s</div>' % t for t in ['12:30:44', ic('sun') + '&nbsp;9℃', ic('timer') + '&nbsp;元旦 62 天']) + '</div>'
     main_vis = panel_wall(fit('<div style="width:1000px;padding:14px 0 18px"><div style="display:flex;justify-content:center;font-size:19px"><div class="isl-stack">' + static_isl(idle('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"') + '</div></div>' + row2.replace('17px', '19px') + '</div>', 1000, 'position:relative;width:100%', 520), '50%', '2%', '190%', 'pad')
@@ -172,7 +188,7 @@ def home():
     gt = ''.join('<button role="tab" data-g="%d"%s>%s</button>' % (i, ' class="on" aria-selected="true"' if i == 0 else '', g[1]) for i, g in enumerate(G))
     gi = ''.join('<img class="gimg%s" data-cap="%s" src="/assets/img/%s.webp" alt="ClassFabric %s界面截图" loading="lazy" width="1920" height="1040">' % (' on' if i == 0 else '', g[2], g[0], g[1]) for i, g in enumerate(G))
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">档案编辑，<span class="g">所见即所得</span></h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
-          '<div class="gframe" id="gframe" title="点击放大">' + gi + '</div><p class="gcap" id="gcap">' + G[0][2] + '</p></div></div></section>\n')
+          '<div class="gframe" id="gframe" title="点击放大">' + gi + '</div></div></div></section>\n')
 
     # claim 4
     wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
