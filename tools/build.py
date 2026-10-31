@@ -160,7 +160,7 @@ def home():
     subs = ('<div class="subs"><div class="sub-i">' + ic('cal') + '<div><h4>灵活的课表启用规则</h4><p>可为课表设置每周、某一天或循环启用的规则，支持多周轮换，到日期自动切换。</p></div></div>'
             '<div class="sub-i">' + ic('clock') + '<div><h4>时间与科目的自由定制</h4><p>不同课表可使用不同的时间表，并支持自定义科目，设置科目图标与主题色。</p></div></div>'
             '<div class="sub-i">' + ic('edit') + '<div><h4>简洁直观的编辑工具</h4><p>课表、时间表、科目分页编辑，时间表以时间轴方式直接拖动调整。</p></div></div></div>')
-    ed_vis = panel_wall('<div style="padding:4% 3% 0">' + fit(editor_window(1500, 640, True, 'edMain'), 1500, 'position:relative;width:100%') + '</div>', '30%', '60%', '230%', '')
+    ed_vis = panel_wall('<div style="padding:4% 3% 0">' + ui2.editor_app(h=620) + '</div>', '30%', '60%', '230%', '')
     h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击右侧的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
     # 调课
     swap_vis = panel_wall('<div class="swwrap"><div class="sw2 w" data-app="swap"></div></div>', '70%', '36%', '210%', '')

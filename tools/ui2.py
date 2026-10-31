@@ -124,3 +124,12 @@ def settings_app(island='周六 10/31　今天没有课程。', ver='2.1.1.4'):
     a, b = island.split('\u3000')
     return ('<div class="w sapp">' + titlebar('应用设置', ver, '<span>%s</span><span style="font-weight:400">%s</span>' % (a, b)) +
             '<div class="wb">' + nav + '<div class="pgs">' + body + '</div></div></div>')
+
+
+# ---------------------------------------------------------------- 档案编辑（内容由 apps.js 渲染）
+def editor_app(island='周六 10/31　今天没有课程。', ver='2.1.1.4', h=620):
+    a, b = island.split('　')
+    tabs = ''.join('<span%s data-v="%s">%s</span>' % (' class="on"' if k == 'grid' else '', k, t) for k, t in [('grid', '课表'), ('tl', '时间表'), ('sj', '科目'), ('sw', '调课')])
+    acts = ''.join('<span>%s<em>%s</em></span>' % (ic(i), t) for i, t in [('doc', 'Default.json'), ('shield', '不信任'), ('save', '保存'), ('import', '导入/导出')])
+    return ('<div class="app"><div class="w ed2" data-app="editor" style="--h:%dpx">' % h + titlebar('档案编辑', ver, '<span>%s</span><span style="font-weight:400">%s</span>' % (a, b)) +
+            '<div class="e2tabs">' + tabs + '<div class="e2act">' + acts + '</div></div><div class="e2body"></div></div></div>')
