@@ -215,12 +215,20 @@
         '<div class="cbx2'+(st.auto?' on':'')+'" data-auto>'+'<i>'+I.check+'</i>选完科目自动移动到下一个课程</div></div>')+'</div>'+
         (st.pop ? popup() : '');
     }
-    var pp = {name:'新课表', rule:0, days:[false,false,false,false,false,false,false], target:null};
+    var pp = {name:'周一', rule:0, days:[false,false,false,false,false,false,false], target:null, copy:false, range:false};
+    var RI = {tag:'<svg viewBox="0 0 16 16"><path d="M2.5 2.5h5.6l5.4 5.4-5.6 5.6-5.4-5.4z M5.5 5.5h.01"/></svg>', week:'<svg viewBox="0 0 16 16"><rect x="2.5" y="3" width="11" height="10.5" rx="2"/><path d="M2.5 6.5h11"/></svg>', day:'<svg viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="M5.5 6.5h5M5.5 9.5h3"/></svg>', loop:'<svg viewBox="0 0 16 16"><path d="M3 7a4 4 0 0 1 7-2.5L12 6.5M13 9a4 4 0 0 1-7 2.5L4 9.5M12 3.5v3h-3M4 12.5v-3h3"/></svg>'};
+    function sel3(t){ return '<div class="sel2"><span>'+t+'</span>'+I.chev+'</div>'; }
     function popup(){
-      return '<div class="mask2"><div class="pop2"><h4>新课表</h4><label>时间表</label><div class="sel2"><span>新时间表</span>'+I.chev+'</div>'+
-        '<label>名称</label><input class="in2" data-pn value="'+esc(pp.name)+'"><label>触发规则</label><div class="seg2">'+['每周','某天','循环'].map(function(x,i){return '<span class="'+(pp.rule===i?'on':'')+'" data-rule="'+i+'">'+x+'</span>';}).join('')+'</div>'+
-        '<label>当今天是</label><div class="pills">'+days.map(function(d,i){return '<span class="'+(pp.days[i]?'on':'')+'" data-pd="'+i+'">'+d+'</span>';}).join('')+'</div>'+
-        '<div class="pbar"><span class="b2" data-pcancel>取消</span><span class="b2 acc" data-pok>创建</span></div></div></div>';
+      var rules = [['每周','week'],['某天','day'],['循环','loop']];
+      return '<div class="nfly" data-fly><div class="pop2"><h4>新建课表</h4><label>时间表</label>'+sel3('新时间表')+'<label>名称</label><input class="in2" data-pn value="'+esc(pp.name)+'">'+
+        '<div class="cbx2'+(pp.copy?' on':'')+'" data-pcopy style="margin:12px 0 4px"><i>'+I.check+'</i>复制自</div><hr>'+
+        '<div class="sh2">'+RI.tag+'触发规则</div><p class="hint2">课表只有在规则全部满足时才会生效。</p>'+
+        '<div class="seg3">'+rules.map(function(x,i){return '<span class="'+(pp.rule===i?'on':'')+'" data-rule="'+i+'">'+RI[x[1]]+x[0]+'</span>';}).join('')+'</div>'+
+        (pp.rule===0 ? '<div class="evr"><span>每</span><div class="sel2 sm">两周'+I.chev+'</div><span>的</span><div class="sel2 sm">每周启用'+I.chev+'</div></div>' : '')+
+        '<label>当今天是:</label><div class="pills">'+days.map(function(d,i){return '<span class="'+(pp.days[i]?'on':'')+'" data-pd="'+i+'">'+d+'</span>';}).join('')+'</div>'+
+        '<div class="cbx2'+(pp.range?' on':'')+'" data-prange style="margin:14px 0 4px"><i>'+I.check+'</i>并且今天处于以下日期范围</div>'+
+        '<label>排除以下日期</label>'+sel3('选择日期')+'<label>附加以下日期</label>'+sel3('选择日期')+'<hr>'+
+        '<div class="b2 acc cr" data-pok>'+I.check+'创建</div></div></div>';
     }
     function tlView(){
       var H = (T1-T0)*PX, lines='';
@@ -267,6 +275,13 @@
     root.querySelectorAll('.e2tabs > span').forEach(function(sp){ sp.addEventListener('click', function(){
       root.querySelectorAll('.e2tabs > span').forEach(function(x){x.classList.toggle('on',x===sp)}); st.v = sp.dataset.v; st.pop=false; render(); }); });
 
+    var anchor = 0, atop = 140;
+    function place(th){
+      var f = body.querySelector('[data-fly]'); if(!f) return;
+      if (th){ var nbEl = body.querySelector('.nb[data-new="'+pp.target+'"]'); var tb = (nbEl||body).getBoundingClientRect(), bb = body.getBoundingClientRect(); anchor = tb.left - bb.left - 6; atop = tb.bottom - bb.top + 4; }
+      var bw = body.clientWidth, w = f.firstChild.offsetWidth;
+      f.style.left = Math.max(8, Math.min(anchor, bw - w - 8))+'px'; var ph = f.firstChild.offsetHeight; f.style.top = Math.max(6, Math.min(atop, body.clientHeight - Math.min(ph,body.clientHeight-130) - 8))+'px';
+    }
     function cur(){ return blocks[st.tl]; }
     body.addEventListener('click', function(e){
       var t = e.target, el;
@@ -293,10 +308,12 @@
         if (st.auto) st.cell=[c[0], Math.min(n-1,c[1]+1)]; render(); return; }
       if ((el=t.closest('[data-z]'))){ var z=Math.round(PX/0.006)+(+el.dataset.z)*50; z=Math.max(100,Math.min(500,z)); PX=z*0.006; render(true); return; }
       if (t.closest('[data-auto]')){ st.auto=!st.auto; render(); return; }
-      if ((el=t.closest('[data-new]'))){ pp.target=+el.dataset.new; pp.name='新课表'; pp.days=days.map(function(x,i){return i===pp.target}); st.pop=true; render(); return; }
-      if ((el=t.closest('[data-rule]'))){ pp.rule=+el.dataset.rule; render(); return; }
-      if ((el=t.closest('[data-pd]'))){ var i=+el.dataset.pd; pp.days[i]=!pp.days[i]; render(); return; }
-      if (t.closest('[data-pcancel]')){ st.pop=false; render(); return; }
+      if ((el=t.closest('[data-new]'))){ pp.target=+el.dataset.new; pp.name='周'+days[pp.target]; pp.copy=false; pp.range=false; pp.days=days.map(function(x,i){return i===pp.target}); st.pop=true; render(); place(true); return; }
+      if ((el=t.closest('[data-rule]'))){ pp.rule=+el.dataset.rule; render(); place(); return; }
+      if ((el=t.closest('[data-pd]'))){ var i=+el.dataset.pd; pp.days[i]=!pp.days[i]; render(); place(); return; }
+      if (t.closest('[data-pcopy]')){ pp.copy=!pp.copy; render(); place(); return; }
+      if (t.closest('[data-prange]')){ pp.range=!pp.range; render(); place(); return; }
+      if (st.pop && !t.closest('[data-fly]')){ st.pop=false; render(); return; }
       if (t.closest('[data-pok]')){ pp.days.forEach(function(on,i){ if(on && !sched[i]) sched[i]=classes().map(function(){return null}); }); st.pop=false; st.cell=[pp.target,0]; render(); return; }
       if ((el=t.closest('[data-so]'))){ var s=subj[+el.dataset.so]; s.o=!s.o; render(); return; }
       if ((el=t.closest('.sr[data-si]'))){ st.sj=+el.dataset.si; render(); return; }

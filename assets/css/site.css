@@ -1383,3 +1383,27 @@ html,body{overflow-x:clip}
 .tt2 th{position:relative}
 @container (max-width:720px){.tt2 th .nb{font-size:11px;padding:4px 0}.tt2 th small{position:static;display:block;margin:0}}
 @container (max-width:720px){.tt2 th small{position:static!important;display:block!important;margin:2px 0 6px!important;float:none!important}.tt2{min-width:600px}.tt2 th .nb{white-space:nowrap}.gscroll{overflow-x:auto}}
+/* V17 新建课表浮出面板 */
+.nfly{position:absolute;z-index:6;top:176px;width:0}
+.nfly .pop2{width:288px;max-width:calc(100vw - 32px);padding:14px 16px 14px;border-radius:8px;background:#2b2b2b;border:1px solid #3d3d3d;box-shadow:0 12px 32px rgba(0,0,0,.55);max-height:none;overflow:visible;font-size:13px}
+.nfly .pop2 h4{font-size:13.5px;font-weight:600;margin:0 0 10px}
+.nfly .pop2 label{margin:10px 0 5px;font-weight:600;font-size:13px;color:#eee}
+.nfly .pop2 hr{border:0;border-top:1px solid #3a3a3a;margin:12px 0}
+.nfly .sh2{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13px}
+.nfly .sh2 svg,.seg3 svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.nfly .hint2{margin:4px 0 8px;color:#cfcfcf;font-size:12.5px}
+.seg3{display:flex;background:#222;border:1px solid #3a3a3a;border-radius:6px;padding:2px}
+.seg3 span{flex:1;display:flex;gap:6px;align-items:center;justify-content:center;height:30px;border-radius:5px;cursor:pointer;position:relative}
+.seg3 span.on{background:#343434}.seg3 span.on::after{content:"";position:absolute;bottom:2px;left:50%;width:14px;height:3px;margin-left:-7px;border-radius:2px;background:var(--blue)}
+.evr{display:flex;align-items:center;gap:8px;margin:12px 0 4px;color:#cfcfcf}
+.evr .sel2.sm{height:30px;flex:1;padding:0 8px;font-size:12.5px;background:#323232;border-color:#3c3c3c}
+.nfly .sel2{background:#323232;border-color:#3d3d3d;height:32px}
+.nfly .sel2 svg{width:10px;height:10px;opacity:.8}
+.nfly .pills{gap:4px}.nfly .pills span{width:34px;height:30px;border-radius:15px;background:#303030;border-color:#3b3b3b}
+.nfly .pills span.on{border-radius:15px}
+.nfly .cr{width:70px;gap:6px;justify-content:center;height:30px;padding:0}.nfly .cr svg{width:12px;height:12px}
+.nfly .pop2{max-height:calc(100% - 12px);overflow:auto}
+.nfly{bottom:6px}.nfly .pop2{max-height:100%}
+.nfly .pop2 label{margin:8px 0 4px}.nfly .pop2 hr{margin:9px 0}.nfly .evr{margin:9px 0 2px}.nfly .pop2 h4{margin-bottom:6px}
+.nfly .pills span.on{background:var(--blue);border-color:var(--blue);color:#06233b}
+.nfly .pop2::-webkit-scrollbar{width:6px}.nfly .pop2::-webkit-scrollbar-thumb{background:#555;border-radius:3px}
