@@ -204,8 +204,8 @@ def home():
 
     # 除了这些
     rec_vis = panel_wall('<div style="display:flex;gap:6%;align-items:flex-end;justify-content:center;padding:6% 5% 0">' + fit(recovery(), 420, 'position:relative;width:54%;margin-bottom:-4px') + '</div>', '70%', '70%', '240%', '')
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">除了这些…</h2>'
-          '<div class="blk rv"><div class="copy"><span class="tag gr">#可靠</span><h3>出现问题，也能恢复</h3><p>内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。</p></div>' + rec_vis + '</div></div></section>\n')
+    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可靠</span>的大屏课表软件</h2>'
+          '<div class="blk split rv"><div class="copy"><span class="tag gr">#恢复</span><h3>出现问题，也能恢复</h3><p>内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。</p></div>' + rec_vis + '</div></div></section>\n')
 
     # steps
     st = [('1', '下载', '前往下载页，获取适用于 Windows 的最新版本。'), ('2', '运行', '按文件类型安装或解压后启动，主界面会出现在屏幕上方。'), ('3', '接着用', '如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。')]
