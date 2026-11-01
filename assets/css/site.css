@@ -1407,3 +1407,5 @@ html,body{overflow-x:clip}
 .nfly .pop2 label{margin:8px 0 4px}.nfly .pop2 hr{margin:9px 0}.nfly .evr{margin:9px 0 2px}.nfly .pop2 h4{margin-bottom:6px}
 .nfly .pills span.on{background:var(--blue);border-color:var(--blue);color:#06233b}
 .nfly .pop2::-webkit-scrollbar{width:6px}.nfly .pop2::-webkit-scrollbar-thumb{background:#555;border-radius:3px}
+.rcv{text-align:left}.rcv .o>div{flex:1;min-width:0;text-align:left}.rcv .o .go{flex:none}
+.rcv .o:has(.go[viewBox]) .go{margin-left:auto}
