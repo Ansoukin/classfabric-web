@@ -87,7 +87,6 @@ def home():
     h = head('ClassFabric — 紧跟上游的 ClassIsland 个人修改版班级大屏课表',
              'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', ld())
     h += navbar('home')
-    h += '<nav class="lnav" id="lnav" aria-label="页内导航"><div class="wrap"><b>ClassFabric</b><span class="lk"><a href="#feat">功能</a><a href="#custom">定制</a><a href="#sync">同步</a><a class="lb" href="/download.html">下载</a></span></div></nav>\n'
     h += '<main>\n'
     # hero
     h += ('<section class="hero"><div class="wrap">'
@@ -115,8 +114,8 @@ def home():
     c_mig = fc('cal', '课表与档案', '', used) + fc('bolt', '自动化', '', used) + fc('plug', '插件', '', used) + fc('brush', '主题', '', used)
     c_enh = fc('cloud', '更多天气源', '小米天气 · OpenWeather · 和风天气', on) + fc('text', '多语言', '实验中', on) + fc('plug', '更好的插件预览', '', on) + fc('sync', '持续同步上游', '', on)
     h += ('<section class="sec sync" id="sync"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2>'
-          '<div class="cmp rv"><div class="cc"><small>上游</small><h3>ClassIsland</h3><p>由 HelloWRC 维护的原版，成熟稳定，更新节奏由上游决定。</p></div>'
-          '<div class="cc hl2"><small>个人修改版</small><h3>ClassFabric</h3><p>底层代码与上游保持一致，新功能与修复会尽快同步；原有的课表、自动化、插件与主题，安装后即可继续使用；并在上游之上加入更多增强。</p></div></div>'
+          '<div class="cmp2 rv"><div class="cr2"><span class="ci">' + ic('school') + '</span><div class="ct2"><b>ClassIsland</b><span>由 HelloWRC 维护的原版，成熟稳定，更新节奏由上游决定。</span></div><em>上游</em></div>'
+          '<div class="cr2 on"><span class="ci"><img src="/assets/img/icon-64.png" alt="" width="26" height="26"></span><div class="ct2"><b>ClassFabric</b><span>底层代码与上游保持一致，新功能与修复会尽快同步；原有的课表、自动化、插件与主题，安装后即可继续使用；并在上游之上加入更多增强。</span></div><em class="acc">个人修改版</em></div></div>'
           '<div class="tri3">'
           '<div class="rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p></div>'
           '<div class="rv d1"><span class="tag">#迁移</span><h3>无感切换，沿用现有配置</h3><p>原有的课表、自动化、插件与主题，安装后即可继续使用。</p></div>'
@@ -190,15 +189,18 @@ def home():
     h += '</div></section>\n'
 
     # claim 4
-    wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
-    ln = ('<div class="cd s3 rv d1"><h4>多语言 <span style="font-size:13px;color:var(--faint);font-weight:500">实验中</span></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
-          '<div class="vis"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div style="font-size:12.5px;color:var(--faint);margin-top:8px">适配进度 约 40%</div></div></div>')
-    pv = ('<div class="cd s2 rv"><h4>更好的插件预览</h4><p>插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。</p><div class="vis"><div style="display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)">'
-          '<span style="width:46px;height:46px;border-radius:10px;background:#6a6a6a;display:grid;place-items:center;font-weight:800;font-size:20px;flex:none">U</span><div style="flex:1;min-width:0"><b style="display:block">UIAccess 提权</b><span style="font-size:13px;color:var(--muted)">2.0.0.0 · HelloWRC, Doubx690i</span></div><span class="chip on" style="padding:6px 14px">安装</span></div>'
-          '<div style="height:70px;margin-top:10px;border-radius:10px;border:1px solid var(--line);background:linear-gradient(90deg,#0d1b2e,#15335a 45%,#0e2240);position:relative;overflow:hidden"><div style="position:absolute;left:10%;right:10%;top:46%;height:7px;border-radius:4px;background:rgba(98,179,242,.55)"></div></div></div></div>')
-    jn = ('<div class="cd s2 rv d2"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="cta" style="justify-content:flex-start"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
-    tray = ('<div class="cd s2 rv d1 trayc"><h4>一切，都在托盘里</h4><p>右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。</p><div class="vis"><img src="/assets/img/tray.webp" alt="托盘菜单" loading="lazy" width="187" height="390"></div></div>')
-    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
+    def fx(cls, ico, t, d, vis, tag=''):
+        return '<div class="fx1 %s rv"><div class="fh"><span class="fi">%s</span><div><h4>%s%s</h4><p>%s</p></div></div><div class="fv">%s</div></div>' % (cls, ic(ico), t, tag, d, vis)
+    wx = fx('', 'cloud', '更多天气源', '除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。',
+            '<div class="seg4"><span class="on">小米天气</span><span>OpenWeather</span><span>和风天气</span></div>')
+    ln = fx('', 'text', '多语言', '界面文字正在由写死改为可翻译的形式，支持简体中文、繁體中文与 English，通过 Crowdin 协作，欢迎参与。',
+            '<div class="cbo"><span>简体中文</span>' + ic('chev') + '</div><div class="pbar2"><i style="width:40%"></i></div><small>适配进度 约 40%</small>', '<span class="bdg">实验中</span>')
+    pv = fx('', 'plug', '更好的插件预览', '插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。',
+            '<div class="plrow"><span class="pi">U</span><div><b>UIAccess 提权</b><small>2.0.0.0 · HelloWRC, Doubx690i</small></div><span class="abtn">安装</span></div>')
+    jn = fx('', 'group', '欢迎参与共建', '欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。',
+            '<div class="btnrow"><a class="fb acc" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="fb" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div>')
+    tray = fx('tr', 'list', '一切，都在托盘里', '右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。', '<div class="trw">' + tray_menu() + '</div>')
+    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="fxg">' + wx + pv + tray + ln + jn + '</div></div></section>\n'
 
     # 除了这些
     rec_vis = panel_wall('<div style="display:flex;gap:6%;align-items:flex-end;justify-content:center;padding:6% 5% 0">' + fit(recovery(), 420, 'position:relative;width:54%;margin-bottom:-4px') + '</div>', '70%', '70%', '240%', '')
@@ -228,15 +230,18 @@ def home():
 def download():
     h = head('下载 ClassFabric — Windows 版', '下载 ClassFabric，ClassIsland 的个人修改版班级大屏课表。支持 Windows 10 及更高版本，免费开源。', '/download.html')
     h += navbar('dl')
-    h += ('<main><section class="phead"><div class="wrap"><h1>下载 ClassFabric</h1><p>目前提供 Windows 版本。</p></div></section><div class="wrap"><div class="dl-grid">'
-          '<div class="dl-card"><div class="dl-os"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg><h2>Windows</h2></div>'
-          '<p class="dl-sub">Windows 10 及更高版本</p><div class="ver2"><span>最新版本 <code data-ver>读取中…</code></span><span>发布于 <span data-date>—</span></span></div>'
-          '<div class="cta" style="justify-content:flex-start"><a class="btn blue" href="' + REL + '" data-dl data-releaselink rel="noopener">' + ic('dl') + '下载最新版</a><a class="btn glass" href="' + GH + '/releases" rel="noopener">全部版本</a></div>'
-          '<div class="assets" id="assets"><div class="none">正在读取版本信息…</div></div>'
-          '<ol class="steps"><li><span><b>下载</b>　选择上方的文件，保存到本地。</span></li><li><span><b>运行</b>　按文件类型安装或解压后启动，主界面会出现在屏幕上方。</span></li><li><span><b>接着用</b>　如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。</span></li></ol></div>'
-          '<div class="dl-side"><div class="dl-card"><h3>Linux 与 macOS</h3><p>代码中保留了相关支持，但我们暂无测试环境，因此暂不提供官方构建。欢迎自行从源码构建，或帮助测试。</p></div>'
-          '<div class="dl-card"><h3>更新与反馈</h3><p>新版本均发布在 GitHub Releases。遇到问题或有建议，欢迎提交 Issue。</p><div class="cta" style="justify-content:flex-start;margin-top:18px"><a class="btn glass sm" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass sm" href="/about.html">了解 ClassFabric</a></div></div></div></div>'
-          '<div style="height:clamp(60px,9vw,120px)"></div></div></main>\n')
+    h += ('<main><section class="dlh"><div class="wrap"><h1>下载 ClassFabric</h1><p>目前提供 Windows 版本，免费开源。</p></div></section>'
+          '<div class="wrap dl2"><div class="dmain"><div class="dtop"><span class="wlogo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg></span>'
+          '<div class="dtt"><h2>Windows</h2><span>Windows 10 及更高版本 · x64</span></div>'
+          '<div class="seg4 chan" id="chan"><span class="on" data-chan="stable">稳定版</span><span data-chan="pre">预览版</span></div></div>'
+          '<div class="dver"><div><small id="chanTip">最新稳定版</small><div class="vn"><b data-ver>读取中…</b><em class="bdg" data-badge hidden>预览版</em></div><span class="vd">发布于 <span data-date>—</span></span></div>'
+          '<div class="btnrow"><a class="fb acc lg" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '下载最新版</a><a class="fb lg" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div></div>'
+          '<div class="assets2" id="assets"><div class="none">正在读取版本信息…</div></div></div>'
+          '<div class="dside"><div class="infob"><b>Linux 与 macOS</b><span>代码中保留了相关支持，但暂无测试环境，因此暂不提供官方构建。欢迎自行从源码构建，或帮助测试。</span></div>'
+          '<div class="infob"><b>预览版说明</b><span>预览版包含尚未稳定的新功能，仅在 GitHub 发布了预览版时才可选择；遇到问题欢迎反馈。</span></div>'
+          '<div class="infob"><b>更新与反馈</b><span>新版本均发布在 GitHub Releases。</span><div class="btnrow"><a class="fb" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="fb" href="/about.html">了解 ClassFabric</a></div></div></div></div>'
+          '<div class="wrap"><div class="stp3"><div><i>1</i><b>下载</b><p>选择上方的文件，保存到本地。</p></div><div><i>2</i><b>运行</b><p>按文件类型安装或解压后启动，主界面会出现在屏幕上方。</p></div><div><i>3</i><b>接着用</b><p>如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。</p></div></div></div>'
+          '<div style="height:clamp(50px,8vw,100px)"></div></main>\n')
     return h + FOOT
 
 # ------------------------------------------------------------------ about

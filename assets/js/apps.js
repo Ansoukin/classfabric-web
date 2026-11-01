@@ -172,6 +172,7 @@
     });
   }
   $$('[data-app="settings"]').forEach(initSettings);
+  $$('[data-app="settings"][data-start="remind"]').forEach(function(h){ var f=h.querySelector('.prov'); if(f) f.click(); });
 
   /* ============ 档案编辑（可交互 · 可拖拽时间轴） ============ */
   function initEditor(root){
@@ -211,8 +212,8 @@
       return toolbar(any ? [['refresh','刷新','','sync'],'|',['day','周六','dim','doc'],['info','详细信息','','info'],['layer','创建临时层','','stack'],['del','删除','','trash']] : [['refresh','刷新','','sync'],'|',['none','未选择课表','dim','']]) +
         '<div class="e2v grid"><div class="gmain"><div class="gh2"><span class="dp">2026/10/31'+I.cal+'</span><span class="ar">←</span><span class="ar">→</span><span class="wk">第 9 周</span></div>'+
         '<div class="gscroll"><table class="tt2"><thead><tr>'+th+'</tr></thead>'+(any?'<tbody>'+rows+'</tbody>':'')+'</table>'+(any?'':'<div class="emp2"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="9" stroke-dasharray="9 7"/></svg><p>这里还没有课表。不妨先点击上方的【新课表】按钮创建课表吧</p></div>')+'</div></div>'+
-        (!any?'':'<div class="side2"><div class="tb2"><span class="on">编辑科目</span><span>编辑课程</span></div><div class="chips3">'+chips+'</div>'+
-        '<div class="cbx2'+(st.auto?' on':'')+'" data-auto>'+'<i>'+I.check+'</i>选完科目自动移动到下一个课程</div></div>')+'</div>'+
+        '<div class="side2"><div class="tb2"><span class="on">编辑科目</span><span>编辑课程</span></div><div class="chips3">'+chips+'</div>'+
+        '<div class="cbx2'+(st.auto?' on':'')+'" data-auto>'+'<i>'+I.check+'</i>选完科目自动移动到下一个课程</div></div></div>'+
         (st.pop ? popup() : '');
     }
     var pp = {name:'周一', rule:0, days:[false,false,false,false,false,false,false], target:null, copy:false, range:false};
