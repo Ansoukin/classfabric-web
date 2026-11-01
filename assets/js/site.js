@@ -207,39 +207,26 @@
     var o = links.classList.toggle('open'); menu.setAttribute('aria-expanded', o);
   });
 
-  /* ---------- release info（稳定版 / 预览版） ---------- */
-  var rels = null, chan = 'stable';
+  /* ---------- release info ---------- */
+  var cache = null;
+  try { cache = JSON.parse(localStorage.getItem('cf_rel') || 'null'); } catch (e) { }
   function fmt(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB'; }
-  function pick() { if (!rels) return null; for (var i = 0; i < rels.length; i++) { var r = rels[i]; if (!r.draft && (chan === 'pre' ? r.prerelease : !r.prerelease)) return r; } return null; }
-  function fillRel() {
-    var r = pick(), box = $('#assets'), dl = $('[data-dl]');
-    $$('[data-badge]').forEach(function (e) { e.hidden = chan !== 'pre'; });
-    var tip = $('#chanTip'); if (tip) tip.textContent = chan === 'pre' ? '最新预览版' : '最新稳定版';
-    if (!r) {
-      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; });
-      $$('[data-date]').forEach(function (e) { e.textContent = '—'; });
-      if (box) box.innerHTML = '<div class="none">' + (chan === 'pre' ? '目前没有发布预览版，请先使用稳定版。' : '暂无可下载的版本。') + '</div>';
-      if (dl) dl.classList.add('dis'); return;
-    }
-    if (dl) { dl.classList.remove('dis'); }
+  function fillRel(r) {
     $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; });
     $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); });
     $$('[data-releaselink]').forEach(function (e) { e.href = r.html_url; });
-    if (dl) { var big = (r.assets || []).slice().sort(function (a, b) { return /installer/i.test(b.name) - /installer/i.test(a.name); })[0]; dl.href = big ? big.browser_download_url : r.html_url; }
+    var box = $('#assets');
     if (box) {
       var as = r.assets || [];
       box.innerHTML = as.length ? as.map(function (a) {
-        return '<a href="' + a.browser_download_url + '" rel="noopener"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg><span class="an">' + a.name + '</span><em>' + fmt(a.size) + '</em><i class="dlb"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></i></a>';
+        return '<a href="' + a.browser_download_url + '" rel="noopener"><span>' + a.name + '</span><em>' + fmt(a.size) + '</em></a>';
       }).join('') : '<div class="none">该版本暂无文件，请前往 GitHub 查看。</div>';
     }
   }
-  $$('[data-chan]').forEach(function (b) { b.addEventListener('click', function () {
-    chan = b.dataset.chan; $$('[data-chan]').forEach(function (x) { x.classList.toggle('on', x === b); }); fillRel(); }); });
-  if (window.fetch && ($('[data-ver]') || $('#assets'))) {
-    var cache = null; try { cache = JSON.parse(localStorage.getItem('cf_rels') || 'null'); } catch (e) { }
-    if (cache && Date.now() - cache.t < 36e5) { rels = cache.r; fillRel(); }
-    else fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=20').then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (r) { rels = r; fillRel(); try { localStorage.setItem('cf_rels', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
+  if (cache && cache.r && Date.now() - cache.t < 36e5) fillRel(cache.r);
+  else if (window.fetch && ($('[data-ver]') || $('#assets'))) {
+    fetch('https://api.github.com/repos/' + REPO + '/releases/latest').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (r) { fillRel(r); try { localStorage.setItem('cf_rel', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
       .catch(function () {
         $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; });
         var box = $('#assets'); if (box) box.innerHTML = '<div class="none">暂时无法读取版本信息，请前往 <a href="https://github.com/' + REPO + '/releases" rel="noopener">GitHub Releases</a> 下载。</div>';
@@ -250,7 +237,7 @@
   var tb = $('#theme');
   if (tb) tb.addEventListener('click', function () {
     var cur = document.documentElement.dataset.theme;
-    if (!cur) cur = 'dark';
+    if (!cur) cur = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
     var nx = cur === 'light' ? 'dark' : 'light';
     document.documentElement.dataset.theme = nx;
     try { localStorage.setItem('cf_theme', nx); } catch (e) { }
@@ -345,20 +332,4 @@
       f.addEventListener('pointerleave', function () { f.style.transform = ''; });
     });
   }
-})();
-
-/* 提醒：滚动讲述（滚动进度 → 切换状态） */
-(function () {
-  var st = document.getElementById('story'); if (!st) return;
-  var tabs = Array.prototype.slice.call(st.querySelectorAll('#remTabs .sub-i')); if (!tabs.length) return;
-  var cur = -1;
-  function tick() {
-    if (window.innerWidth <= 860) return;
-    var r = st.getBoundingClientRect(), total = r.height - window.innerHeight;
-    var p = Math.max(0, Math.min(.999, -r.top / (total > 0 ? total : 1)));
-    var i = Math.floor(p * tabs.length);
-    if (i !== cur) { cur = i; tabs[i].click(); }
-    if (r.top < window.innerHeight && r.bottom > 0 && cur < 0) { cur = 0; tabs[0].click(); }
-  }
-  window.addEventListener('scroll', tick, { passive: true }); window.addEventListener('resize', tick); tick();
 })();

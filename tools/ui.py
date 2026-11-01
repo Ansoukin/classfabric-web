@@ -50,8 +50,6 @@ P = {
  'x': '<path d="M6 6l12 12M18 6L6 18"/>',
  'search': '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
  'tri': '<path d="M3 20h18L12 4z"/><path d="M12 10v5"/>',
- 'arrowr': '<path d="M4 12h16M14 6l6 6-6 6"/>',
- 'ext': '<path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/>',
  'dl': '<path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/>',
 }
 
@@ -288,8 +286,8 @@ def tray_menu():
 
 def recovery():
     def o(i, t, s='', dis=False, ext=False):
-        return '<div class="o%s">%s<div><b>%s</b>%s</div>%s</div>' % (' dis' if dis else '', ic(i), t, ('<small>%s</small>' % s) if s else '', ic('ext', 'go') if ext else ic('chevr', 'go'))
+        return '<div class="o%s">%s<div><b>%s</b>%s</div>%s</div>' % (' dis' if dis else '', ic(i), t, ('<small>%s</small>' % s) if s else '', ic('chevr', 'go'))
     return ('<div class="rcv" style="--dw:420px"><div class="t">恢复<span class="ctl"><i>–</i><i>▢</i><i>✕</i></span></div><h5>选择一个选项</h5><p class="s">选择一个操作以继续。</p>'
-            '<div class="g1">' + o('arrowr', '继续使用 ClassFabric') + o('arrowr', '以安全模式继续使用 ClassFabric', '禁用所有插件和自动化功能。') + o('arrowr', '以诊断模式继续使用 ClassFabric', '在日志中记录详细的信息，并启用控制台输出。') + o('folder', '打开日志目录', '', False, True) + '</div>'
+            '<div class="g1">' + o('chevr', '继续使用 ClassFabric') + o('chevr', '以安全模式继续使用 ClassFabric', '禁用所有插件和自动化功能。') + o('chevr', '以诊断模式继续使用 ClassFabric', '在日志中记录详细的信息，并启用控制台输出。') + o('folder', '打开日志目录') + '</div>'
             '<div class="g1">' + o('back', '恢复备份', '从先前的备份恢复处于正确状态的配置文件。') + o('undo', '回滚', '回滚到之前的 ClassFabric 版本', True) + '</div>'
             '<div class="g1">' + o('trash', '清除临时文件', '删除所有缓存和临时文件。') + o('sync', '重置应用设置', '重置应用的设置信息，不影响档案、组件、自动化、插件等的配置。') + o('save', '重置全部配置', '重置应用的所有配置，包括应用设置、组件配置、自动化配置、插件设置等，不影响档案配置。') + o('back', '重置全部信息', '重置应用的所有信息，恢复到安装前的状态。') + '</div></div>')
