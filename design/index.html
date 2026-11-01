@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ClassFabric · 设计样张目录</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/design/proto.css">
+</head>
+<body>
+
+<header class="p-top">
+  <div class="p-wrap">
+    <b>ClassFabric · 设计样张</b>
+    <span>v12 提案 · 非正式站</span>
+  </div>
+</header>
+
+<section class="p-sec" style="border-top:0;padding-top:clamp(32px,4vw,56px)">
+  <div class="p-wrap">
+    <div class="p-sec-head">
+      <span class="p-kicker">Preview</span>
+      <h2>三个入口</h2>
+      <p>左边是现在的正式站，中间是新视觉样张，右边是方案文档。下面两张卡片点进去即可。</p>
+    </div>
+
+    <div class="p-comps" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+
+      <a class="p-card" href="/design/proposal.html" style="display:block">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 10h17"/></svg>
+        </div>
+        <h4>视觉样张 proposal.html</h4>
+        <p>新首屏（含班牌样机与关键事实条）、设计变量、组件库、新旧对照表。<br><span style="color:var(--accent)">/design/proposal.html</span></p>
+      </a>
+
+      <a class="p-card" href="/design/plan.md" style="display:block">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>
+        </div>
+        <h4>方案文档 plan.md</h4>
+        <p>诊断数据、设计变量、首页信息排序、实施批次与验收标准。<br><span style="color:var(--accent)">/design/plan.md</span></p>
+      </a>
+
+      <a class="p-card" href="/" style="display:block">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9H4z"/><path d="M9 20v-6h6v6"/></svg>
+        </div>
+        <h4>现有正式站</h4>
+        <p>改版前的线上版本，用来和样张对照。<br><span style="color:var(--accent)">/</span></p>
+      </a>
+
+    </div>
+
+    <p style="margin-top:var(--s6);font-size:var(--fs-sm);color:var(--faint);line-height:1.7">
+      提示：预览地址是同一个端口，改地址栏路径即可切换；直接把 <code style="font-family:var(--mono);font-size:12px">/design/proposal.html</code> 接在预览域名后面就是样张。
+      样张是纯静态、无 JS 依赖，手机和桌面都能看。
+    </p>
+  </div>
+</section>
+
+<footer class="p-foot">
+  <div class="p-wrap">样张目录 · 仅用于评审，可随时删除 <code style="font-family:var(--mono)">design/</code> 目录。</div>
+</footer>
+
+</body>
+</html>
