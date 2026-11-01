@@ -177,14 +177,13 @@
   function initEditor(root){
     var body = root.querySelector('.e2body');
     var PX = 1.8, T0 = 6*60, T1 = 18*60;
-    var subj = [['语文','语','#e5576b'],['数学','数','#5a78d8'],['英语','英','#7e62d3'],['物理','物','#3a9ae2'],['化学','化','#2fb2a1'],['生物','生','#4faf53'],['政治','政','#df4f6d'],['历史','历','#c58b3d'],['地理','地','#8bb347'],['信息技术','信','#2f9cc9'],['体育','体','#f0872e'],['自习','自','#6c7d9d']];
-    subj = subj.map(function(x,i){return {n:x[0],a:x[1],c:x[2],o:x[0]==='体育'}});
+    var subj = [['语文','语','#e5576b'],['数学','数','#5a78d8'],['英语','英','#7e62d3'],['历史','历','#c58b3d'],['政治','政','#df4f6d'],['物理','物','#3a9ae2'],['化学','化','#2fb2a1'],['生物','生','#4faf53'],['地理','地','#8bb347'],['信息技术','信','#2f9cc9'],['体育','体','#f0872e'],['自习','自','#6c7d9d'],['通用技术','技','#a8774f'],['音乐','音','#c05fd0'],['美术','美','#e07a5f'],['选修','选','#5a8f7b'],['社团','社','#d4a017'],['心理','心','#7aa2f7'],['早读','早','#e9a23b'],['班会','班','#4aa3a3'],['测验','测','#b5546a']];
+    subj = subj.map(function(x){return {n:x[0],a:x[1],c:x[2],o:x[0]==='体育'}});
     var blocks = [], t = 8*60;
     for (var i=0;i<6;i++){ blocks.push({s:t,e:t+40,k:'k'}); t+=40; if(i<5){ blocks.push({s:t,e:t+10,k:'b'}); t+=10; } }
     var days = ['日','一','二','三','四','五','六'], dates = ['10/25','10/26','10/27','10/28','10/29','10/30','10/31'], TODAY = 6;
-    var sched = {}; sched[TODAY] = ['语文','数学','英语','物理','化学','生物'];
-    sched[1] = ['数学','语文','英语','历史','政治','地理'];
-    var st = {v:'grid', cell:[TODAY,1], auto:true, tl:3, sj:0, hist:[], redo:[], pop:false};
+    var sched = {};
+    var st = {tinfo:false, v:'grid', cell:[TODAY,1], auto:true, tl:3, sj:0, hist:[], redo:[], pop:false};
     function hm(m){ return ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+m%60).slice(-2); }
     function pm(v){ var a=v.split(':'); return (+a[0])*60+(+a[1]); }
     function classes(){ return blocks.filter(function(b){return b.k==='k'}); }
@@ -208,11 +207,12 @@
         rows += '<tr>'+tr+'</tr>';
       });
       var chips = subj.map(function(s){ return '<span data-sub="'+esc(s.n)+'" title="'+esc(s.n)+'">'+esc(s.a)+'</span>'; }).join('');
-      return toolbar([['refresh','刷新','','sync'],'|',['day','周六','dim','doc'],['info','详细信息','','info'],['layer','创建临时层','','stack'],['del','删除','','trash']]) +
+      var any = Object.keys(sched).length > 0;
+      return toolbar(any ? [['refresh','刷新','','sync'],'|',['day','周六','dim','doc'],['info','详细信息','','info'],['layer','创建临时层','','stack'],['del','删除','','trash']] : [['refresh','刷新','','sync'],'|',['none','未选择课表','dim','']]) +
         '<div class="e2v grid"><div class="gmain"><div class="gh2"><span class="dp">2026/10/31'+I.cal+'</span><span class="ar">←</span><span class="ar">→</span><span class="wk">第 9 周</span></div>'+
-        '<div class="gscroll"><table class="tt2"><thead><tr>'+th+'</tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
-        '<div class="side2"><div class="tb2"><span class="on">编辑科目</span><span>编辑课程</span></div><div class="chips3">'+chips+'</div>'+
-        '<div class="cbx2'+(st.auto?' on':'')+'" data-auto>'+'<i>'+I.check+'</i>选完科目自动移动到下一个课程</div></div></div>'+
+        '<div class="gscroll"><table class="tt2"><thead><tr>'+th+'</tr></thead>'+(any?'<tbody>'+rows+'</tbody>':'')+'</table>'+(any?'':'<div class="emp2"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="9" stroke-dasharray="9 7"/></svg><p>这里还没有课表。不妨先点击上方的【新课表】按钮创建课表吧</p></div>')+'</div></div>'+
+        (!any?'':'<div class="side2"><div class="tb2"><span class="on">编辑科目</span><span>编辑课程</span></div><div class="chips3">'+chips+'</div>'+
+        '<div class="cbx2'+(st.auto?' on':'')+'" data-auto>'+'<i>'+I.check+'</i>选完科目自动移动到下一个课程</div></div>')+'</div>'+
         (st.pop ? popup() : '');
     }
     var pp = {name:'新课表', rule:0, days:[false,false,false,false,false,false,false], target:null};
@@ -230,19 +230,24 @@
         return '<div class="tb3 '+b.k+(sel?' sel':'')+'" data-i="'+i+'" style="top:'+(b.s-T0)*PX+'px;height:'+d*PX+'px">'+
           (b.k==='k' ? '<div class="l1">'+I.book+'<span>'+hm(b.s)+':00 - '+hm(b.e)+':00</span></div><div class="l2">'+I.hist+'<span>'+dur(d)+'</span></div>' : '<div class="l1">'+I.clock+'<span>'+hm(b.s)+':00 - '+hm(b.e)+':00</span></div>')+
           (sel?'<span class="del" data-a="del">'+I.trash+'</span><i class="hd t" data-h="s"></i><i class="hd b" data-h="e"></i>':'')+'</div>'; }).join('');
-      var b = blocks[st.tl] || blocks[0];
-      var bar = b ? '<div class="addbar" style="top:'+((b.e-T0)*PX+16)+'px"><span class="ab0">'+I.chev+'添加</span><span class="ab" data-a="addk">'+I.book+'上课</span><span class="ab" data-a="addb">'+I.clock+'课间</span><span class="ab x">'+I.x+'</span></div>' : '';
+      var tlOn = blocks.length>0; var b = blocks[st.tl] || blocks[0];
+      if (!tlOn) b = {s:480,e:520,k:'k'};
+      var bar = (b && blocks.length) ? '<div class="addbar" style="top:'+((b.e-T0)*PX+16)+'px"><span class="ab0">'+I.chev+'添加</span><span class="ab" data-a="addk">'+I.book+'上课</span><span class="ab" data-a="addb">'+I.clock+'课间</span><span class="ab x">'+I.x+'</span></div>' : '';
       function tri(w,v){ return '<div class="tri">'+['h','m','s'].map(function(k,j){ var n=[Math.floor(v/60),('0'+v%60).slice(-2),'00'][j]; return '<input data-tp="'+w+k+'" value="'+n+'" inputmode="numeric">'; }).join('')+'</div>'; }
       return '<div class="e2tool">'+[['addk','上课','book'],['addb','课间','clock'],['sep','分割线','split'],['act','行动','bolt'],'|',['dup','创建副本','copy'],['undo','','undo'],['redo','','redo'],'|',['del','删除','minus'],['refresh','刷新','sync'],'|',['info','时间表信息','info'],'|',['more','','dots']].map(function(x){ return x==='|'?'<b></b>':'<span class="'+(x[0]==='undo'&&!st.hist.length||x[0]==='redo'&&!st.redo.length?'dim':'')+'" data-a="'+x[0]+'">'+I[x[2]]+(x[1]?'<em>'+x[1]+'</em>':'')+'</span>'; }).join('')+'</div>'+
-        '<div class="e2v tlv"><div class="llist"><div class="ltool"><span>'+I.plus+'<em>添加</em></span><span>'+I.copy+'<em>复制</em></span></div><div class="li2 on">新时间表</div><div class="lbot"><span>时间点时长</span>'+I.up+'</div></div>'+
-        '<div class="cvw"><div class="cvs"><div class="cvin" style="height:'+(H+20)+'px">'+lines+bl+bar+'</div></div>'+
+        '<div class="e2v tlv"><div class="llist"><div class="ltool"><span data-a="tladd">'+I.plus+'<em>添加</em></span><span class="'+(tlOn?'':'dim')+'">'+I.copy+'<em>复制</em></span></div>'+(tlOn?'<div class="li2 on">新时间表</div>':'')+'<div class="lbot"><span>时间点时长</span>'+I.up+'</div></div>'+
+        '<div class="cvw"><div class="cvs">'+(tlOn?'<div class="cvin" style="height:'+(H+20)+'px">'+lines+bl+bar+'</div>':'<div class="emp2 big"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="9" stroke-dasharray="9 7"/></svg><p>啥都没有</p></div>')+'</div>'+
         '<div class="zbar"><span class="zi">'+I.list+'</span><span class="zi">'+I.cal2+'</span><span class="sp"></span><span class="zb on">'+I.fit+'</span><span class="zi" data-z="-1">'+I.zout+'</span><em>'+Math.round(PX/0.006)+'%</em><span class="zi" data-z="1">'+I.zin+'</span><span class="zi">'+I.loc+'</span></div></div>'+
-        '<div class="side2 sd3"><h5>编辑时间点</h5><label>开始时间</label>'+tri('s',b.s)+'<label>结束时间</label>'+tri('e',b.e)+
+        (st.tinfo ? tinfoPanel() : !tlOn ? '<div class="side2 sd3"></div>' : '')+'<div class="side2 sd3"'+(st.tinfo||!tlOn?' hidden':'')+'><h5>编辑时间点</h5><label>开始时间</label>'+tri('s',b.s)+'<label>结束时间</label>'+tri('e',b.e)+
         '<label>类型</label><div class="pl2"><span class="'+(b.k==='k'?'on':'')+'" data-ty="k">'+I.book+'上课</span><span class="'+(b.k==='b'?'on':'')+'" data-ty="b">'+I.clock+'课间休息</span></div>'+
         (b.k==='k' ? '<div class="cbx2'+(b.hide?' on':'')+'" data-hide><i>'+I.check+'</i>默认隐藏</div><p class="hint">若默认隐藏一个时间点，那么只有在处于此时间点时，此时间点才会显示。</p><hr><div class="sh">'+I.book+'默认课程</div><div class="selw"><select class="in2" data-def><option value=""></option>'+subj.map(function(s){return '<option'+(b.def===s.n?' selected':'')+'>'+esc(s.n)+'</option>';}).join('')+'</select></div><div class="ov">'+I.up+'覆盖现有课程</div>'
                     : '<label>课间名称</label><input class="in2" data-bn value="'+esc(b.name||'')+'">')+
         '<hr><div class="sh">'+I.gear+'更多选项</div>'+
         [['上课提醒设置','layers',0],['课程显示设置','book',0],['天气提醒设置','cloud',1]].map(function(x){ return '<div class="mo2">'+I[x[1]]+'<span>'+x[0]+'</span>'+(x[2]?'':'<i class="lay">'+I.layers+'</i>')+'<span class="tg"><i></i><span>关</span></span><em>'+I.chev+'</em></div>'; }).join('')+'</div></div>';
+    }
+    function tinfoPanel(){
+      return '<div class="side2 sd3 tinfo"><h5>时间表信息</h5><label>名称</label><input class="in2" value="新时间表"><hr><div class="sh">'+I.gear+'更多选项</div>'+
+        [['放学提醒设置'],['上课提醒设置'],['课程显示设置']].map(function(x){ return '<div class="mo2">'+I.layers+'<span>'+x[0]+'</span><i class="lay">'+I.layers+'</i><span class="tg"><i></i><span>关</span></span>'+I.chev+'</div>'; }).join('')+'</div>';
     }
     function dur(d){ return ('0'+Math.floor(d/60)).slice(-2)+':'+('0'+d%60).slice(-2)+':00'; }
     function sjView(){
@@ -268,6 +273,8 @@
       if ((el=t.closest('[data-a]'))){ var a = el.dataset.a, b = cur();
         if (a==='addk'||a==='addb'){ snap(); var s = b? b.e : 8*60, k = a==='addk'?'k':'b', d = k==='k'?40:10; if (s+d>T1) return; var nb={s:s,e:s+d,k:k}; blocks.splice(st.tl+1,0,nb);
           var sh = 0; for (var q=st.tl+2;q<blocks.length;q++){ var o=blocks[q]; if (o.s < blocks[q-1].e) { sh = blocks[q-1].e - o.s; o.s+=sh; o.e+=sh; } } st.tl++; render(true); }
+        else if (a==='info' && st.v==='tl'){ st.tinfo=!st.tinfo; render(true); }
+        else if (a==='tladd'){ if(!blocks.length){ snap(); blocks.push({s:480,e:520,k:'k'}); st.tl=0; } st.tinfo=false; render(); }
         else if (a==='sep'||a==='act'||a==='info'||a==='more'){ }
         else if (a==='dup' && b){ snap(); var n = {s:b.e,e:b.e+(b.e-b.s),k:b.k}; if (n.e>T1) return; blocks.splice(st.tl+1,0,n); st.tl++; render(true); }
         else if (a==='del' && st.v==='tl' && b){ snap(); blocks.splice(st.tl,1); st.tl=Math.max(0,st.tl-1); render(true); }
@@ -278,7 +285,7 @@
         else if (a==='addsj'){ subj.push({n:'新科目',a:'新',c:'#8a8a8a',o:false}); st.sj=subj.length-1; render(); }
         else if (a==='delsj' && subj.length>1){ subj.splice(st.sj,1); st.sj=0; render(); }
         return; }
-      if ((el=t.closest('.tb3')) && !t.closest('.hd')){ st.tl=+el.dataset.i; render(true); return; }
+      if ((el=t.closest('.tb3')) && !t.closest('.hd')){ st.tinfo=false; st.tl=+el.dataset.i; render(true); return; }
       if ((el=t.closest('[data-ty]'))){ var b2=cur(); snap(); b2.k=el.dataset.ty; render(true); return; }
       if ((el=t.closest('[data-hide]'))){ var b3=cur(); b3.hide=!b3.hide; render(true); return; }
       if ((el=t.closest('td.c'))){ st.cell=[+el.dataset.d,+el.dataset.r]; render(); return; }

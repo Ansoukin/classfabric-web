@@ -1370,3 +1370,16 @@ html,body{overflow-x:clip}
 @media(max-width:720px){.lnav .lk a:not(.lb){display:none}}
 .lnav{visibility:hidden}.lnav.on{visibility:visible}
 .blk>.app{max-width:1280px;margin-inline:auto}
+
+/* V17 空状态 + 时间表信息 */
+.ed2 [hidden]{display:none!important}
+.emp2{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;color:#9b9b9b;padding:56px 24px;font-size:14px;line-height:1.6}
+.emp2 svg{width:44px;height:44px;fill:none;stroke:#6b6b6b;stroke-width:2;stroke-linecap:round}
+.emp2 p{margin:0;max-width:30em}
+.emp2.big{min-height:100%;height:100%;font-size:15px}
+.gscroll .emp2{min-height:240px}
+.e2v.grid{flex-direction:row}
+@container (max-width:720px){.e2v.grid{flex-direction:column}}
+.tt2 th{position:relative}
+@container (max-width:720px){.tt2 th .nb{font-size:11px;padding:4px 0}.tt2 th small{position:static;display:block;margin:0}}
+@container (max-width:720px){.tt2 th small{position:static!important;display:block!important;margin:2px 0 6px!important;float:none!important}.tt2{min-width:600px}.tt2 th .nb{white-space:nowrap}.gscroll{overflow-x:auto}}
