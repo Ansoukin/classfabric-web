@@ -250,7 +250,7 @@
   var tb = $('#theme');
   if (tb) tb.addEventListener('click', function () {
     var cur = document.documentElement.dataset.theme;
-    if (!cur) cur = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    if (!cur) cur = 'dark';
     var nx = cur === 'light' ? 'dark' : 'light';
     document.documentElement.dataset.theme = nx;
     try { localStorage.setItem('cf_theme', nx); } catch (e) { }

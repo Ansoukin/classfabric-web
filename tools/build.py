@@ -56,7 +56,7 @@ def head(title, desc, path, extra=''):
             '<link rel="icon" href="/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">\n<link rel="apple-touch-icon" href="/assets/img/icon-180.png">\n'
             '<meta property="og:type" content="website">\n<meta property="og:site_name" content="ClassFabric">\n<meta property="og:title" content="%s">\n<meta property="og:description" content="%s">\n'
             '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta name="twitter:card" content="summary_large_image">\n'
-            '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n%s</head>\n') % (title, desc, url, title, desc, url, SITE, extra)
+            '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");document.documentElement.dataset.theme=t||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n%s</head>\n') % (title, desc, url, title, desc, url, SITE, extra)
 
 def navbar(cur):
     def a(href, label, key):
@@ -88,11 +88,29 @@ def home():
              'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', ld())
     h += navbar('home')
     h += '<main>\n'
+    # showcase
+    def sidle(past, cur, fut):
+        return '<div class="isl static on"><span class="pa">%s</span>%s<span class="sep"></span><span class="fu">%s</span></div>' % (''.join('<span class="s p">%s</span>' % c for c in past), cur, ''.join('<span class="s">%s</span>' % c for c in fut))
+    def sbar2(l, ms=''):
+        return '<div class="isl static on bar two"><span>%s</span><span class="nx">下节课是: <em>物理</em><small>10:30-11:10</small></span></div>' % l
+    def smask(t, icn):
+        return '<div class="isl static on mask">%s<span>%s</span>%s</div>' % (ic('info'), t, ic(icn))
+    ST = [sbar2('距上课还剩 <b>16</b> 秒'),
+          '<div class="isl static on bar">准备上课，请回到座位并保持安静，做好上课准备。</div>',
+          smask('上课', 'atom'),
+          sidle('语数英', '<span class="cur">' + ic('clock') + '<span>课间休息</span><small>10:20-10:30</small></span>', '物化生历政地'),
+          smask('即将上课', 'atom'),
+          sidle('语数', '<span class="cur">' + ic('text') + '<span>英语</span><span class="pill">-31s</span></span>', '物化生历政地'),
+          smask('课间休息', 'clock'),
+          sbar2('本节课间休息长 <b>10</b> 分钟')]
+    wrapi = lambda x: '<div class="mq-i"><div class="isl-stack">' + x + '</div></div>'
+    row1 = ''.join(wrapi(x) for x in (ST[0], ST[1], ST[2], ST[3]))
+    row2 = ''.join(wrapi(x) for x in (ST[4], ST[5], ST[6], ST[7]))
     # hero
-    h += ('<section class="hero"><div class="wrap">'
+    h += ('<section class="hero"><div class="fly3" aria-hidden="true">' + row1 + row2 + '</div><div class="wrap">'
           '<div class="lockup rv"><img src="/assets/img/logo.png" alt="">ClassFabric<span>班级大屏课表</span></div>'
           '<h1 class="rv">紧跟上游，<span class="g">再进一步</span></h1>'
-          '<p class="sub rv d1">基于 ClassIsland 的个人修改版，原有课表、插件与主题无缝沿用</p>'
+          '<p class="sub rv d1">功能强、可定制、不断增强</p><p class="lead rv d1">基于 ClassIsland 的个人修改版，原有课表、插件与主题无缝沿用。</p>'
           '<div class="cta rv d2"><a class="btn blue" href="' + REL + '" data-dl data-releaselink rel="noopener">' + ic('dl') + '立即下载</a><a class="btn glass" href="' + GH + '" rel="noopener">' +
           '<svg viewBox="0 0 16 16" fill="currentColor" stroke="none"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub 仓库</a></div>'
           '<p class="note rv d2">支持在 Windows 10/11 上运行　·　最新版本 <b data-ver>—</b>　·　GPL-3.0 开源</p>'
@@ -122,30 +140,12 @@ def home():
           '<div class="rv d2"><span class="tag">#增强</span><h3>来自社区与我们的增强</h3><p>更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p></div>'
           '</div></div></section>\n')
 
-    # showcase
-    def sidle(past, cur, fut):
-        return '<div class="isl static on"><span class="pa">%s</span>%s<span class="sep"></span><span class="fu">%s</span></div>' % (''.join('<span class="s p">%s</span>' % c for c in past), cur, ''.join('<span class="s">%s</span>' % c for c in fut))
-    def sbar2(l, ms=''):
-        return '<div class="isl static on bar two"><span>%s</span><span class="nx">下节课是: <em>物理</em><small>10:30-11:10</small></span></div>' % l
-    def smask(t, icn):
-        return '<div class="isl static on mask">%s<span>%s</span>%s</div>' % (ic('info'), t, ic(icn))
-    ST = [sbar2('距上课还剩 <b>16</b> 秒'),
-          '<div class="isl static on bar">准备上课，请回到座位并保持安静，做好上课准备。</div>',
-          smask('上课', 'atom'),
-          sidle('语数英', '<span class="cur">' + ic('clock') + '<span>课间休息</span><small>10:20-10:30</small></span>', '物化生历政地'),
-          smask('即将上课', 'atom'),
-          sidle('语数', '<span class="cur">' + ic('text') + '<span>英语</span><span class="pill">-31s</span></span>', '物化生历政地'),
-          smask('课间休息', 'clock'),
-          sbar2('本节课间休息长 <b>10</b> 分钟')]
-    wrapi = lambda x: '<div class="mq-i"><div class="isl-stack">' + x + '</div></div>'
-    row1 = ''.join(wrapi(x) for x in (ST[0], ST[1], ST[2], ST[3]))
-    row2 = ''.join(wrapi(x) for x in (ST[4], ST[5], ST[6], ST[7]))
     h += ('<section class="sec show"><div class="wrap"><h2 class="claim rv">上课与下课，<span class="g">一目了然</span></h2></div>'
           '<div class="marq rv" aria-label="灵动岛的各种状态"><div class="row"><div class="trk">' + row1 * 2 + '</div></div><div class="row rev"><div class="trk">' + row2 * 2 + '</div></div></div>'
           '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video></figure></div></section>\n')
 
     # claim 2
-    h += '<section class="sec light" id="feat"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2>'
+    h += '<section class="sec" id="feat"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2>'
     # 主界面
     row2 = '<div style="display:flex;gap:10px;justify-content:center;margin-top:14px;font-size:17px;font-family:var(--font)">' + ''.join('<div class="isl static" style="padding:0 1em">%s</div>' % t for t in ['12:30:44', ic('sun') + '&nbsp;9℃', ic('timer') + '&nbsp;元旦 62 天']) + '</div>'
     main_vis = panel_wall(fit('<div style="width:1000px;padding:14px 0 18px"><div style="display:flex;justify-content:center;font-size:19px"><div class="isl-stack">' + static_isl(idle('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"') + '</div></div>' + row2.replace('17px', '19px') + '</div>', 1000, 'position:relative;width:100%', 520), '50%', '2%', '190%', 'pad')
@@ -163,7 +163,7 @@ def home():
             '<div class="sub-i">' + ic('clock') + '<div><h4>时间与科目的自由定制</h4><p>不同课表可使用不同的时间表，并支持自定义科目，设置科目图标与主题色。</p></div></div>'
             '<div class="sub-i">' + ic('edit') + '<div><h4>简洁直观的编辑工具</h4><p>课表、时间表、科目分页编辑，时间表以时间轴方式直接拖动调整。</p></div></div></div>')
     ed_vis = panel_wall('<div style="padding:4% 3% 0">' + ui2.editor_app(h=700) + '</div>', '30%', '60%', '230%', '')
-    h += ('<div class="blk band rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击右侧的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
+    h += ('<div class="blk rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击右侧的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
     # 调课
     swap_vis = panel_wall('<div class="swwrap"><div class="sw2 w" data-app="swap"></div></div>', '70%', '36%', '210%', '')
     h += ('<div class="blk swapblk rv"><div class="copy"><span class="tag gr">#调课</span><h3>提前调整课程</h3><p>支持当日与跨天换课，灵活应对调课情景。</p>'
@@ -173,7 +173,7 @@ def home():
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
     # 自动化
     auto_vis = '<div class="app" data-app="settings" data-start="auto" data-h="640"></div>'
-    h += ('<div class="blk full dk rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
+    h += ('<div class="blk full rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
           '</div>' + auto_vis + '</div>')
     h += '</div></section>\n'
 

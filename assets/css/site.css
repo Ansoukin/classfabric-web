@@ -1564,3 +1564,47 @@ html,body{overflow-x:clip}
 .ab section:first-of-type{border-top:0;margin-top:0}
 .ab h2{font-size:clamp(28px,3.2vw,40px);letter-spacing:-.02em;margin:0 0 16px}
 .toc a{font-size:14.5px}
+
+/* ======== V22 ClassIsland.tech 式版式 + Fluent 2（扁平、小圆角） ======== */
+main .sec{background:none}
+.hero{position:relative;overflow:hidden;text-align:left;padding-top:clamp(96px,11vw,140px);background:radial-gradient(900px 500px at 20% 0%,rgba(40,100,255,.18),transparent 70%),var(--bg)}
+.hero>.wrap{position:relative;z-index:2}
+.hero .lockup{justify-content:flex-start;font-size:clamp(26px,3vw,36px);margin:0 0 20px}
+.hero h1{text-align:left;font-size:clamp(44px,6.6vw,88px);letter-spacing:-.04em;margin:0 0 8px}
+.hero .sub{text-align:left;font-size:clamp(22px,2.6vw,34px);font-weight:600;color:var(--fg);margin:0 0 10px}
+.hero .lead{margin:0 0 26px;color:var(--muted);font-size:clamp(15px,1.4vw,18px)}
+.hero .cta{justify-content:flex-start}.hero .note{text-align:left;margin:16px 0 0}
+.hero .desk{margin-top:clamp(40px,6vw,80px)}
+.fly3{position:absolute;right:-10%;top:4%;width:72%;font-size:clamp(14px,1.5vw,22px);display:grid;gap:18px;transform:perspective(1500px) rotateY(-26deg) rotateZ(-9deg) rotateX(8deg);transform-origin:80% 40%;opacity:.95;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%);mask-image:linear-gradient(90deg,transparent 0,#000 38%);z-index:1}
+.fly3 .mq-i{display:block;margin:0}.fly3 .mq-i:nth-child(odd){margin-left:8%}
+@media(max-width:860px){.fly3{opacity:.35;right:-40%;width:130%}}
+/* 章节：左对齐 #标签 + 标题 + 说明，画面在下 */
+main .blk,main .blk.full,main .blk.band,main .blk.dk,main .blk.chap{display:block;text-align:left;max-width:1180px;margin:0 auto clamp(72px,9vw,120px);padding:0;background:none;box-shadow:none;clip-path:none;--fg:inherit}
+main .blk.dk,main .blk.band,main .blk.chap{color:inherit}
+main .blk .copy{max-width:760px;margin:0 0 clamp(22px,3vw,36px)!important;text-align:left}
+main .blk .copy h3{font-size:clamp(26px,3vw,38px)!important;letter-spacing:-.025em;margin:6px 0 10px;text-align:left;color:var(--fg)}
+main .blk .copy p{font-size:clamp(15px,1.3vw,17px);color:var(--muted);text-align:left;margin:0;line-height:1.8}
+main .blk .tag{background:none!important;padding:0!important;color:var(--blue)!important;font-weight:600;font-size:15px;border:0}
+main .blk .subs{grid-template-columns:repeat(3,minmax(0,1fr));max-width:none;margin:24px 0 0}
+main .blk .subs:has(>.sub-i:nth-child(2):last-child){grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
+main .blk .sub-i h4{font-size:16px}main .blk .sub-i p{font-size:14.5px!important}
+main .blk>.panel,main .blk>.app{border-radius:8px}
+main .blk .w{border-radius:8px}
+main .sec>.wrap>.claim{margin:0 0 clamp(40px,5vw,72px);font-size:clamp(30px,4.2vw,52px);text-align:center}
+main .sec{padding-block:clamp(60px,8vw,110px)}
+.blk.split{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}
+main .blk.split{display:grid}
+/* Fluent 2：小圆角、实色、细边框 */
+.fx1,.cr2,.infob,.stp3>div,.dmain{border-radius:8px}
+.btn{border-radius:6px}
+.hero .lockup{margin:0 0 22px!important;display:inline-flex}.hero .lead{text-align:left!important;max-width:30em}
+.fly3{width:60%;right:-8%}
+main .blk.chap .copy,main .blk.dk .copy,main .blk.band .copy{margin-inline:0!important;text-align:left!important;max-width:760px}
+main .blk.chap .copy h3,main .blk.chap .copy p{text-align:left!important;margin-inline:0!important}
+main .blk .ctabs{justify-content:flex-start}
+main .sec{padding-block:clamp(36px,5vw,72px)}
+main .sec>.wrap>.claim{margin-bottom:clamp(28px,4vw,52px)}
+main .blk,main .blk.full,main .blk.band,main .blk.dk,main .blk.chap{margin-bottom:clamp(48px,6vw,88px)}
+.final3 h2,.final3 .claim{font-size:clamp(34px,5vw,60px)!important}
+@media(max-width:860px){.fly3{opacity:.16}.hero .lockup{font-size:22px;padding:6px 14px}.hero .lockup span{font-size:15px}.hero .lockup img{height:28px}}
+main .sec>.wrap>.claim{text-wrap:balance}
