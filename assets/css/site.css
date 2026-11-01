@@ -1498,3 +1498,29 @@ html,body{overflow-x:clip}
 .dtt{flex:1;min-width:140px;background:none}.dtt h2{margin:0;font-size:22px}.dtt span{color:var(--muted);font-size:14px}
 .assets2 .none a{display:inline;border:0;padding:0;background:none;color:var(--blue);text-decoration:underline}
 .stp3>div{align-content:start}
+
+/* V19 科目页（对照真实） */
+.sjv .sjl{flex:1;min-width:0;overflow:auto;font-size:13px}
+.sjr{display:grid;grid-template-columns:34px 56px 72px 90px 70px 100px minmax(110px,1fr) minmax(110px,1fr);align-items:center;min-height:33px;border-bottom:1px solid #333;padding:0;cursor:pointer;min-width:640px}
+.sjr>span{padding:0 10px;display:flex;align-items:center;min-height:33px;border-right:1px solid #333;overflow:hidden;white-space:nowrap}
+.sjr>span:first-child{border-right:0;padding:0 6px}
+.sjr.h{background:#2b2b2b;color:#bbb;min-height:32px;cursor:default;position:sticky;top:0;z-index:2;font-size:12px}
+.sjr.on{background:#4f7da3}.sjr:not(.h):not(.on):hover{background:#2f2f2f}
+.sjr .grip{width:16px;height:16px;fill:none;stroke:#9a9a9a;stroke-linecap:round}
+.sjr .ico{justify-content:center}.sjr .ico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.sjr .sw3{width:24px;height:22px;border-radius:4px;display:block}
+.sjr .cb3{width:20px;height:20px}
+.sd4{width:340px;overflow:auto;background:#262626}.sd4 h5{font-size:20px;font-weight:600;margin:0 0 10px}
+.r4{display:grid;grid-template-columns:52px 1fr 1fr 56px;gap:6px}.r4 label{margin:0 0 4px}
+.cbo.ic{height:34px;padding:0 8px;gap:4px;justify-content:space-between}.cbo.ic svg:first-child{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5}
+.cbo.clr{height:34px;padding:0 8px}.cbo.clr i{width:26px;height:22px;border-radius:4px;display:block}
+.exq{margin-bottom:6px;border-radius:6px;background:#2d2d2d;border:1px solid #363636}
+.exh{display:flex;align-items:center;gap:8px;min-height:36px;padding:0 10px;cursor:pointer;font-size:13px}
+.exh>svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6}.exh b{flex:1;font-weight:600}
+.exh .lay{opacity:.7}.exh .lay svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.6}
+.exh em{display:grid;place-items:center;font-style:normal}.exh em svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
+.exq:not(.open) .exh em{transform:rotate(180deg)}
+.exb{padding:4px 12px 12px;opacity:.85}.exb label{font-weight:600;margin:10px 0 4px}
+.mini{display:flex;gap:18px;color:#8a8a8a;margin:4px 0 8px;font-size:12.5px;padding-left:4px}.mini .on{color:#fff;border-bottom:2px solid var(--blue);padding-bottom:3px}
+.numq{display:flex;justify-content:space-between;align-items:center;height:34px;padding:0 10px;border:1px solid #3c3c3c;border-radius:5px;background:#2a2a2a;color:#9a9a9a}.numq svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
+.dimc{opacity:.7;margin:8px 0}
