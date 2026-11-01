@@ -87,6 +87,7 @@ def home():
     h = head('ClassFabric — 紧跟上游的 ClassIsland 个人修改版班级大屏课表',
              'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', ld())
     h += navbar('home')
+    h += '<nav class="lnav" id="lnav" aria-label="页内导航"><div class="wrap"><b>ClassFabric</b><span class="lk"><a href="#feat">功能</a><a href="#custom">定制</a><a href="#sync">同步</a><a class="lb" href="/download.html">下载</a></span></div></nav>\n'
     h += '<main>\n'
     # hero
     h += ('<section class="hero"><div class="wrap">'
@@ -104,11 +105,6 @@ def home():
           '<svg class="cursor" id="hCur" viewBox="0 0 24 24"><path d="M4 2.5v17l4.6-4.4 3 6.9 2.9-1.3-3-6.8h6.5z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg>'
           '</div></div></section>\n')
 
-    h += '<section class="mani"><div class="wrap"><p class="mtxt" id="mtxt">' + ''.join('<span class="mw">%s</span>' % c for c in "积极同步上游。无缝沿用配置。再多一点点，属于我们自己的增强。") + '</p></div></section>\n'
-    def bigmq(a, b):
-        r1 = ''.join('<span>%s</span><i>·</i>' % t for t in a) * 3
-        r2 = ''.join('<span>%s</span><i>·</i>' % t for t in b) * 3
-        return '<div class="bigmq" aria-hidden="true"><div class="r1"><div class="t">' + r1 + '</div></div><div class="r2"><div class="t">' + r2 + '</div></div></div>\n'
     # claim 1
     def fc(icn, t, d='', trail=''):
         return '<div class="fcard">%s<div class="tx"><b>%s</b>%s</div>%s</div>' % (ic(icn), t, ('<span>%s</span>' % d) if d else '', trail)
@@ -118,15 +114,13 @@ def home():
     c_sync = fc('sync', '新功能', 'ClassIsland 发布的新功能', ok) + fc('bolt', '问题修复', 'ClassIsland 的修复与改进', ok) + fc('info', '上游版本', '底层代码与上游保持一致', ok)
     c_mig = fc('cal', '课表与档案', '', used) + fc('bolt', '自动化', '', used) + fc('plug', '插件', '', used) + fc('brush', '主题', '', used)
     c_enh = fc('cloud', '更多天气源', '小米天气 · OpenWeather · 和风天气', on) + fc('text', '多语言', '实验中', on) + fc('plug', '更好的插件预览', '', on) + fc('sync', '持续同步上游', '', on)
-    SYNC = ('<svg viewBox="0 0 1000 230" class="syncsvg" role="img" aria-label="上游的更新持续流向 ClassFabric，并叠加我们自己的增强">'
-            '<text x="0" y="22" class="lb">ClassIsland 上游</text><text x="0" y="214" class="lb b">ClassFabric</text>'
-            '<line x1="0" y1="46" x2="1000" y2="46" class="ln"/><line x1="0" y1="176" x2="1000" y2="176" class="ln"/><circle cx="100" cy="46" r="7" class="up"/><path class="fl" d="M100 46 C100 110 140 110 140 176" style="animation-delay:0.0s"/><circle cx="140" cy="176" r="7" class="dn"/><circle cx="260" cy="46" r="7" class="up"/><path class="fl" d="M260 46 C260 110 300 110 300 176" style="animation-delay:0.5s"/><circle cx="300" cy="176" r="7" class="dn"/><circle cx="420" cy="46" r="7" class="up"/><path class="fl" d="M420 46 C420 110 460 110 460 176" style="animation-delay:1.0s"/><circle cx="460" cy="176" r="7" class="dn"/><circle cx="580" cy="46" r="7" class="up"/><path class="fl" d="M580 46 C580 110 620 110 620 176" style="animation-delay:1.5s"/><circle cx="620" cy="176" r="7" class="dn"/><circle cx="740" cy="46" r="7" class="up"/><path class="fl" d="M740 46 C740 110 780 110 780 176" style="animation-delay:2.0s"/><circle cx="780" cy="176" r="7" class="dn"/><circle cx="900" cy="46" r="7" class="up"/><path class="fl" d="M900 46 C900 110 940 110 940 176" style="animation-delay:2.5s"/><circle cx="940" cy="176" r="7" class="dn"/><circle cx="190" cy="176" r="7" class="ours"/><circle cx="350" cy="176" r="7" class="ours"/><circle cx="670" cy="176" r="7" class="ours"/>'
-            '<text x="190" y="152" class="lo" text-anchor="middle">+ 增强</text><text x="350" y="152" class="lo" text-anchor="middle">+ 增强</text><text x="670" y="152" class="lo" text-anchor="middle">+ 增强</text></svg>') 
-    h += ('<section class="sec sync"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2>'
-          '<div class="syncfig rv">' + SYNC + '</div><div class="tri3">'
-          '<div class="rv"><i>01</i><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p></div>'
-          '<div class="rv d1"><i>02</i><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p></div>'
-          '<div class="rv d2"><i>03</i><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p></div>'
+    h += ('<section class="sec sync" id="sync"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2>'
+          '<div class="cmp rv"><div class="cc"><small>上游</small><h3>ClassIsland</h3><p>由 HelloWRC 维护的原版，成熟稳定，更新节奏由上游决定。</p></div>'
+          '<div class="cc hl2"><small>个人修改版</small><h3>ClassFabric</h3><p>底层代码与上游保持一致，新功能与修复会尽快同步；原有的课表、自动化、插件与主题，安装后即可继续使用；并在上游之上加入更多增强。</p></div></div>'
+          '<div class="tri3">'
+          '<div class="rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p></div>'
+          '<div class="rv d1"><span class="tag">#迁移</span><h3>无感切换，沿用现有配置</h3><p>原有的课表、自动化、插件与主题，安装后即可继续使用。</p></div>'
+          '<div class="rv d2"><span class="tag">#增强</span><h3>来自社区与我们的增强</h3><p>更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p></div>'
           '</div></div></section>\n')
 
     # showcase
@@ -152,7 +146,7 @@ def home():
           '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video></figure></div></section>\n')
 
     # claim 2
-    h += '<section class="sec light"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2>'
+    h += '<section class="sec light" id="feat"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2>'
     # 主界面
     row2 = '<div style="display:flex;gap:10px;justify-content:center;margin-top:14px;font-size:17px;font-family:var(--font)">' + ''.join('<div class="isl static" style="padding:0 1em">%s</div>' % t for t in ['12:30:44', ic('sun') + '&nbsp;9℃', ic('timer') + '&nbsp;元旦 62 天']) + '</div>'
     main_vis = panel_wall(fit('<div style="width:1000px;padding:14px 0 18px"><div style="display:flex;justify-content:center;font-size:19px"><div class="isl-stack">' + static_isl(idle('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"') + '</div></div>' + row2.replace('17px', '19px') + '</div>', 1000, 'position:relative;width:100%', 520), '50%', '2%', '190%', 'pad')
@@ -179,37 +173,23 @@ def home():
           '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>临时启用课表</h4><p>可在当日或未来某一天临时启用另一个课表，应对调休与换课。</p></div></div>'
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
     # 自动化
-    auto_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window("auto", 1920, 700), 1920, 'position:relative;width:100%') + '</div>', '84%', '60%', '230%', '')
-    h += '<div class="flow rv"><span>当 <b class="f1">时间到了</b></span><i>→</i><span>若 <b class="f2">满足规则</b></span><i>→</i><span>就 <b class="f3">自动执行</b></span></div>\n'
+    auto_vis = '<div class="app" data-app="settings" data-start="auto" data-h="640"></div>'
     h += ('<div class="blk full rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
           '</div>' + auto_vis + '</div>')
     h += '</div></section>\n'
 
     # claim 3
-    h += bigmq(['组件','主题','插件','自动化','外观'], ['拖动','搭配','安装','触发','个性化'])
-    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
-    wid_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
-    wbento = '<div class="wbento rv">' + ''.join('<div class="wtile %s">%s<b>%s</b><span>%s</span></div>' % (c, ic(i), n, d) for i, n, d, c in [('doc', '课程表', '显示当前的课程表信息。', 't3r2'), ('cal', '日期', '显示今天的日期和星期。', 't3'), ('clock', '时钟', '显示现在的时间，支持精确到秒。', 't3'), ('sun', '天气简报', '显示当前的天气概况和气象预警。', 't2'), ('timer', '倒计时', '显示距离某一天的倒计时。', 't2'), ('text', '文本', '显示自定义文本。', 't2'), ('carousel', '轮播容器', '轮播多个组件。', 't3'), ('scroll', '滚动容器', '滚动显示组件内的内容。', 't3'), ('group', '分组容器', '将多个组件组合到一个组件中显示。', 't2'), ('stack', '堆叠容器', '将多个容器堆叠显示。', 't2'), ('split', '分割线', '视觉上对组件进行分组。', 't2')]) + '</div>'
-    h += wbento
-    h += ('<div class="blk full crop rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
-          '<p>进入「编辑模式」，可以直接在主界面上拖动调整组件。</p></div>' + wid_vis + '</div>')
-    thm_vis = panel_wall('<div style="padding:5% 4% 3%"><div class="app" data-app="settings" data-start="appearance" data-h="620"></div></div>', '50%', '90%', '230%', '')
-    h += ('<div class="themes3 rv">' + ''.join('<figure><img src="/assets/img/theme-%s.webp" alt="%s主题" loading="lazy"><figcaption>%s</figcaption></figure>' % (k, n, n) for k, n in [('classic', '经典'), ('fluent', 'Fluent'), ('rect', 'Rectangles')]) + '</div>')
-    h += ('<div class="blk full rv"><div class="copy"><span class="tag o">#主题</span><h3>自由的主题系统</h3><p>内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。</p></div>' + thm_vis + '</div>')
-    plg_vis = panel_wall('<div style="padding:3.5% 3%">' + fit(settings_window('plugins', 1242, 590), 1242, 'position:relative;width:100%') + '</div>', '20%', '20%', '230%', '')
-    h += '<div class="pmq rv"><div class="t">' + ''.join('<div class="pc"><span class="av" style="background:%s">%s</span><div><b>%s</b><small>%s</small></div></div>' % (c,a,n,au) for n,a,c,au in [('UIAccess 提权', 'U', '#6a6a6a', 'HelloWRC'), ('随机抽选', '随', '#4a8fd8', '社区'), ('像素流动', '像', '#a05bd6', '社区'), ('GSVIsland', 'G', '#e0a23a', '社区'), ('OmniTTS', 'O', '#3aa8a0', '社区'), ('SystemTools', 'S', '#d65b7a', '社区')])*3 + '</div></div>\n'
-    h += ('<div class="blk full crop rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
+    h += '<section class="sec" id="custom"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
+    TABS = [('widgets', '组件', '通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。'),
+            ('appearance', '外观', '调整界面缩放、背景透明度、圆角半径与字体，高度个性化你的界面。'),
+            ('themes', '主题', '内置经典、Fluent 与 Rectangles 三套主题，也可以安装更多主题。'),
+            ('plugins', '插件', '在应用内的插件市场浏览、搜索与安装插件。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。')]
+    h += ('<div class="blk full chap rv"><div class="copy"><span class="tag">#定制</span><h3>按你的方式搭配</h3><p id="cdesc">' + TABS[0][2] + '</p></div>'
+          '<div class="ctabs" data-for="cApp">' + ''.join('<button class="ct%s" data-go="%s" data-d="%s">%s</button>' % (' on' if i == 0 else '', k, d, n) for i, (k, n, d) in enumerate(TABS)) + '</div>'
+          '<div class="app" id="cApp" data-app="settings" data-start="widgets" data-h="640"></div></div>')
     h += '</div></section>\n'
 
-    # gallery
-    G = [('shot-timeline', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('shot-subjects', '科目', '自定义科目的名称、图标与主题色。')]
-    gt = ''.join('<button role="tab" data-g="%d"%s>%s</button>' % (i, ' class="on" aria-selected="true"' if i == 0 else '', g[1]) for i, g in enumerate(G))
-    gi = ''.join('<img class="gimg%s" data-cap="%s" src="/assets/img/%s.webp" alt="ClassFabric %s界面截图" loading="lazy" width="1920" height="1040">' % (' on' if i == 0 else '', g[2], g[0], g[1]) for i, g in enumerate(G))
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">档案编辑，<span class="g">所见即所得</span></h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
-          '<div class="gframe" id="gframe" title="点击放大">' + gi + '</div></div></div></section>\n')
-
     # claim 4
-    h += bigmq(['更多天气源','托盘菜单','恢复模式','持续同步'], ['OpenWeather','和风天气','SFTP 备份','云端同步'])
     wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
     ln = ('<div class="cd s3 rv d1"><h4>多语言 <span style="font-size:13px;color:var(--faint);font-weight:500">实验中</span></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
           '<div class="vis"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div style="font-size:12.5px;color:var(--faint);margin-top:8px">适配进度 约 40%</div></div></div>')

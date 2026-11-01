@@ -332,3 +332,17 @@
   }
   $$('[data-app="editor"]').forEach(initEditor);
 })();
+(function(){
+  /* 定制章节：分段标签切换设置页 */
+  document.querySelectorAll('.ctabs').forEach(function(bar){
+    var host = document.getElementById(bar.dataset.for); if(!host) return;
+    var desc = document.getElementById('cdesc');
+    function mark(k){ bar.querySelectorAll('.ct').forEach(function(b){ var on=b.dataset.go===k; b.classList.toggle('on',on); if(on && desc) desc.textContent=b.dataset.d; }); }
+    bar.addEventListener('click', function(e){ var b=e.target.closest('.ct'); if(!b) return; var k=b.dataset.go;
+      var root=host.querySelector('.sapp'); root.querySelectorAll('.pgx').forEach(function(p){p.classList.toggle('on',p.dataset.p===k)});
+      root.querySelectorAll('.nv .it[data-go]').forEach(function(n){n.classList.toggle('on',n.dataset.go===k)}); mark(k); });
+    host.addEventListener('click', function(e){ var n=e.target.closest('.nv .it[data-go]'); if(n) mark(n.dataset.go); });
+  });
+  var ln=document.getElementById('lnav');
+  if(ln){ var hero=document.querySelector('.hero'); function t(){ var y=hero?hero.getBoundingClientRect().bottom:300; ln.classList.toggle('on', y<60); } window.addEventListener('scroll',t,{passive:true}); t(); }
+})();
