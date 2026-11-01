@@ -1524,3 +1524,18 @@ html,body{overflow-x:clip}
 .mini{display:flex;gap:18px;color:#8a8a8a;margin:4px 0 8px;font-size:12.5px;padding-left:4px}.mini .on{color:#fff;border-bottom:2px solid var(--blue);padding-bottom:3px}
 .numq{display:flex;justify-content:space-between;align-items:center;height:34px;padding:0 10px;border:1px solid #3c3c3c;border-radius:5px;background:#2a2a2a;color:#9a9a9a}.numq svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
 .dimc{opacity:.7;margin:8px 0}
+
+/* V19 明暗交替的章节带：深色窗口落在深色舞台上 */
+.blk.dk,.blk.band,.blk.chap{--fg:#f5f5f7;--muted:#a6adbb;--faint:#7d8599;--bg2:#161b29;--line:rgba(255,255,255,.14);color:var(--fg);background:#0b0f19;box-shadow:0 0 0 100vmax #0b0f19;clip-path:inset(0 -100vmax);margin-block:0;padding-block:clamp(48px,7vw,96px)}
+.blk.dk h3,.blk.band h3,.blk.chap h3{color:#f5f5f7}
+.blk.band{margin-top:clamp(40px,6vw,90px)}
+.blk.dk+.blk.chap{padding-top:0}
+.blk.band .subs h4,.blk.dk .subs h4{color:#f5f5f7}
+.blk.dk .w,.blk.band .w,.blk.chap .w{box-shadow:0 30px 70px -24px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.1)}
+.blk.chap .ct{color:var(--muted)}.blk.chap .ct.on{color:#f5f5f7}
+:root[data-theme=light] .g,:root:not([data-theme=dark]) .g{color:#0a6fd1!important}
+.blk.dk .g,.blk.band .g,.blk.chap .g{color:var(--blue)!important}
+.blk.dk .tag,.blk.band .tag,.blk.chap .tag{background:rgba(98,179,242,.16);color:#8fcaff}
+.blk.dk .copy,.blk.band .copy,.blk.chap .copy{text-align:center;margin-inline:auto;max-width:860px}
+.blk.dk .copy h3,.blk.dk .copy p{text-align:center;margin-inline:auto}
+.sapp .auto-head *{white-space:nowrap}
