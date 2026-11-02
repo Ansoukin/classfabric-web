@@ -4,7 +4,6 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var REPO = 'Ansoukin/ClassFabric';
 
-  /* ---------- fit scaling ---------- */
   function fitAll() {
     var mobile = window.innerWidth <= 760;
     $$('.fitbox').forEach(function (b) {
@@ -23,7 +22,6 @@
   window.addEventListener('load', fitAll);
   fitAll();
 
-  /* ---------- helpers ---------- */
   function inView(el, cb, th) {
     if (!('IntersectionObserver' in window)) { cb(); return; }
     var io = new IntersectionObserver(function (es) {
@@ -33,7 +31,6 @@
   }
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
-  /* ---------- reveal ---------- */
   var rv = $$('.rv');
   if ('IntersectionObserver' in window) {
     var rio = new IntersectionObserver(function (es) {
@@ -42,7 +39,6 @@
     rv.forEach(function (e) { rio.observe(e); });
   } else rv.forEach(function (e) { e.classList.add('in'); });
 
-  /* ---------- island stacks ---------- */
   function cycle(stack, getList) {
     var token = 0;
     function show(el) {
@@ -83,7 +79,6 @@
     });
   });
 
-  /* ---------- editor tabs / grid ---------- */
   $$('.editor, .ed').forEach(function (ed) {
     var ts = $$('[data-tab]', ed), vs = $$('[data-v]', ed);
     ts.forEach(function (t) {
@@ -108,11 +103,7 @@
     });
   });
 
-  /* ---------- automation flyout ---------- */
-  var btnAct = $('#btnAct'), flyAct = $('#flyAct');
-  if (btnAct && flyAct) btnAct.addEventListener('click', function () { flyAct.classList.toggle('open'); });
 
-  /* ---------- swap dialog ---------- */
   var sw = $('#swap');
   if (sw) {
     var mid = $('#swMid'), hint = $('#swHint'), done = $('#swDone'), ok = $('#swOk'), perm = $('#swPerm'), back = $('#swBack'), cancel = $('#swCancel');
@@ -146,59 +137,78 @@
     reset();
   }
 
-  /* ---------- hero demo ---------- */
   var desk = $('#heroDesk');
   if (desk) {
-    var cur = $('#hCur'), tray = $('#hTrayIco'), win = $('.hwin', desk), tmenu = $('.htray', desk), hisl = $('.hisl', desk);
+    var cur = $('#hCur'), tray = $('#hTrayIco'), win = $('.hwin', desk), tmenu = $('.htray', desk), hisl = $('.hisl', desk), editor = $('.ed2', desk);
+    var steps = $$('#dsteps li'), replay = $('#dreplay'), hstack = $('.isl-stack', desk);
     var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var token = 0, manual = false, started = false, STOP = {};
+    var TODAY = new Date().getDay();
     function pos(el, fx, fy) {
       var d = desk.getBoundingClientRect(), r = el.getBoundingClientRect();
       var k = d.width / desk.offsetWidth || 1; return [(r.left - d.left + r.width * (fx == null ? .5 : fx)) / k, (r.top - d.top + r.height * (fy == null ? .5 : fy)) / k];
     }
-    function move(el, fx, fy) { var p = pos(el, fx, fy); cur.style.transform = 'translate(' + p[0] + 'px,' + p[1] + 'px)'; return sleep(950); }
-    function click() { cur.classList.remove('click'); void cur.offsetWidth; cur.classList.add('click'); return sleep(350); }
-    desk.classList.add('stage0');
-    var hstack = $('.isl-stack', desk);
-    function setState(s) { // 0: nothing, 1: tray menu, 2: window, 3: island
-      tmenu.style.opacity = s === 1 ? 1 : 0;
-      win.style.opacity = s === 2 ? 1 : (s === 3 ? 0 : 0);
-      win.style.transform = s === 2 ? 'none' : 'translateY(10px) scale(.98)';
-      hisl.style.opacity = s === 3 ? 1 : 0;
+    function wait(ms) { var t = token; return sleep(ms).then(function () { if (t !== token) throw STOP; }); }
+    function move(el, fx, fy) { var p = pos(el, fx, fy); cur.style.transform = 'translate(' + p[0] + 'px,' + p[1] + 'px)'; return wait(900); }
+    function click() { cur.classList.remove('click'); void cur.offsetWidth; cur.classList.add('click'); return wait(350); }
+    function setStep(i) { steps.forEach(function (s, k) { s.classList.toggle('on', k === i); s.classList.toggle('done', k < i); }); }
+    function setState(s) {
+      tmenu.style.opacity = s === 1 ? 1 : 0; tmenu.style.pointerEvents = s === 1 ? 'auto' : 'none';
+      var showWin = s === 2 || s === 4;
+      win.style.opacity = showWin ? 1 : 0; win.style.transform = showWin ? 'none' : 'translateY(10px) scale(.98)'; win.style.pointerEvents = showWin ? 'auto' : 'none';
+      hisl.style.opacity = s === 3 || s === 4 ? 1 : 0;
+      if (hstack._c) { if (s === 3 || s === 4) hstack._c.start(); else hstack._c.stop(); }
     }
     [win, tmenu, hisl].forEach(function (e) { e.style.transition = 'opacity .45s,transform .45s'; });
+    function qs(sel) { return $(sel, editor); }
     async function loop() {
-      cur.style.transform = 'translate(' + (desk.clientWidth * .55) + 'px,' + (desk.clientHeight * .55) + 'px)';
-      cur.classList.add('on');
-      for (;;) {
-        setState(0); if (hstack._c) hstack._c.stop();
-        await sleep(800);
-        await move(tray, .5, .5); await click();
-        setState(1); await sleep(600);
-        var mi = $('.mi[data-k="edit"]', tmenu);
-        await move(mi, .3, .5); mi.classList.add('hl'); await click();
-        setState(2); mi.classList.remove('hl'); await sleep(900);
-        var cells = $$('td.c[data-i]', win), chips = $$('.chips span[data-s]', win);
-        for (var i = 0; i < Math.min(cells.length, 5); i++) {
-          await move(cells[i], .5, .5); await click(); cells[i].click();
-          var s = (cells[i].dataset.s || '语数英物化')[0];
-          var ch = chips.filter(function (c) { return c.dataset.s === '语数英物化'[i]; })[0] || chips[i];
-          if (ch) { await move(ch, .5, .5); await click(); ch.click(); }
+      var t = token;
+      try {
+        cur.style.transform = 'translate(' + (desk.clientWidth * .55) + 'px,' + (desk.clientHeight * .5) + 'px)';
+        cur.classList.add('on');
+        for (;;) {
+          if (editor.__reset) editor.__reset();
+          setState(0); setStep(-1); await wait(900);
+          setStep(0); await move(tray, .5, .5); await click(); setState(1); await wait(700);
+          var mi = $('.mi[data-k="edit"]', tmenu);
+          setStep(1); await move(mi, .3, .5); mi.classList.add('mon'); await click(); setState(2); mi.classList.remove('mon'); await wait(1000);
+          setStep(2);
+          var nb = qs('.nb[data-new="' + TODAY + '"]'); await move(nb, .5, .5); await click(); nb.click(); await wait(800);
+          var ok = qs('[data-pok]'); await move(ok, .5, .5); await click(); ok.click(); await wait(700);
+          var c0 = qs('td.c[data-d="' + TODAY + '"][data-r="0"]'); await move(c0, .5, .5); await click(); c0.click(); await wait(300);
+          var names = ['语文', '数学', '英语', '物理', '化学'];
+          for (var i = 0; i < names.length; i++) {
+            var chip = qs('[data-sub="' + names[i] + '"]'); await move(chip, .5, .5); await click(); chip.click(); await wait(180);
+          }
+          await wait(900);
+          setState(3); setStep(3); cur.classList.remove('on'); await wait(18000);
+          cur.classList.add('on');
         }
-        await sleep(700);
-        setState(3); if (hstack._c) hstack._c.start();
-        await sleep(19000);
-      }
+      } catch (e) { if (e !== STOP) throw e; }
     }
-    if (!reduce) inView(desk, loop, 0.3); else { setState(3); }
+    function takeOver() {
+      if (manual) return; manual = true; token++; cur.classList.remove('on'); setState(4); setStep(-1);
+      if (replay) replay.hidden = false;
+    }
+    function restart() {
+      manual = false; token++; if (replay) replay.hidden = true; if (editor.__reset) editor.__reset(); loop();
+    }
+    desk.addEventListener('pointerdown', function (e) {
+      if (!started) return;
+      if (!manual) { takeOver(); return; }
+      if (e.target.closest('#hTrayIco')) { var open = tmenu.style.opacity === '1'; tmenu.style.opacity = open ? 0 : 1; tmenu.style.pointerEvents = open ? 'none' : 'auto'; return; }
+      var m = e.target.closest('.htray .mi');
+      if (m) { tmenu.style.opacity = 0; tmenu.style.pointerEvents = 'none'; if (m.dataset.k === 'edit') setState(4); }
+    });
+    if (replay) replay.addEventListener('click', restart);
+    if (!reduce) inView(desk, function () { started = true; loop(); }, 0.3); else { started = true; manual = true; setState(4); }
   }
 
-  /* ---------- progress bar ---------- */
   var b40 = $('#bar40 i');
   if (b40) inView(b40, function () { b40.style.width = '40%'; });
   var mig = $('#mig');
   if (mig) inView(mig, function () { $$('div', mig).forEach(function (d, i) { setTimeout(function () { d.classList.add('ok'); }, 300 + i * 350); }); });
 
-  /* ---------- nav ---------- */
   var nav = $('#nav');
   function sc() { nav && nav.classList.toggle('solid', window.scrollY > 20); }
   window.addEventListener('scroll', sc, { passive: true }); sc();
@@ -207,33 +217,44 @@
     var o = links.classList.toggle('open'); menu.setAttribute('aria-expanded', o);
   });
 
-  /* ---------- release info ---------- */
-  var cache = null;
-  try { cache = JSON.parse(localStorage.getItem('cf_rel') || 'null'); } catch (e) { }
+  var rels = null, chan = 'stable';
   function fmt(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB'; }
-  function fillRel(r) {
+  function pick() { if (!rels) return null; for (var i = 0; i < rels.length; i++) { var r = rels[i]; if (!r.draft && (chan === 'pre' ? r.prerelease : !r.prerelease)) return r; } return null; }
+  function fillRel() {
+    var r = pick(), box = $('#assets'), dl = $('[data-dl]');
+    $$('[data-badge]').forEach(function (e) { e.hidden = chan !== 'pre'; });
+    var tip = $('#chanTip'); if (tip) tip.textContent = chan === 'pre' ? '最新预览版' : '最新稳定版';
+    if (!r) {
+      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; });
+      $$('[data-date]').forEach(function (e) { e.textContent = '—'; });
+      if (box) box.innerHTML = '<div class="none">' + (chan === 'pre' ? '目前没有发布预览版，请先使用稳定版。' : '暂无可下载的版本。') + '</div>';
+      if (dl) dl.classList.add('dis'); return;
+    }
+    if (dl) { dl.classList.remove('dis'); }
     $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; });
     $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); });
     $$('[data-releaselink]').forEach(function (e) { e.href = r.html_url; });
-    var box = $('#assets');
+    if (dl) { var big = (r.assets || []).slice().sort(function (a, b) { return /installer/i.test(b.name) - /installer/i.test(a.name); })[0]; dl.href = big ? big.browser_download_url : r.html_url; }
     if (box) {
       var as = r.assets || [];
       box.innerHTML = as.length ? as.map(function (a) {
-        return '<a href="' + a.browser_download_url + '" rel="noopener"><span>' + a.name + '</span><em>' + fmt(a.size) + '</em></a>';
+        return '<a href="' + a.browser_download_url + '" rel="noopener"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg><span class="an">' + a.name + '</span><em>' + fmt(a.size) + '</em><i class="dlb"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></i></a>';
       }).join('') : '<div class="none">该版本暂无文件，请前往 GitHub 查看。</div>';
     }
   }
-  if (cache && cache.r && Date.now() - cache.t < 36e5) fillRel(cache.r);
-  else if (window.fetch && ($('[data-ver]') || $('#assets'))) {
-    fetch('https://api.github.com/repos/' + REPO + '/releases/latest').then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (r) { fillRel(r); try { localStorage.setItem('cf_rel', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
+  $$('[data-chan]').forEach(function (b) { b.addEventListener('click', function () {
+    chan = b.dataset.chan; $$('[data-chan]').forEach(function (x) { x.classList.toggle('on', x === b); }); fillRel(); }); });
+  if (window.fetch && ($('[data-ver]') || $('#assets'))) {
+    var cache = null; try { cache = JSON.parse(localStorage.getItem('cf_rels') || 'null'); } catch (e) { }
+    if (cache && Date.now() - cache.t < 36e5) { rels = cache.r; fillRel(); }
+    else fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=20').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (r) { rels = r; fillRel(); try { localStorage.setItem('cf_rels', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
       .catch(function () {
         $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; });
         var box = $('#assets'); if (box) box.innerHTML = '<div class="none">暂时无法读取版本信息，请前往 <a href="https://github.com/' + REPO + '/releases" rel="noopener">GitHub Releases</a> 下载。</div>';
       });
   }
 
-  /* ---------- theme ---------- */
   var tb = $('#theme');
   if (tb) tb.addEventListener('click', function () {
     var cur = document.documentElement.dataset.theme;
@@ -243,7 +264,6 @@
     try { localStorage.setItem('cf_theme', nx); } catch (e) { }
   });
 
-  /* ---------- toc highlight ---------- */
   var toc = $$('.toc a');
   if (toc.length && 'IntersectionObserver' in window) {
     var tio = new IntersectionObserver(function (es) {
@@ -255,11 +275,9 @@
   }
 })();
 
-/* ---------- V11 additions ---------- */
 (function () {
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  // desk scale on scroll (Apple-like)
   var desk = $('#heroDesk');
   if (desk && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
     var tick = false;
@@ -272,7 +290,6 @@
     window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
     upd();
   }
-  // video lazy play
   var v = $('#vid video');
   if (v && 'IntersectionObserver' in window) {
     var vio = new IntersectionObserver(function (es) {
@@ -285,7 +302,6 @@
     }, { threshold: 0.35 });
     vio.observe(v);
   }
-  // gallery
   var tabs = $$('.gtabs button'), imgs = $$('.gimg'), cap = $('#gcap'), n = 0, timer = null;
   function go(i) {
     n = i;
@@ -306,7 +322,6 @@
   }
 })();
 
-/* ---------- V14：宣言文字滚动点亮 / 光斑跟随 / 主题卡倾斜 ---------- */
 (function () {
   var mt = document.getElementById('mtxt');
   if (mt) {
@@ -332,4 +347,43 @@
       f.addEventListener('pointerleave', function () { f.style.transform = ''; });
     });
   }
+})();
+
+(function () {
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function p2(n) { return (n < 10 ? '0' : '') + n; }
+  function tick() {
+    var d = new Date(), wd = '日一二三四五六'.charAt(d.getDay());
+    var t = '周' + wd + ' ' + p2(d.getMonth() + 1) + '/' + p2(d.getDate());
+    $$('.idt').forEach(function (e) { e.textContent = t; });
+    $$('[data-clock]').forEach(function (e) { e.innerHTML = p2(d.getHours()) + ':' + p2(d.getMinutes()) + '<br>' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate(); });
+    $$('[data-wd]').forEach(function (e) { e.textContent = '周' + wd; });
+  }
+  tick(); setInterval(tick, 20000);
+})();
+
+(function () {
+  Array.prototype.forEach.call(document.querySelectorAll('.pc img'), function (img) {
+    function fallback() {
+      var s = document.createElement('span'); s.className = 'av'; s.textContent = (img.parentNode.querySelector('b').textContent || '?').charAt(0);
+      img.replaceWith(s);
+    }
+    img.addEventListener('error', fallback);
+    if (img.complete && img.naturalWidth === 0) fallback();
+  });
+})();
+
+(function () {
+  Array.prototype.forEach.call(document.querySelectorAll('[data-acc]'), function (acc) {
+    var items = Array.prototype.slice.call(acc.querySelectorAll('.acc-i'));
+    function set(it, open) { it.classList.toggle('open', open); it.querySelector('button').setAttribute('aria-expanded', open); }
+    items.forEach(function (it) {
+      it.querySelector('button').addEventListener('click', function () {
+        var open = !it.classList.contains('open');
+        items.forEach(function (x) { set(x, false); });
+        set(it, open);
+      });
+    });
+    set(items[0], true);
+  });
 })();

@@ -50,6 +50,8 @@ P = {
  'x': '<path d="M6 6l12 12M18 6L6 18"/>',
  'search': '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
  'tri': '<path d="M3 20h18L12 4z"/><path d="M12 10v5"/>',
+ 'arrowr': '<path d="M4 12h16M14 6l6 6-6 6"/>',
+ 'ext': '<path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/>',
  'dl': '<path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/>',
 }
 
@@ -72,7 +74,6 @@ def titlebar(title, ver=None, isl=None, icon=True):
 
 TITLE_ISL = '<span>周四 10/29</span><span style="font-weight:400">今天没有课程。</span>'
 
-# ---------------------------------------------------------------- settings window
 NAV = [
  ('gear', '通用', 'g'), ('sub', '基本'), ('sub', '时钟'), ('sub', '存储'), ('sub', '隐私'), ('sub', '翻新与迎新'), ('sub', '高级'),
  ('layout', '主界面', 'g'), ('sub', '组件'), ('sub', '外观'), ('sub', '窗口'),
@@ -130,13 +131,13 @@ def pg_auto():
      '<div class="arow on"><span style="flex:1">新自动化</span>' + tg(True) + '</div>'
      '</div>'
      '<div class="rgt" style="position:relative">'
-     '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;font-size:14px"><div class="inp" style="width:148px;flex:none;height:32px;font-weight:600">新自动化</div>' + cb(True, '启用恢复') + '<span class="btnw" style="margin-left:2px;background:#303a46;border-color:transparent;font-weight:600">' + ic('play') + '触发</span><span style="opacity:.7">' + ic('play') + '</span><span style="display:flex;gap:6px;align-items:center;font-weight:600;margin-left:8px">' + ic('undo') + '恢复</span><span style="width:1px;height:20px;background:#555;margin:0 4px"></span>' + ic('doc') + '<span style="color:#ff6f7d;margin-left:6px">' + ic('trash') + '</span></div>'
+     '<div class="auto-head" style="display:flex;gap:10px;align-items:center;margin-bottom:12px;font-size:14px"><div class="inp" style="width:148px;flex:none;height:32px;font-weight:600">新自动化</div>' + cb(True, '启用恢复') + '<span class="btnw" style="margin-left:2px;background:#303a46;border-color:transparent;font-weight:600">' + ic('play') + '触发</span><span style="opacity:.7">' + ic('play') + '</span><span style="display:flex;gap:6px;align-items:center;font-weight:600;margin-left:8px">' + ic('undo') + '恢复</span><span style="width:1px;height:20px;background:#555;margin:0 4px"></span>' + ic('doc') + '<span style="color:#ff6f7d;margin-left:6px">' + ic('trash') + '</span></div>'
      '<div class="hdr">' + ic('bolt') + '当事件触发时' + ic('chev', 'chev') + '</div>'
-     '<div class="bd" style="min-height:76px"><span class="sel" id="selTrig" style="width:112px;margin-right:6px">&nbsp;' + ic('chev') + '</span><div style="margin-top:12px;color:var(--blue);display:flex;gap:6px;align-items:center;font-size:12.5px">' + ic('plus') + '添加触发器</div></div>'
+     '<div class="bd" data-trigs style="min-height:76px"><span class="sel" data-fk="trig" style="min-width:112px;margin-right:6px"><span class="v">&nbsp;</span>' + ic('chev') + '</span><div style="margin-top:12px;color:var(--blue);display:flex;gap:6px;align-items:center;font-size:12.5px">' + ic('plus') + '添加触发器</div></div>'
      '<div class="hdr">' + ic('shield') + '并且满足规则集时' + tg(False) + ic('chev', 'chev') + '</div>'
      '<div class="bd">工作流运行时不会考虑规则集。</div>'
      '<div class="hdr">' + ic('bolt') + '触发行动' + ic('chev', 'chev') + '</div>'
-     '<div class="bd" style="min-height:70px"><div id="btnAct" style="color:var(--blue);display:flex;gap:6px;align-items:center;font-size:12.5px;cursor:pointer">' + ic('plus') + '添加行动</div></div>'
+     '<div class="bd" data-acts style="min-height:70px"><div data-fk="act" style="color:var(--blue);display:flex;gap:6px;align-items:center;font-size:12.5px;cursor:pointer">' + ic('plus') + '添加行动</div></div>'
      + flyout_trig() + flyout_act() +
      '</div></div>')
     return '<div class="pg"><h2>自动化</h2>' + lft + '</div>'
@@ -144,14 +145,14 @@ def pg_auto():
 def flyout_trig():
     items = ['规则集更新时', '收到信号时', '调用 Uri 时', '从托盘菜单运行时', 'cron', '应用启动时', '应用退出时', '上课时', '课间休息时', '放学时', '当前时间状态变化时', '特定时间点前']
     ico = ['shield', 'bell', 'import', 'list', 'sync', 'window', 'exit', 'school', 'clock', 'power', 'clock', 'clock']
-    return '<div class="fly open" id="flyTrig" style="left:5px;top:122px;width:182px">' + ''.join('<div class="mi">%s%s</div>' % (ic(i), t) for i, t in zip(ico, items)) + '</div>'
+    return '<div class="fly" data-fly="trig" style="left:5px;top:122px;width:182px">' + ''.join('<div class="mi">%s%s</div>' % (ic(i), t) for i, t in zip(ico, items)) + '</div>'
 
 def flyout_act():
-    h = '<div class="fly" id="flyAct" style="left:-6px;top:150px;width:130px">'
+    h = '<div class="fly" data-fly="act" style="left:-6px;top:150px;width:130px">'
     h += '<div class="mi">' + ic('bell') + '广播信号</div><div class="mi">' + ic('clock') + '等待时长</div>'
     h += '<div class="mi">' + ic('gear') + '应用设置' + ic('chevr', 'chev') + '</div><div class="mi hl">' + ic('import') + '运行' + ic('chevr', 'chev') + '</div>'
     h += '<div class="mi">' + ic('bell') + '提醒' + ic('chevr', 'chev') + '</div><div class="mi">' + ic('info') + 'ClassFabric' + ic('chevr', 'chev') + '</div></div>'
-    h += '<div class="fly" id="flyAct2" style="left:128px;top:180px;width:112px"><div class="mi">' + ic('window') + '应用程序</div><div class="mi">' + ic('list') + 'cmd 命令</div><div class="mi">' + ic('doc') + '文件</div><div class="mi">' + ic('folder') + '文件夹</div><div class="mi">' + ic('import') + 'Url 链接</div></div>'
+    h += '<div class="fly" data-fly="act2" style="left:128px;top:180px;width:112px"><div class="mi">' + ic('window') + '应用程序</div><div class="mi">' + ic('list') + 'cmd 命令</div><div class="mi">' + ic('doc') + '文件</div><div class="mi">' + ic('folder') + '文件夹</div><div class="mi">' + ic('import') + 'Url 链接</div></div>'
     return h
 
 def pg_widgets():
@@ -208,7 +209,6 @@ def settings_window(page, dw=860, dh=520):
     h = ('<div class="w" style="--dw:%dpx;--dh:%dpx">' % (dw, dh)) + titlebar('应用设置', '2.1.1.3', TITLE_ISL) + '<div class="wb">' + nav(on) + body + '</div></div>'
     return h
 
-# ---------------------------------------------------------------- profile editor
 ROWS = [('07:40-08:20', '语文'), ('08:30-09:10', '数学'), ('09:20-10:00', '英语'), ('10:30-11:10', '物理'), ('11:20-12:00', '化学'), ('13:50-14:30', '生物'),
         ('14:40-15:20', '政治'), ('15:30-16:10', '历史'), ('16:20-17:00', '地理'), ('17:30-18:50', '自习'), ('19:05-20:25', '自习')]
 DAYS = [('日', '10/25'), ('一', '10/26'), ('二', '10/27'), ('三', '10/28'), ('四', '10/29'), ('五', '10/30'), ('六', '10/31')]
@@ -266,16 +266,14 @@ def editor_window(dw=860, dh=520, filled=True, wid=''):
     return ('<div class="w editor"%s style="--dw:%dpx;--dh:%dpx">' % ((' id="%s"' % wid) if wid else '', dw, dh)) + titlebar('档案编辑', None, TITLE_ISL) + \
            '<div class="ed" style="height:calc(var(--dh) - 32px)">' + tabs + '<div class="tool"><span>' + ic('sync') + '刷新</span><b></b>' + tools + '</div>' + grid_view(filled) + timeline_view() + subjects_view() + '</div></div>'
 
-# ---------------------------------------------------------------- swap dialog
 def swap_dialog():
     subs = ''.join('<span class="pick" data-s="%s" data-n="%s">%s</span>' % (s, n, s) for s, n in zip('语数英物化生政历地自自', ['语文', '数学', '英语', '物理', '化学', '生物', '政治', '历史', '地理', '自习', '自习']))
     return ('<div class="w swp" id="swap" style="--dw:640px">' + titlebar('换课', None, None, False) +
-            '<div class="wb"><div style="width:100%"><div class="top"><h4>换课 <span>' + ic('doc') + '周四</span><em id="swHint">→ 选择要调换的课程。</em></h4></div>'
+            '<div class="wb"><div style="width:100%"><div class="top"><h4>换课 <span>' + ic('doc') + '<span data-wd>周四</span></span><em id="swHint">→ 选择要调换的课程。</em></h4></div>'
             '<div class="mid" id="swMid">' + subs + '</div><div class="done" id="swDone">' + ic('check') + '已交换：语文 与 数学 的位置对调</div>'
             '<div class="bot"><span class="btnw" id="swCancel">' + ic('x') + '取消</span><span class="btnw ghost" id="swBack" style="display:none">← 上一步</span><span class="btnw ghost">高级换课…</span><span class="sp"></span>'
             '<span id="swPerm" style="display:none">' + cb(False, '永久换课') + '</span><span class="btnw acc" id="swOk" style="display:none">' + ic('check') + '确认换课</span></div></div></div></div>')
 
-# ---------------------------------------------------------------- tray menu / recovery
 def tray_menu():
     items = [('info', 'ClassFabric', ''), ('school', '教学…', ''), ('help', '帮助文档…', ''), ('hr',), ('eyeoff', '隐藏主界面', ''), ('hr',), ('doc', '编辑档案…', 'edit'), ('doc', '加载临时课表…', ''), ('swap', '换课…', ''), ('hr',), ('edit', '编辑主界面…', ''), ('gear', '应用设置…', ''), ('hr',), ('sync', '重启', ''), ('exit', '退出', '')]
     h = '<div class="tmenu">'
@@ -286,8 +284,8 @@ def tray_menu():
 
 def recovery():
     def o(i, t, s='', dis=False, ext=False):
-        return '<div class="o%s">%s<div><b>%s</b>%s</div>%s</div>' % (' dis' if dis else '', ic(i), t, ('<small>%s</small>' % s) if s else '', ic('chevr', 'go'))
+        return '<div class="o%s">%s<div><b>%s</b>%s</div>%s</div>' % (' dis' if dis else '', ic(i), t, ('<small>%s</small>' % s) if s else '', ic('ext', 'go') if ext else ic('chevr', 'go'))
     return ('<div class="rcv" style="--dw:420px"><div class="t">恢复<span class="ctl"><i>–</i><i>▢</i><i>✕</i></span></div><h5>选择一个选项</h5><p class="s">选择一个操作以继续。</p>'
-            '<div class="g1">' + o('chevr', '继续使用 ClassFabric') + o('chevr', '以安全模式继续使用 ClassFabric', '禁用所有插件和自动化功能。') + o('chevr', '以诊断模式继续使用 ClassFabric', '在日志中记录详细的信息，并启用控制台输出。') + o('folder', '打开日志目录') + '</div>'
+            '<div class="g1">' + o('arrowr', '继续使用 ClassFabric') + o('arrowr', '以安全模式继续使用 ClassFabric', '禁用所有插件和自动化功能。') + o('arrowr', '以诊断模式继续使用 ClassFabric', '在日志中记录详细的信息，并启用控制台输出。') + o('folder', '打开日志目录', '', False, True) + '</div>'
             '<div class="g1">' + o('back', '恢复备份', '从先前的备份恢复处于正确状态的配置文件。') + o('undo', '回滚', '回滚到之前的 ClassFabric 版本', True) + '</div>'
             '<div class="g1">' + o('trash', '清除临时文件', '删除所有缓存和临时文件。') + o('sync', '重置应用设置', '重置应用的设置信息，不影响档案、组件、自动化、插件等的配置。') + o('save', '重置全部配置', '重置应用的所有配置，包括应用设置、组件配置、自动化配置、插件设置等，不影响档案配置。') + o('back', '重置全部信息', '重置应用的所有信息，恢复到安装前的状态。') + '</div></div>')

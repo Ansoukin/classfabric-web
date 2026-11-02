@@ -25,7 +25,6 @@ def exp(icon, title, desc, body, on=True, open_=True, tgl=True):
 
 EMPTY = '<div class="empty"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="9" stroke-dasharray="9 7"/></svg><b>啥都没有</b></div>'
 
-# ---------------------------------------------------------------- 提醒
 def page_remind():
     prov = [('school', '上下课提醒', '在准备上课、上课和下课时发出醒目提醒，并预告下一节课程。'), ('power', '放学提醒', '在当天的课程结束后发出提醒。'),
             ('cloud', '天气预警', '当有降雨或者极端天气时发出提醒。'), ('bolt', '行动提醒', '显示由行动发出的提醒。')]
@@ -55,22 +54,18 @@ def page_remind():
              '<div class="scr" data-pane="b">' + basic + '</div><div class="scr" data-pane="a" hidden>' + adv + '</div></div><div class="rempty">' + EMPTY + '</div></div>')
     return '<h2>提醒</h2><div class="two">' + left + right + '</div>'
 
-# ---------------------------------------------------------------- 组件
 def page_widgets():
     lib = [('text', '文本', '显示自定义文本。'), ('split', '分割线', '显示一个分割线，视觉上对组件进行分组。'), ('doc', '课程表', '显示当前的课程表信息。'), ('cal', '日期', '显示今天的日期和星期。'),
            ('clock', '时钟', '显示现在的时间，支持精确到秒。'), ('sun', '天气简报', '显示当前的天气概况和气象预警。'), ('timer', '倒计时', '显示距离某一天的倒计时。'), ('carousel', '轮播容器', '轮播多个组件。'),
            ('scroll', '滚动容器', '滚动显示组件内的内容。'), ('group', '分组容器', '将多个组件组合到一个组件中显示。'), ('stack', '堆叠容器', '将多个容器堆叠显示。')]
     g = ''.join('<div class="li" data-w="%s">%s<span class="tx"><b>%s</b><span>%s</span></span></div>' % (t, ic(i), t, d) for i, t, d in lib)
-    return ('<div class="pg pgc"><div class="wtop"><div><h2>组件</h2><p class="sub2">以下组件将显示在主界面上，从组件库拖动组件以添加组件。</p></div>'
+    return ('<div class="pg pgc wxpg"><div class="wtop"><div><h2>组件</h2><p class="sub2">以下组件将显示在主界面上，从组件库拖动组件以添加组件。</p></div>'
             '<div class="cfg"><label>配置方案</label><div class="cfgr">' + combo('Default', 150) + '<span class="ib">' + ic('sync') + '</span><span class="ib">' + ic('plus') + '</span><span class="ib">' + ic('folder') + '</span></div></div></div>'
-            '<div class="rowbar"><span class="ins"></span><div class="chips2" id="wchips"><span class="wc on">' + ic('cal') + '日期</span><span class="wc">' + ic('doc') + '课程表</span></div>'
-            '<div class="rtools"><span class="ib">' + ic('layout') + '</span><span class="ib acc">' + ic('bell') + '</span><span class="ib">' + ic('plus') + '</span><span class="ib red">' + ic('trash') + '</span></div></div>'
-            '<div class="tabs2x" data-tabs><span class="on" data-t="l">组件库</span><span data-t="r">行设置</span></div>'
-            '<div data-pane="l"><div class="grp">内置</div><div class="lib2">' + g + '</div></div><div data-pane="r" hidden><div class="grp">行设置</div>' +
-            sc('layout', '行高', '', '<span class="num" style="min-width:120px">默认</span>') + sc('sliders', '行间隔', '', '<span class="num" style="min-width:120px">5</span>') + '</div>'
-            '<div class="ibar"><span class="dot">i</span>新功能：现在可以使用「编辑模式」更加直观地编辑主界面上的组件！<span class="btnw">进入编辑模式</span><span class="x">' + ic('x') + '</span></div></div>')
+            '<div class="wxrows" data-wx-rows></div><div class="wxsplit"></div>'
+            '<div class="wxlow"><div class="wxtabs" data-wx-tabs></div><div class="wxpane" data-wx-pane></div></div>'
+            '<div class="ibar"><span class="dot">i</span>新功能：现在可以使用「编辑模式」更加直观地编辑主界面上的组件！<span class="btnw">进入编辑模式</span><span class="x">' + ic('x') + '</span></div>'
+            '<div class="lib2 wxlibsrc" hidden>' + g + '</div></div>')
 
-# ---------------------------------------------------------------- 外观
 def page_appearance():
     def sec(icon, t): return '<div class="sech">%s%s</div>' % (ic(icon), t)
     return ('<div class="pg pgc"><h2>外观</h2>' + sec('gear', '基本') +
@@ -81,7 +76,6 @@ def page_appearance():
             sec('text', '字体') + sc('text', '自定义字体', '自定义主界面显示课表的字体。', combo('HarmonyOS Sans SC（默认）', 240)) + sc('text', '自定义字重', '自定义主界面显示的字体的字重，需要对应字体支持。', combo('Medium', 98, '', 'Light|Regular|Medium|Bold')) +
             sc('text', '字体大小', '调整主界面上各类字体的大小。', '<span class="car2">' + ic('chev') + '</span>') + sc('text', '字体颜色', '调整字体颜色，将覆盖主题默认值。', tg(False)) + '</div>')
 
-# ---------------------------------------------------------------- 窗口
 def page_window():
     pos = ''.join('<span class="dock%s" data-dock="%d" style="%s"></span>' % (' on' if i == 1 else '', i, st) for i, st in enumerate(
         ['left:8%;top:10%', 'left:46%;top:10%', 'right:8%;top:10%', 'left:8%;bottom:20%', 'left:46%;bottom:20%', 'right:8%;bottom:20%']))
@@ -98,7 +92,6 @@ def page_window():
             sc('monitor', '录制模式', '启用后，ClassFabric 将调整窗口属性以便被录屏软件录制。这会导致主界面窗口显示在任务栏中且主界面窗口只会在一个虚拟桌面上显示，如您没有录制 ClassFabric 窗口的需求，请勿开启此选项。', tg(False)) +
             sc('shield', '阻止截图', '开启后，其他应用无法截取 ClassFabric 主界面窗口内容，录制时也不会录制到主页面。', tg(False)) + '</div>')
 
-# ---------------------------------------------------------------- 外壳
 NAVX = [('gear', '通用', 'g', None), ('gear', '基本', 's', None), ('clock', '时钟', 's', None), ('save', '存储', 's', None), ('shield', '隐私', 's', None), ('sync', '翻新与迎新', 's', None), ('sliders', '高级', 's', None),
         ('layout', '主界面', 'g', None), ('widgets', '组件', 's', 'widgets'), ('brush', '外观', 's', 'appearance'), ('window', '窗口', 's', 'window'),
         ('bell', '提醒', 'i', 'remind'), ('cloud', '天气', 'i', None), ('bolt', '自动化', 'i', 'auto'), ('sync', '更新', 'i', None), ('hr',),
@@ -126,7 +119,6 @@ def settings_app(island='周六 10/31　今天没有课程。', ver='2.1.1.4'):
             '<div class="wb">' + nav + '<div class="pgs">' + body + '</div></div></div>')
 
 
-# ---------------------------------------------------------------- 档案编辑（内容由 apps.js 渲染）
 def editor_app(island='周六 10/31　今天没有课程。', ver='2.1.1.4', h=620):
     a, b = island.split('　')
     tabs = ''.join('<span%s data-v="%s">%s</span>' % (' class="on"' if k == 'grid' else '', k, t) for k, t in [('grid', '课表'), ('tl', '时间表'), ('sj', '科目'), ('sw', '调课')])
