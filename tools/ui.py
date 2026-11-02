@@ -150,7 +150,7 @@ def flyout_trig():
 def flyout_act():
     h = '<div class="fly" data-fly="act" style="left:-6px;top:150px;width:130px">'
     h += '<div class="mi">' + ic('bell') + '广播信号</div><div class="mi">' + ic('clock') + '等待时长</div>'
-    h += '<div class="mi">' + ic('gear') + '应用设置' + ic('chevr', 'chev') + '</div><div class="mi hl">' + ic('import') + '运行' + ic('chevr', 'chev') + '</div>'
+    h += '<div class="mi">' + ic('gear') + '应用设置' + ic('chevr', 'chev') + '</div><div class="mi mon">' + ic('import') + '运行' + ic('chevr', 'chev') + '</div>'
     h += '<div class="mi">' + ic('bell') + '提醒' + ic('chevr', 'chev') + '</div><div class="mi">' + ic('info') + 'ClassFabric' + ic('chevr', 'chev') + '</div></div>'
     h += '<div class="fly" data-fly="act2" style="left:128px;top:180px;width:112px"><div class="mi">' + ic('window') + '应用程序</div><div class="mi">' + ic('list') + 'cmd 命令</div><div class="mi">' + ic('doc') + '文件</div><div class="mi">' + ic('folder') + '文件夹</div><div class="mi">' + ic('import') + 'Url 链接</div></div>'
     return h
@@ -279,6 +279,7 @@ def tray_menu():
     h = '<div class="tmenu">'
     for it in items:
         if it[0] == 'hr': h += '<hr>'
+        elif it[1] == 'ClassFabric': h += '<div class="mi" data-k="%s"><img class="ti" src="/assets/img/icon-64.png" alt="">%s</div>' % (it[2], it[1])
         else: h += '<div class="mi" data-k="%s">%s%s</div>' % (it[2], ic(it[0]), it[1])
     return h + '</div>'
 

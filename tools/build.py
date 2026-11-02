@@ -46,6 +46,23 @@ def fit(inner, dw, style='', dwm=None, cls='', extra=''):
     return '<div class="fitbox %s" data-dw="%d"%s style="%s"%s><div class="fit" style="width:%dpx">%s</div></div>' % (
         cls, dw, (' data-dwm="%d"' % dwm) if dwm else '', style, extra, dw, inner)
 
+def vtask(running=False):
+    folder = '<svg viewBox="0 0 24 24"><path fill="#f6c453" d="M2.5 6.5a2 2 0 012-2h5l2 2.2h8a2 2 0 012 2V18a2 2 0 01-2 2h-15a2 2 0 01-2-2z"/><path fill="#fbdb7d" d="M2.5 10h19v8a2 2 0 01-2 2h-15a2 2 0 01-2-2z"/></svg>'
+    globe = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#2b88d8"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="#bfe3ff" stroke-width="1.2"/></svg>'
+    store = '<svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="2.5" fill="#3a7bd5"/><path d="M8 7V6a4 4 0 018 0v1" fill="none" stroke="#bfe3ff" stroke-width="1.5"/></svg>'
+    win = '<svg viewBox="0 0 24 24"><path fill="#4cc2ff" d="M3 5.5l8-1.1v7.1H3zM12 4.3L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zM12 12.5h9V21l-9-1.3z"/></svg>'
+    srch = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg>'
+    wifi = '<svg viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0119 0M5.5 12.5a9.5 9.5 0 0113 0M8.7 16a5 5 0 016.6 0"/><circle cx="12" cy="19" r=".6"/></svg>'
+    vol = '<svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>'
+    bat = '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="16" height="8" rx="2"/><path d="M21 11v2"/><path d="M6 11h8" stroke-width="2.4"/></svg>'
+    chev = '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>'
+    return ('<div class="vtask"><span class="tb">' + win + '</span><span class="tb">' + srch + '</span><span class="tb run">' + folder + '</span><span class="tb run">' + globe + '</span><span class="tb">' + store + '</span>'
+            '<span class="tb cfapp' + (' on' if running else ' run') + '"><img src="/assets/img/icon-64.png" alt=""></span>'
+            '<div class="vtray"><span class="tg2 hide">' + chev + '</span><span class="tg2 ctray" id="%s" title="ClassFabric"><img src="/assets/img/icon-64.png" alt=""></span><span class="sys">' + wifi + vol + bat + '</span><span class="clk" data-clock>10:12<br>2026/11/2</span></div></div>')
+
+def vdesk(inner, cls, w=1280, h=720, mw=680, mh=780, extra='', tray_id='vTray'):
+    return ('<div class="vdk %s" data-vd data-w="%d" data-h="%d" data-mw="%d" data-mh="%d"%s><div class="vdks">%s%s</div></div>' % (cls, w, h, mw, mh, extra, inner, vtask(False).replace('%s', tray_id, 1)))
+
 def static_isl(h, w='50%'):
     return h.replace('class="isl bar', 'class="isl static bar').replace('<div class="isl"', '<div class="isl static"').replace('<div class="isl mask', '<div class="isl static mask')
 
@@ -69,7 +86,7 @@ def navbar(cur):
 
 import hashlib, datetime
 
-SITE_VER = '1.0.1'
+SITE_VER = '1.0.3'
 
 def build_id():
     h = hashlib.sha1()
@@ -121,13 +138,12 @@ def home():
           '<svg viewBox="0 0 16 16" fill="currentColor" stroke="none"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub 仓库</a></div>'
           '<p class="note rv d2">支持在 Windows 10/11 上运行　·　最新版本 <b data-ver>—</b>　·　GPL-3.0 开源</p>'
           '<div class="dctl rv d2"><ol class="dsteps" id="dsteps"><li><i>1</i><span>右键托盘图标</span></li><li><i>2</i><span>打开「编辑档案」</span></li><li><i>3</i><span>新建课表，填入课程</span></li><li><i>4</i><span>主界面随即就位</span></li></ol><button type="button" class="dreplay" id="dreplay" hidden>' + ic('sync') + '重播演示</button></div>'
-          '<div class="desk rv d2" id="heroDesk" role="group" aria-label="ClassFabric 演示：右键托盘图标，打开档案编辑，填入课表，主界面随即在屏幕上方显示今日课程并发出上课提醒。点击画面可自行操作。">'
-          + fit('<div style="display:flex;justify-content:center;width:100%"><div class="isl-stack" data-demo="hero" id="hIsl">' + HERO_STATES + '</div></div>', 1180, 'left:0;top:2.6%;width:100%', 640, 'hisl')
-          + fit(ui2.editor_app(h=450), 1000, 'left:6%;top:12%;width:88%', None, 'hwin')
-          + fit(tray_menu(), 190, 'right:1.2%;bottom:6.2%;width:17%', None, 'htray')
-          + '<div class="taskbar"><svg class="ws" viewBox="0 0 24 24"><path fill="#4cc2ff" d="M3 5.5l8-1.1v7.1H3zM12 4.3L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zM12 12.5h9V21l-9-1.3z"/></svg><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i><div class="tray"><b></b><b></b><span class="ctray" id="hTrayIco"><img src="/assets/img/icon-32.png" alt=""></span><span data-clock>10:12<br>2026/10/29</span></div></div>'
-          '<svg class="cursor" id="hCur" viewBox="0 0 24 24"><path d="M4 2.5v17l4.6-4.4 3 6.9 2.9-1.3-3-6.8h6.5z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg>'
-          '</div></div></section>\n')
+          + vdesk('<div class="visl hisl">' + '<div class="isl-stack" data-demo="hero" id="hIsl">' + HERO_STATES + '</div></div>'
+                  '<div class="vwin hwin">' + ui2.editor_app() + '</div>'
+                  '<div class="vtray-menu htray">' + tray_menu() + '</div>'
+                  '<svg class="cursor" id="hCur" viewBox="0 0 24 24"><path d="M4 2.5v17l4.6-4.4 3 6.9 2.9-1.3-3-6.8h6.5z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+                  'vdk-edit rv d2', 1280, 720, 680, 780, ' id="heroDesk" role="group" aria-label="ClassFabric 演示：右键托盘图标，打开档案编辑，填入课表，主界面随即在屏幕上方显示今日课程并发出上课提醒。点击画面可自行操作。"', 'hTrayIco')
+          + '</div></section>\n')
 
     h += '<section class="mani"><div class="wrap"><p class="mtxt" id="mtxt">' + ''.join('<span class="mw">%s</span>' % c for c in "积极同步上游。无缝沿用配置。再多一点点，属于我们自己的增强。") + '</p></div></section>\n'
     def bigmq(a, b):
@@ -184,9 +200,9 @@ def home():
     subs = ('<div class="subs"><div class="sub-i">' + ic('cal') + '<div><h4>灵活的课表启用规则</h4><p>可为课表设置每周、某一天或循环启用的规则，支持多周轮换，到日期自动切换。</p></div></div>'
             '<div class="sub-i">' + ic('clock') + '<div><h4>时间与科目的自由定制</h4><p>不同课表可使用不同的时间表，并支持自定义科目，设置科目图标与主题色。</p></div></div>'
             '<div class="sub-i">' + ic('edit') + '<div><h4>简洁直观的编辑工具</h4><p>课表、时间表、科目分页编辑，时间表以时间轴方式直接拖动调整。</p></div></div></div>')
-    ed_vis = panel_wall('<div style="padding:4% 3% 0">' + ui2.editor_app(h=620) + '</div>', '30%', '60%', '230%', '')
-    h += ('<div class="blk band rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击右侧的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
-    swap_vis = panel_wall('<div class="swwrap"><div class="sw2 w" data-app="swap"></div></div>', '70%', '36%', '210%', '')
+    ed_vis = '<div class="edpanel">' + vdesk('<div class="vwin">' + ui2.editor_app(seed='real') + '</div>', 'vdk-bare', 1280, 720, 680, 780).replace('<div class="vtask">', '<div class="vtask" hidden>', 1) + '</div>'
+    h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击窗口上方的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
+    swap_vis = '<div class="edpanel">' + vdesk('<div class="vwin" data-vwin="swap"><div class="sw2 w" data-app="swap" data-modal="1"></div></div><div class="vtray-menu" data-vmenu>' + tray_menu() + '</div>', 'vdk-swap', 800, 500, 720, 520, ' data-vtray="swap"', 'swTray') + '<p class="vcap">点击右下角的托盘图标，选择「换课…」，即可从托盘打开独立的换课窗口。</p></div>'
     h += ('<div class="blk rev zoomed rv"><div class="copy" style="order:2"><span class="tag gr">#调课</span><h3>提前调整课程</h3><p>支持当日与跨天换课，灵活应对调课情景。可以只换这一次，也可以勾选「永久换课」。</p>'
           '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>临时启用课表</h4><p>可在当日或未来某一天临时启用另一个课表，应对调休与换课。</p></div></div>'
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
@@ -210,20 +226,23 @@ def home():
     h += ('<div class="blk full crop rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
     h += '</div></section>\n'
 
-    G = [('shot-timeline', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('shot-subjects', '科目', '自定义科目的名称、图标与主题色。')]
-    gt = ''.join('<button role="tab" data-g="%d"%s>%s</button>' % (i, ' class="on" aria-selected="true"' if i == 0 else '', g[1]) for i, g in enumerate(G))
-    gi = ''.join('<img class="gimg%s" data-cap="%s" src="/assets/img/%s.webp" alt="ClassFabric %s界面截图" loading="lazy" width="1920" height="1040">' % (' on' if i == 0 else '', g[2], g[0], g[1]) for i, g in enumerate(G))
+    G = [('tl', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('sj', '科目', '自定义科目的名称、图标与主题色。'), ('grid', '课表', '按周查看并填写课表，科目一键点选。'), ('sw', '调课', '周视图与日历视图，可预定临时启用的课表。')]
+    gt = ''.join('<button role="tab" data-gt="%s"%s>%s</button>' % (g[0], ' class="on" aria-selected="true"' if i == 0 else '', g[1]) for i, g in enumerate(G))
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">档案编辑，<span class="g">所见即所得</span></h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
-          '<div class="gframe" id="gframe" title="点击放大">' + gi + '</div></div></div></section>\n')
+          + vdesk('<div class="vwin">' + ui2.editor_app(seed='real') + '</div>', 'vdk-bare', 1280, 720, 680, 780, ' data-gallery="1"').replace('<div class="vtask">', '<div class="vtask" hidden>', 1) +
+          '<p class="vcap" id="gcap">' + G[0][2] + '</p></div></div></section>\n')
 
     h += bigmq(['更多天气源','托盘菜单','恢复模式','持续同步'], ['OpenWeather','和风天气','SFTP 备份','云端同步'])
     wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
     ln = ('<div class="cd s3 rv d1"><h4>多语言 <span style="font-size:13px;color:var(--faint);font-weight:500">实验中</span></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
           '<div class="vis"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div style="font-size:12.5px;color:var(--faint);margin-top:8px">适配进度 约 40%</div></div></div>')
-    pv = ('<div class="cd s2 rv"><h4>更好的插件预览</h4><p>插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。</p><div class="vis"><div style="display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)">'
-          '<span style="width:46px;height:46px;border-radius:10px;background:#6a6a6a;display:grid;place-items:center;font-weight:800;font-size:20px;flex:none">U</span><div style="flex:1;min-width:0"><b style="display:block">UIAccess 提权</b><span style="font-size:13px;color:var(--muted)">2.0.0.0 · HelloWRC, Doubx690i</span></div><span class="chip on" style="padding:6px 14px">安装</span></div>'
-          '<div style="height:70px;margin-top:10px;border-radius:10px;border:1px solid var(--line);background:linear-gradient(90deg,#0d1b2e,#15335a 45%,#0e2240);position:relative;overflow:hidden"><div style="position:absolute;left:10%;right:10%;top:46%;height:7px;border-radius:4px;background:rgba(98,179,242,.55)"></div></div></div></div>')
-    jn = ('<div class="cd s2 rv d2"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="cta" style="justify-content:flex-start"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
+    pv = ('<div class="cd s2 rv pvc"><h4>更好的插件预览</h4><p>插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。</p><div class="vis"><div class="pvw">'
+          '<div class="pvh"><span class="pva"><img src="https://cdn.jsdelivr.net/gh/HelloWRC/GrantUiAccess@master/GrantUiAccess/icon.png" alt="" width="46" height="46"></span><div><b>UIAccess 提权</b><small>2.0.0.0 · HelloWRC, Doubx690i</small></div><span class="pvb">安装</span></div>'
+          '<div class="pvt"><span class="on">详情</span><span>版本</span><span>依赖</span></div>'
+          '<div class="pvmd"><h5>UIAccess 提权</h5><p>为 ClassIsland 提升 UIAccess 令牌，使其可以置顶到全屏 UWP 应用和系统界面上。</p>'
+          '<div class="pvimg"><div class="isl-stack" style="font-size:12px">' + smask('上课', 'atom') + '</div></div></div></div></div></div>')
+    jn = ('<div class="cd s2 rv d2 jnc"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="repo"><div class="rh">' + GHSVG.replace(' class="ghi"', '') + '<b>Ansoukin/ClassFabric</b></div><p>ClassIsland 的个人修改版班级大屏课表</p><div class="rc"><span>GPL-3.0</span><span>Windows</span><span>欢迎 PR</span></div></div>'
+          '<div class="cta" style="justify-content:flex-start;margin-top:16px"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
     tray = ('<div class="cd s2 rv d1 trayc"><h4>一切，都在托盘里</h4><p>右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。</p><div class="vis traystage"><div class="tzoom">' + tray_menu() + '</div></div></div>')
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
 
@@ -231,9 +250,9 @@ def home():
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">除了这些…</h2>'
           '<div class="blk rv"><div class="copy"><span class="tag gr">#可靠</span><h3>出现问题，也能恢复</h3><p>内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。</p></div>' + rec_vis + '</div></div></section>\n')
 
-    st = [('1', '下载', '前往下载页，获取适用于 Windows 的最新版本。'), ('2', '运行', '按文件类型安装或解压后启动，主界面会出现在屏幕上方。'), ('3', '接着用', '如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。')]
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><div class="steps3">' +
-          ''.join('<div class="st rv d%d"><i>%s</i><h4>%s</h4><p>%s</p></div>' % (k, a, b, c) for k, (a, b, c) in enumerate(st)) + '</div></div></section>\n')
+    st = [('01', 'dl', '下载', '前往下载页，获取适用于 Windows 的最新版本。', '安装程序 · 免安装压缩包'), ('02', 'play', '运行', '按文件类型安装或解压后启动，主界面会出现在屏幕上方。', '右键托盘图标，打开设置'), ('03', 'check', '接着用', '如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。', '无需重新配置')]
+    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="stp4">' +
+          ''.join('<li class="rv d%d"><div class="top"><span class="nd">%s</span><span class="no">%s</span></div><h4>%s</h4><p>%s</p><span class="ch">%s</span></li>' % (k, ic(i), n, b, c, d) for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
 
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2><div class="rel">'
           '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版，既不是它的完美替代品，也不是竞品。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
@@ -250,17 +269,25 @@ def home():
 def download():
     h = head('下载 ClassFabric — Windows 版', '下载 ClassFabric，ClassIsland 的个人修改版班级大屏课表。支持 Windows 10 及更高版本，免费开源。', '/download.html')
     h += navbar('dl')
-    h += ('<main><section class="dlh"><div class="wrap"><h1>下载 ClassFabric</h1><p>目前提供 Windows 版本，免费开源。</p></div></section>'
-          '<div class="wrap dl2"><div class="dmain"><div class="dtop"><span class="wlogo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg></span>'
-          '<div class="dtt"><h2>Windows</h2><span>Windows 10 及更高版本 · x64</span></div>'
-          '<div class="seg4 chan" id="chan"><span class="on" data-chan="stable">稳定版</span><span data-chan="pre">预览版</span></div></div>'
-          '<div class="dver"><div><small id="chanTip">最新稳定版</small><div class="vn"><b data-ver>读取中…</b><em class="bdg" data-badge hidden>预览版</em></div><span class="vd">发布于 <span data-date>—</span></span></div>'
-          '<div class="btnrow"><a class="fb acc lg" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '下载最新版</a><a class="fb lg" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div></div>'
-          '<div class="assets2" id="assets"><div class="none">正在读取版本信息…</div></div></div>'
-          '<div class="dside"><div class="infob"><b>Linux 与 macOS</b><span>代码中保留了相关支持，但暂无测试环境，因此暂不提供官方构建。欢迎自行从源码构建，或帮助测试。</span></div>'
+    win = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg>'
+    req = [('系统', 'Windows 10 及更高版本'), ('架构', 'x64'), ('运行时', '安装程序与自包含版已内置，无需另装'), ('配置', '直接沿用 ClassIsland 的课表、自动化、插件与主题'), ('许可', 'GPL-3.0 开源，免费使用')]
+    h += ('<main><section class="dlh"><div class="wrap"><h1>下载 ClassFabric</h1><p>紧跟上游的 ClassIsland 个人修改版，目前提供 Windows 版本。</p>'
+          '<div class="dpills"><span>' + ic('check') + 'Windows 10 及更高版本</span><span>' + ic('check') + 'x64</span><span>' + ic('check') + '免费开源</span></div></div></section>'
+          '<div class="wrap dlx"><div class="dlx-main"><div class="dlx-l">'
+          '<div class="dlx-top"><span class="wlogo">' + win + '</span><div class="dtt"><h2>Windows</h2><span>Windows 10 及更高版本 · x64</span></div>'
+          '<div class="seg4" id="chan" role="tablist" aria-label="版本通道"><button type="button" role="tab" class="on" data-chan="stable">稳定版</button><button type="button" role="tab" data-chan="pre">预览版</button></div></div>'
+          '<div class="dlx-ver"><small id="chanTip">最新稳定版</small><div class="vn"><b data-ver>读取中…</b><em class="bdg" data-badge hidden>预览版</em></div><span class="vdt">发布于 <span data-date>—</span></span></div>'
+          '<div class="dlx-cta"><a class="fb acc lg" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '下载安装包</a><a class="fb lg" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div></div>'
+          '<ul class="dlx-req">' + ''.join('<li><span>%s</span><b>%s</b></li>' % r for r in req) + '</ul></div>'
+          '<div class="dlx-h"><h3>选择文件</h3><span>不确定选哪个？安装程序适合大多数人。</span></div>'
+          '<div class="assets2" id="assets"><div class="none">正在读取版本信息…</div></div>'
+          '<div class="dlx-h"><h3>下载之后</h3></div>'
+          '<ol class="dlx-steps"><li><i>1</i><div><b>安装或解压</b><p>安装程序按向导完成；压缩包解压到任意目录即可，不必放在系统盘。</p></div></li>'
+          '<li><i>2</i><div><b>启动</b><p>主界面会出现在屏幕上方，右键托盘图标即可编辑档案、换课或打开设置。</p></div></li>'
+          '<li><i>3</i><div><b>接着用</b><p>用过 ClassIsland 的话，原有的课表、自动化、插件与主题可直接沿用。</p></div></li></ol>'
+          '<div class="dlx-info"><div class="infob"><b>Linux 与 macOS</b><span>代码中保留了相关支持，但暂无测试环境，因此暂不提供官方构建。欢迎自行从源码构建，或帮助测试。</span></div>'
           '<div class="infob"><b>预览版说明</b><span>预览版包含尚未稳定的新功能，仅在 GitHub 发布了预览版时才可选择；遇到问题欢迎反馈。</span></div>'
           '<div class="infob"><b>更新与反馈</b><span>新版本均发布在 GitHub Releases。</span><div class="btnrow"><a class="fb" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="fb" href="/about.html">了解 ClassFabric</a></div></div></div></div>'
-          '<div class="wrap"><div class="stp3"><div><i>1</i><b>下载</b><p>选择上方的文件，保存到本地。</p></div><div><i>2</i><b>运行</b><p>按文件类型安装或解压后启动，主界面会出现在屏幕上方。</p></div><div><i>3</i><b>接着用</b><p>如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。</p></div></div></div>'
           '<div style="height:clamp(50px,8vw,100px)"></div></main>\n')
     return h + FOOT
 

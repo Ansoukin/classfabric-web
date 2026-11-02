@@ -100,7 +100,7 @@
       var n = t.closest('.mi[data-n]'); if (n) { st.pick = n.dataset.n; st.open = false; render(); return; }
       var a = t.closest('[data-a]'); if (!a) return;
       var k = a.dataset.a;
-      if (k === 'cancel') { reset(); render(); }
+      if (k === 'cancel') { reset(); render(); if (root.dataset.modal) root.dispatchEvent(new Event('swclose', { bubbles: true })); }
       else if (k === 'back') {
         if (st.mode === 'swap' && st.step === 2) { st.second = -1; st.step = 1; }
         else { st.first = -1; st.second = -1; st.pick = ''; st.open = false; st.mode = 'swap'; st.step = 0; }
@@ -170,15 +170,24 @@
     var PX = 1.8, T0 = 6*60, T1 = 18*60;
     var subj = [['语文','语','#e5576b'],['数学','数','#5a78d8'],['英语','英','#7e62d3'],['历史','历','#c58b3d'],['政治','政','#df4f6d'],['物理','物','#3a9ae2'],['化学','化','#2fb2a1'],['生物','生','#4faf53'],['地理','地','#8bb347'],['信息技术','信','#2f9cc9'],['体育','体','#f0872e'],['自习','自','#6c7d9d'],['通用技术','技','#a8774f'],['音乐','音','#c05fd0'],['美术','美','#e07a5f'],['选修','选','#5a8f7b'],['社团','社','#d4a017'],['心理','心','#7aa2f7'],['早读','早','#e9a23b'],['班会','班','#4aa3a3'],['测验','测','#b5546a']];
     subj = subj.map(function(x){return {n:x[0],a:x[1],c:x[2],o:x[0]==='体育'}});
-    var blocks = [], t = 8*60;
-    for (var i=0;i<6;i++){ blocks.push({s:t,e:t+40,k:'k'}); t+=40; if(i<5){ blocks.push({s:t,e:t+10,k:'b'}); t+=10; } }
+    var SLOTS = [[480,515],[555,595],[605,645],[655,695],[705,745],[755,795],[805,845],[855,895],[905,945]];
+    var blocks = [];
+    SLOTS.forEach(function(sl,i){ if(i>0) blocks.push({s:SLOTS[i-1][1],e:sl[0],k:'b'}); blocks.push({s:sl[0],e:sl[1],k:'k'}); });
+    I.edit = '<svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z"/></svg>';
+    I.grid = '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></svg>';
+    I.tip = '<svg viewBox="0 0 24 24"><path d="M5 5l14 7-14 7z"/></svg>';
     var days = ['日','一','二','三','四','五','六'], NOW = new Date(), TODAY = NOW.getDay(), dates = [];
     function p2(n){ return (n<10?'0':'')+n; }
     for (var di=0; di<7; di++){ var dd = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate()-TODAY+di); dates.push(p2(dd.getMonth()+1)+'/'+p2(dd.getDate())); }
-    var NOWTXT = NOW.getFullYear()+'/'+p2(NOW.getMonth()+1)+'/'+p2(NOW.getDate());
-    var SY = NOW.getMonth()>=8 ? NOW.getFullYear() : NOW.getFullYear()-1, WEEKN = Math.max(1, Math.floor((new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()) - new Date(SY,8,1))/864e5/7)+1);
+    var NOWTXT = NOW.getFullYear()+'/'+(NOW.getMonth()+1)+'/'+NOW.getDate();
+    var SY = NOW.getMonth()>=8 ? NOW.getFullYear() : NOW.getFullYear()-1, WEEKN = (function(){ var a = new Date(SY,8,1); a.setDate(a.getDate()-a.getDay()); var b = new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()); b.setDate(b.getDate()-b.getDay()); return Math.max(1, Math.round((b-a)/864e5/7)+1); })();
     var sched = {};
-    var st = {tinfo:false, v:'grid', cell:[TODAY,1], auto:true, tl:3, sj:0, hist:[], redo:[], pop:false};
+    var SEED = root.dataset.seed === 'real';
+    if (SEED) {
+      sched[1] = SLOTS.map(function(x,r){ return r===0 ? '语文' : null; });
+      sched[6] = ['语文','语文','数学','数学','英语','英语','物理','物理','化学'];
+    }
+    var st = {tinfo:false, v:'grid', cell:SEED?null:[TODAY,0], auto:true, tl:3, sj:0, hist:[], redo:[], pop:false, sv:'grid', cm:0, temp:{}, tpop:null, swd:false};
     function hm(m){ return ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+m%60).slice(-2); }
     function pm(v){ var a=v.split(':'); return (+a[0])*60+(+a[1]); }
     function classes(){ return blocks.filter(function(b){return b.k==='k'}); }
@@ -188,26 +197,37 @@
 
     function toolbar(items){ return '<div class="e2tool">'+items.map(function(x){ return x==='|' ? '<b></b>' : '<span class="'+(x[2]||'')+'" data-a="'+x[0]+'">'+(I[x[3]]||'')+'<em>'+x[1]+'</em></span>'; }).join('')+'</div>'; }
 
-    function gridView(){
-      var cl = classes(), th='<th class="t0">时间</th>';
-      days.forEach(function(d,i){
-        th += '<th class="'+(i===TODAY?'today':'')+'">周'+d+'<small>'+dates[i]+'</small>'+(sched[i]?'':'<span class="nb" data-new="'+i+'">+ 新课表</span>')+'</th>'; });
+    function viewSw(on, three){
+      return '<div class="vsw">'+(three?'<span class="'+(on==='list'?'on':'')+'">'+I.list+'</span>':'')+'<span class="'+(on==='grid'?'on':'')+'" data-sv="grid">'+I.grid+'</span><span class="'+(on==='cal'?'on':'')+'" data-sv="cal">'+I.cal2+'</span></div>';
+    }
+    function dayHead(i, readOnly){
+      var has = !!sched[i];
+      return '<th class="'+(i===TODAY?'today':'')+(has?' has':'')+'"><div class="h1"><span>周'+days[i]+'</span><small>'+dates[i]+'</small></div>'+
+        (has ? '<div class="h2"><b>周'+days[i]+'</b><i>'+I.gear+'</i></div>' : readOnly ? '' : '<span class="nb" data-new="'+i+'">'+I.plus+'新课表</span>')+'</th>';
+    }
+    function tableHtml(readOnly){
+      var cl = classes(), th='<th class="t0">时间</th>', any = Object.keys(sched).length > 0;
+      days.forEach(function(d,i){ th += dayHead(i, readOnly); });
       var rows='';
       cl.forEach(function(b,r){
         var tr='<td class="t">'+hm(b.s)+'-'+hm(b.e)+'</td>';
         days.forEach(function(d,i){
           var v = sched[i] && sched[i][r];
-          tr += sched[i] ? '<td class="c'+(st.cell[0]===i&&st.cell[1]===r?' sel':'')+(v?'':' no')+'" data-d="'+i+'" data-r="'+r+'">'+(v||'（无）')+'</td>' : '<td></td>';
+          tr += sched[i] ? '<td class="c'+(st.cell&&st.cell[0]===i&&st.cell[1]===r?' sel':'')+(v?'':' no')+'" data-d="'+i+'" data-r="'+r+'">'+(v||'（无）')+'</td>' : '<td></td>';
         });
         rows += '<tr>'+tr+'</tr>';
       });
+      return '<table class="tt2"><thead><tr>'+th+'</tr></thead>'+(any||readOnly?'<tbody>'+rows+'</tbody>':'')+'</table>'+(any||readOnly?'':'<div class="emp2"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="9" stroke-dasharray="9 7"/></svg><p>这里还没有课表。不妨先点击上方的【新课表】按钮创建课表吧</p></div>');
+    }
+    function dateRow(){ return '<div class="gh2"><span class="dp">'+NOWTXT+I.cal+'</span><span class="ar">←</span><span class="ar">→</span><span class="wk">第 '+WEEKN+' 周</span></div>'; }
+    function gridView(){
       var chips = subj.map(function(s){ return '<span data-sub="'+esc(s.n)+'" title="'+esc(s.n)+'">'+esc(s.a)+'</span>'; }).join('');
-      var any = Object.keys(sched).length > 0;
-      return toolbar(any ? [['refresh','刷新','','sync'],'|',['day','周'+days[TODAY],'dim','doc'],['info','详细信息','','info'],['layer','创建临时层','','stack'],['del','删除','','trash']] : [['refresh','刷新','','sync'],'|',['none','未选择课表','dim','']]) +
-        '<div class="e2v grid"><div class="gmain"><div class="gh2"><span class="dp">'+NOWTXT+I.cal+'</span><span class="ar">←</span><span class="ar">→</span><span class="wk">第 '+WEEKN+' 周</span></div>'+
-        '<div class="gscroll"><table class="tt2"><thead><tr>'+th+'</tr></thead>'+(any?'<tbody>'+rows+'</tbody>':'')+'</table>'+(any?'':'<div class="emp2"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="9" stroke-dasharray="9 7"/></svg><p>这里还没有课表。不妨先点击上方的【新课表】按钮创建课表吧</p></div>')+'</div></div>'+
+      var any = Object.keys(sched).length > 0, sel = any && st.cell && sched[st.cell[0]];
+      return toolbar(sel ? [['refresh','刷新','','sync'],'|',['day','周'+days[st.cell[0]],'dim','doc'],['info','详细信息','','info'],['layer','创建临时层','','stack'],['del','删除','','trash']] : [['refresh','刷新','','sync'],'|',['none','未选择课表','dim','']]) +
+        '<div class="e2v grid"><div class="gmain">'+dateRow()+
+        '<div class="gscroll">'+tableHtml(false)+'</div>'+viewSw('grid', true)+'</div>'+
         '<div class="side2"><div class="tb2"><span class="on">编辑科目</span><span>编辑课程</span></div><div class="chips3">'+chips+'</div>'+
-        '<div class="cbx2'+(st.auto?' on':'')+'" data-auto>'+'<i>'+I.check+'</i>选完科目自动移动到下一个课程</div></div></div>'+
+        '<div class="cbx2'+(st.auto?' on':'')+'" data-auto><i>'+I.check+'</i>选完科目自动移动到下一个课程</div></div></div>'+
         (st.pop ? popup() : '');
     }
     var pp = {name:'周一', rule:0, days:[false,false,false,false,false,false,false], target:null, copy:false, range:false};
@@ -267,11 +287,37 @@
         '<label>科任老师</label><input class="in2" data-st value="'+esc(c.t||'')+'"><label>地点</label><input class="in2" data-sp value="'+esc(c.p||'')+'">'+
         '<div class="cbx2'+(c.o?' on':'')+'" data-so="'+st.sj+'" style="margin:14px 0"><i>'+I.check+'</i>该科目是户外课程</div><hr><div class="sh">'+I.gear+'更多选项</div>'+ex('上课提醒设置','bolt',st.ex1!==false,rem)+ex('课程显示设置','book',st.ex2!==false,dsp)+'</div></div>';
     }
-    function swView(){ return '<div class="e2v swv"><div class="swwrap"><div class="sw2 w" data-app="swap"></div></div></div>'; }
+    function ymd(d){ return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()); }
+    function calView(){
+      var first = new Date(NOW.getFullYear(), NOW.getMonth()+st.cm, 1), off = (first.getDay()+6)%7, start = new Date(first.getFullYear(), first.getMonth(), 1-off), cells = '';
+      for (var n=0;n<42;n++){
+        var d = new Date(start.getFullYear(), start.getMonth(), start.getDate()+n), k = ymd(d), wd = d.getDay(), tp = st.temp[k] || [], isT = k===ymd(NOW);
+        cells += '<div class="cc'+(isT?' today':'')+'"><span class="cl">'+(sched[wd]?'周'+days[wd]:'')+'</span><span class="cn"><i>'+d.getDate()+'</i></span>'+
+          '<span class="ci'+(tp.length?' on':'')+'" data-ci="'+k+'" data-tip="预定临时课表">'+I.doc+'</span>'+(tp.length?'<span class="ct">'+tp.map(esc).join('、')+'</span>':'')+'</div>';
+      }
+      var tri = function(d,dir){ return '<span class="mv" data-mv="'+dir+'"><svg viewBox="0 0 10 10"><path d="'+d+'" fill="currentColor" stroke="none"/></svg></span>'; };
+      return toolbar([['refresh','刷新','','sync']])+
+        '<div class="e2v swv"><div class="swl"></div><div class="swsp"></div><div class="gmain cal"><div class="chd"><b>'+first.getFullYear()+'年'+(first.getMonth()+1)+'月</b><span class="sp"></span>'+tri('M1 7l4-4 4 4z',-1)+tri('M1 3l4 4 4-4z',1)+'</div>'+
+        '<div class="wkh">'+['一','二','三','四','五','六','日'].map(function(x){return '<span>'+x+'</span>';}).join('')+'</div><div class="cgrid">'+cells+'</div>'+viewSw('cal', false)+'</div></div>'+
+        (st.tpop ? tpopHtml() : '');
+    }
+    function tpopHtml(){
+      var names = Object.keys(sched).map(function(i){ return '周'+days[i]; }), cur = st.temp[st.tpop.k] || [];
+      return '<div class="tpop" style="left:'+st.tpop.x+'px;top:'+st.tpop.y+'px"><div class="th1"><b>选择要临时启用的课表</b><span data-tx>'+I.x+'</span></div>'+
+        (names.length ? names.map(function(n){ var on = st.tpop.sel.indexOf(n)>=0; return '<div class="tr1'+(on?' on':'')+'" data-tpick="'+esc(n)+'"><i class="cb3'+(on?' on':'')+'">'+(on?I.check:'')+'</i>'+esc(n)+'</div>'; }).join('') : '<p class="hint2">还没有可选的课表。</p>')+
+        '<div class="tact"><span data-tok>'+I.check+'确定</span><span data-tclr><svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6z"/><path d="M12 10l4 4M16 10l-4 4"/></svg>清除</span></div></div>';
+    }
+    function swView(){
+      if (st.sv === 'cal') return calView();
+      return toolbar([['refresh','刷新','','sync'],'|',['modify','修改课程','','edit'],['swapc','交换课程','','swap']])+
+        '<div class="e2v swv"><div class="swl"></div><div class="swsp"></div><div class="gmain">'+dateRow()+'<div class="gscroll">'+tableHtml(true)+'</div>'+viewSw('grid', false)+'</div></div>'+
+        (st.swd ? '<div class="swov" data-swov><div class="sw2 w" data-app="swap" data-modal="1"></div></div>' : '');
+    }
     function render(keep){
       var y = keep && body.querySelector('.cvs') ? body.querySelector('.cvs').scrollTop : 0;
       body.innerHTML = st.v==='grid' ? gridView() : st.v==='tl' ? tlView() : st.v==='sj' ? sjView() : swView();
-      if (st.v==='sw') initSwap(body.querySelector('[data-app="swap"]'));
+      if (st.v==='sw' && st.swd) initSwap(body.querySelector('[data-app="swap"]'));
+      var cur2 = root.querySelector('.e2act span:nth-child(2)'); if (cur2) { var cs = sched[TODAY] ? '周'+days[TODAY] : '（无）'; cur2.lastChild.textContent = cs; }
       var cv = body.querySelector('.cvs'); if (cv) cv.scrollTop = keep ? y : (7*60+20-T0)*PX;
     }
     root.querySelectorAll('.e2tabs > span').forEach(function(sp){ sp.addEventListener('click', function(){
@@ -292,22 +338,34 @@
           var sh = 0; for (var q=st.tl+2;q<blocks.length;q++){ var o=blocks[q]; if (o.s < blocks[q-1].e) { sh = blocks[q-1].e - o.s; o.s+=sh; o.e+=sh; } } st.tl++; render(true); }
         else if (a==='info' && st.v==='tl'){ st.tinfo=!st.tinfo; render(true); }
         else if (a==='tladd'){ if(!blocks.length){ snap(); blocks.push({s:480,e:520,k:'k'}); st.tl=0; } st.tinfo=false; render(); }
-        else if (a==='sep'||a==='act'||a==='info'||a==='more'){ }
+        else if (a==='swapc'){ st.swd=true; render(true); }
+        else if (a==='sep'||a==='act'||a==='info'||a==='more'||a==='modify'){ }
         else if (a==='dup' && b){ snap(); var n = {s:b.e,e:b.e+(b.e-b.s),k:b.k}; if (n.e>T1) return; blocks.splice(st.tl+1,0,n); st.tl++; render(true); }
         else if (a==='del' && st.v==='tl' && b){ snap(); blocks.splice(st.tl,1); st.tl=Math.max(0,st.tl-1); render(true); }
         else if (a==='undo' && st.hist.length){ st.redo.push(JSON.stringify(blocks)); blocks = JSON.parse(st.hist.pop()); st.tl=Math.min(st.tl,blocks.length-1); render(true); }
         else if (a==='redo' && st.redo.length){ st.hist.push(JSON.stringify(blocks)); blocks = JSON.parse(st.redo.pop()); render(true); }
         else if (a==='refresh'){ render(true); }
-        else if (a==='del' && st.v==='grid'){ var c=st.cell; if (sched[c[0]]){ sched[c[0]][c[1]] = null; render(); } }
+        else if (a==='del' && st.v==='grid'){ var c=st.cell; if (c && sched[c[0]]){ sched[c[0]][c[1]] = null; render(); } }
         else if (a==='addsj'){ subj.push({n:'新科目',a:'新',c:'#8a8a8a',o:false}); st.sj=subj.length-1; render(); }
         else if (a==='dupsj'){ var q=subj[st.sj]; subj.splice(st.sj+1,0,{n:q.n+'（副本）',a:q.a,c:q.c,o:q.o,t:q.t,p:q.p}); st.sj++; render(true); }
         else if (a==='delsj' && subj.length>1){ subj.splice(st.sj,1); st.sj=0; render(); }
         return; }
+      if ((el=t.closest('[data-sv]'))){ st.sv=el.dataset.sv; st.tpop=null; render(); return; }
+      if ((el=t.closest('[data-mv]'))){ st.cm += +el.dataset.mv; st.tpop=null; render(); return; }
+      if ((el=t.closest('[data-ci]'))){ var br=el.getBoundingClientRect(), bb2=body.getBoundingClientRect(), k=el.dataset.ci; var px=Math.max(8,Math.min(br.left-bb2.left-10, body.clientWidth-350)), py=Math.max(8,Math.min(br.bottom-bb2.top+8, body.clientHeight-230));
+        st.tpop={k:k,x:px,y:py,sel:(st.temp[k]||[]).slice()}; render(true); return; }
+      if (st.tpop){
+        if ((el=t.closest('[data-tpick]'))){ var nm=el.dataset.tpick, ix=st.tpop.sel.indexOf(nm); if(ix>=0) st.tpop.sel.splice(ix,1); else st.tpop.sel.push(nm); render(true); return; }
+        if (t.closest('[data-tok]')){ if(st.tpop.sel.length) st.temp[st.tpop.k]=st.tpop.sel; else delete st.temp[st.tpop.k]; st.tpop=null; render(true); return; }
+        if (t.closest('[data-tclr]')){ delete st.temp[st.tpop.k]; st.tpop=null; render(true); return; }
+        if (t.closest('[data-tx]') || !t.closest('.tpop')){ st.tpop=null; render(true); return; }
+      }
+      if (st.swd && t.matches('[data-swov]')){ st.swd=false; render(true); return; }
       if ((el=t.closest('.tb3')) && !t.closest('.hd')){ st.tinfo=false; st.tl=+el.dataset.i; render(true); return; }
       if ((el=t.closest('[data-ty]'))){ var b2=cur(); snap(); b2.k=el.dataset.ty; render(true); return; }
       if ((el=t.closest('[data-hide]'))){ var b3=cur(); b3.hide=!b3.hide; render(true); return; }
       if ((el=t.closest('td.c'))){ st.cell=[+el.dataset.d,+el.dataset.r]; render(); return; }
-      if ((el=t.closest('[data-sub]'))){ var c=st.cell; if(!sched[c[0]]) return; sched[c[0]][c[1]] = el.dataset.sub; var n=classes().length;
+      if ((el=t.closest('[data-sub]'))){ var c=st.cell; if(!c||!sched[c[0]]) return; sched[c[0]][c[1]] = el.dataset.sub; var n=classes().length;
         if (st.auto) st.cell=[c[0], Math.min(n-1,c[1]+1)]; render(); return; }
       if ((el=t.closest('[data-z]'))){ var z=Math.round(PX/0.006)+(+el.dataset.z)*50; z=Math.max(100,Math.min(500,z)); PX=z*0.006; render(true); return; }
       if (t.closest('[data-auto]')){ st.auto=!st.auto; render(); return; }
@@ -323,6 +381,7 @@
       if ((el=t.closest('.sjr[data-si]'))){ st.sj=+el.dataset.si; render(); return; }
       if ((el=t.closest('.tg'))){ el.classList.toggle('on'); el.lastChild.textContent = el.classList.contains('on')?'开':'关'; return; }
     });
+    body.addEventListener('swclose', function(){ st.swd=false; render(true); });
     function clampBlock(){ blocks.sort(function(a,b){return a.s-b.s}); }
     body.addEventListener('input', function(e){
       var t=e.target, b=cur();
@@ -357,7 +416,7 @@
     });
     function end(){ if(drag){ drag=null; render(true); } }
     body.addEventListener('pointerup', end); body.addEventListener('pointercancel', end);
-    root.__reset = function(){ sched={}; st.cell=[TODAY,0]; st.pop=false; st.v='grid'; root.querySelectorAll('.e2tabs > span').forEach(function(x){x.classList.toggle('on',x.dataset.v==='grid')}); render(); };
+    root.__reset = function(){ sched={}; st.cell=[TODAY,0]; st.pop=false; st.sv='grid'; st.temp={}; st.tpop=null; st.swd=false; st.v='grid'; root.querySelectorAll('.e2tabs > span').forEach(function(x){x.classList.toggle('on',x.dataset.v==='grid')}); render(); };
     render();
   }
   $$('[data-app="editor"]').forEach(initEditor);
@@ -390,8 +449,8 @@
       if (mi) {
         var fl = mi.closest('.fly'), k = fl.dataset.fly, name = mi.textContent.trim();
         if (k === 'trig') { root.querySelector('[data-fk="trig"] .v').textContent = name; closeAll(root); return; }
-        if (k === 'act' && mi.querySelector('.chev')) {
-          fl.querySelectorAll('.mi').forEach(function (x) { x.classList.toggle('hl', x === mi); });
+        if (k === 'act' && mi.querySelector('.chev') && /运行/.test(name)) {
+          fl.querySelectorAll('.mi').forEach(function (x) { x.classList.toggle('mon', x === mi); });
           root.querySelector('[data-fly="act2"]').classList.add('open'); return;
         }
         var box = root.querySelector('[data-acts]'), add = box.querySelector('[data-fk="act"]'), row = document.createElement('div');
