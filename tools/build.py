@@ -66,14 +66,40 @@ def vdesk(inner, cls, w=1280, h=720, mw=680, mh=780, extra='', tray_id='vTray'):
 def static_isl(h, w='50%'):
     return h.replace('class="isl bar', 'class="isl static bar').replace('<div class="isl"', '<div class="isl static"').replace('<div class="isl mask', '<div class="isl static mask')
 
-def head(title, desc, path, extra=''):
+def jsonld(path, title, desc):
+    import json
+    org = {"@type": "Organization", "@id": SITE + "/#org", "name": "ClassFabric", "url": SITE + "/", "logo": {"@type": "ImageObject", "url": SITE + "/assets/img/icon-192.png", "width": 192, "height": 192}, "sameAs": [GH]}
+    web = {"@type": "WebSite", "@id": SITE + "/#website", "url": SITE + "/", "name": "ClassFabric", "alternateName": ["ClassFabric 官网", "ClassIsland 个人修改版"], "inLanguage": "zh-CN", "publisher": {"@id": SITE + "/#org"}}
+    app = {"@type": "SoftwareApplication", "@id": SITE + "/#app", "name": "ClassFabric", "alternateName": "ClassIsland 个人修改版", "applicationCategory": "EducationalApplication", "operatingSystem": "Windows 10, Windows 11",
+           "description": "ClassIsland 的个人修改版班级大屏课表，紧跟上游更新，原有课表、插件与主题可直接沿用。", "url": SITE + "/", "downloadUrl": SITE + "/download.html", "installUrl": SITE + "/download.html",
+           "license": "https://www.gnu.org/licenses/gpl-3.0.html", "isBasedOn": {"@type": "SoftwareApplication", "name": "ClassIsland", "url": "https://classisland.tech"}, "image": SITE + "/assets/img/og.jpg",
+           "featureList": ["课表编辑与调课", "自动化行为", "插件生态", "主题与主界面自定义", "更多天气源", "多语言（实验中）"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CNY"}, "publisher": {"@id": SITE + "/#org"}}
+    names = [('/', '首页', 'ClassFabric 首页：紧跟上游的 ClassIsland 班级大屏课表'), ('/download.html', '下载', '下载 ClassFabric Windows 版'), ('/about.html', '关于', '了解 ClassFabric 与 ClassIsland 的关系、已完成与计划中的功能')]
+    nav = [{"@type": "SiteNavigationElement", "@id": SITE + "/#nav-%d" % i, "name": n, "description": d, "url": SITE + p} for i, (p, n, d) in enumerate(names)]
+    kind = {'/': 'WebPage', '/download.html': 'WebPage', '/about.html': 'AboutPage'}.get(path, 'WebPage')
+    page = {"@type": kind, "@id": SITE + path + "#page", "url": SITE + path, "name": title, "description": desc, "inLanguage": "zh-CN", "isPartOf": {"@id": SITE + "/#website"}, "primaryImageOfPage": {"@type": "ImageObject", "url": SITE + "/assets/img/og.jpg", "width": 1200, "height": 630}, "about": {"@id": SITE + "/#app"}}
+    g = [org, web, app] + nav + [page] if path == '/' else [page]
+    if path != '/':
+        g.append({"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": dict((p, n) for p, n, d in names)[path], "item": SITE + path}]})
+        page["breadcrumb"] = {"@id": SITE + path + "#crumb"}; g[-1]["@id"] = SITE + path + "#crumb"
+    if path == '/about.html':
+        g.append({"@type": "FAQPage", "@id": SITE + path + "#faq", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]})
+    if path == '/download.html':
+        g.append({"@type": "SoftwareApplication", "@id": SITE + "/#app", "name": "ClassFabric", "operatingSystem": "Windows 10, Windows 11", "applicationCategory": "EducationalApplication", "downloadUrl": SITE + "/download.html", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CNY"}})
+    return '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False, separators=(',', ':')) + '</script>\n'
+
+def head(title, desc, path, extra='', alt=None):
     url = SITE + path
+    alt_tag = ('<link rel="alternate" media="only screen and (max-width: 640px)" href="%s%s">\n' % (SITE, alt)) if alt else ''
     return ('<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
-            '<title>%s</title>\n<meta name="description" content="%s">\n<link rel="canonical" href="%s">\n<meta name="theme-color" content="#141312">\n'
+            '<title>%s</title>\n<meta name="description" content="%s">\n<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">\n<link rel="canonical" href="%s">\n'
+            '<link rel="alternate" hreflang="zh-CN" href="%s">\n<link rel="alternate" hreflang="x-default" href="%s">\n%s<meta name="application-name" content="ClassFabric">\n<meta name="theme-color" content="#141312">\n'
             '<link rel="icon" href="/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">\n<link rel="apple-touch-icon" href="/assets/img/icon-180.png">\n'
-            '<meta property="og:type" content="website">\n<meta property="og:site_name" content="ClassFabric">\n<meta property="og:title" content="%s">\n<meta property="og:description" content="%s">\n'
-            '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta name="twitter:card" content="summary_large_image">\n'
-            '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n%s</head>\n') % (title, desc, url, title, desc, url, SITE, extra)
+            '<meta property="og:type" content="website">\n<meta property="og:locale" content="zh_CN">\n<meta property="og:site_name" content="ClassFabric">\n<meta property="og:title" content="%s">\n<meta property="og:description" content="%s">\n'
+            '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="ClassFabric 班级大屏课表">\n'
+            '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
+            '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n%s%s</head>\n') % (
+        title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, jsonld(path, title, desc), extra)
 
 def navbar(cur):
     def a(href, label, key):
@@ -104,7 +130,7 @@ FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class=
         '<div><h5>项目</h5><ul><li><a href="' + GH + '" rel="noopener">GitHub 仓库</a></li><li><a href="' + GH + '/issues" rel="noopener">反馈问题</a></li><li><a href="/about.html#join">参与贡献</a></li></ul></div>'
         '<div><h5>了解更多</h5><ul><li><a href="/about.html">关于 ClassFabric</a></li><li><a href="/about.html#faq">常见问题</a></li><li><a href="https://classisland.tech" rel="noopener">ClassIsland 官网</a></li></ul></div></div>'
         '<div class="legal">© 2026 ClassFabric　基于 HelloWRC 的 ClassIsland（© 2023–2026 HelloWRC）二次开发，以 GPL-3.0 协议开源。<br>ClassFabric 是个人修改版，并非 ClassIsland 官方项目；ClassIsland 的名称与原有功能归其原作者所有。</div>' + BUILD + '</div></footer>\n'
-        '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n<script src="/assets/js/widgets.js" defer></script>\n</body>\n</html>\n')
+        '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n<script src="/assets/js/widgets.js" defer></script>\n<script src="/assets/js/dl.js" defer></script>\n</body>\n</html>\n')
 
 def ld():
     return ('<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ClassFabric","applicationCategory":"EducationApplication","operatingSystem":"Windows 10, Windows 11",'
@@ -126,13 +152,13 @@ def panel_wall(inner, wx='50%', wy='50%', ws='170%', cls='pad'):
     return '<div class="panel %s" style="--wx:%s;--wy:%s;--ws:%s"><div class="wp"></div><div style="position:relative">%s</div></div>' % (cls, wx, wy, ws, inner)
 
 def home():
-    h = head('ClassFabric — 紧跟上游的 ClassIsland 个人修改版班级大屏课表',
-             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', ld())
+    h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
+             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '', '/m/')
     h += navbar('home')
     h += '<main>\n'
     h += ('<section class="hero"><div class="wrap">'
           '<p class="eyebrow rv"><img src="/assets/img/logo.png" alt="">ClassFabric<i></i>班级大屏课表</p>'
-          '<h1 class="rv">紧跟上游，<span class="g">再进一步</span></h1>'
+          '<h1 class="rv"><span class="seo-only">ClassFabric：</span>紧跟上游，<span class="g">再进一步</span></h1>'
           '<p class="sub rv d1">基于 ClassIsland 的个人修改版，原有课表、插件与主题无缝沿用</p>'
           '<div class="cta rv d2"><a class="btn blue" href="' + REL + '" data-dl data-releaselink rel="noopener">' + ic('dl') + '立即下载</a><a class="btn glass" href="' + GH + '" rel="noopener">' +
           '<svg viewBox="0 0 16 16" fill="currentColor" stroke="none"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub 仓库</a></div>'
@@ -271,17 +297,17 @@ def home():
     return h + FOOT
 
 def download():
-    h = head('下载 ClassFabric — Windows 版', '下载 ClassFabric，ClassIsland 的个人修改版班级大屏课表。支持 Windows 10 及更高版本，免费开源。', '/download.html')
+    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n', '/m/download.html')
     h += navbar('dl')
     win = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg>'
-    req = [('系统', 'Windows 10 及更高版本'), ('架构', 'x64'), ('运行时', '安装程序与自包含版已内置，无需另装'), ('配置', '直接沿用 ClassIsland 的课表、自动化、插件与主题'), ('许可', 'GPL-3.0 开源，免费使用')]
+    req = [('系统', 'Windows 10 及更高版本'), ('架构', '<b data-archs>x64</b>'), ('运行时', '安装程序与自包含版已内置，无需另装'), ('配置', '直接沿用 ClassIsland 的课表、自动化、插件与主题'), ('许可', 'GPL-3.0 开源，免费使用')]
     h += ('<main><section class="dlh"><div class="wrap"><h1>下载 ClassFabric</h1><p>紧跟上游的 ClassIsland 个人修改版，目前提供 Windows 版本。</p>'
-          '<div class="dpills"><span>' + ic('check') + 'Windows 10 及更高版本</span><span>' + ic('check') + 'x64</span><span>' + ic('check') + '免费开源</span></div></div></section>'
-          '<div class="wrap dlx"><div class="dlx-main"><div class="dlx-l">'
+          '<div class="dpills"><span>' + ic('check') + 'Windows 10 及更高版本</span><span>' + ic('check') + '<b data-archs>x64</b></span><span>' + ic('check') + '免费开源</span></div></div></section>'
+          '<div class="wrap dlx"><div class="dlx-note" id="plat" hidden></div><div class="dlx-main"><div class="dlx-l">'
           '<div class="dlx-top"><span class="wlogo">' + win + '</span><div class="dtt"><h2>Windows</h2><span>Windows 10 及更高版本 · x64</span></div>'
           '<div class="seg4" id="chan" role="tablist" aria-label="版本通道"><button type="button" role="tab" class="on" data-chan="stable">稳定版</button><button type="button" role="tab" data-chan="pre">预览版</button></div></div>'
           '<div class="dlx-ver"><small id="chanTip">最新稳定版</small><div class="vn"><b data-ver>读取中…</b><em class="bdg" data-badge hidden>预览版</em></div><span class="vdt">发布于 <span data-date>—</span></span></div>'
-          '<div class="dlx-cta"><a class="fb acc lg" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '下载安装包</a><a class="fb lg" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div></div>'
+          '<div class="dlx-cta"><a class="fb acc lg" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '下载安装包</a><a class="fb lg" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div><p class="dlx-sub" data-dlsub></p></div>'
           '<ul class="dlx-req">' + ''.join('<li><span>%s</span><b>%s</b></li>' % r for r in req) + '</ul></div>'
           '<div class="dlx-h"><h3>选择文件</h3><span>不确定选哪个？安装程序适合大多数人。</span></div>'
           '<div class="assets2" id="assets"><div class="none">正在读取版本信息…</div></div>'
@@ -315,7 +341,7 @@ def faq_html():
 
 
 def about():
-    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html')
+    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html', '', '/m/about.html')
     h += navbar('about')
     def card(i, t, d, extra=''):
         return '<div class="axc"><span class="axi">%s</span><div><b>%s</b><p>%s</p>%s</div></div>' % (ic(i), t, d, extra)
@@ -356,5 +382,5 @@ def about():
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about)):
     open(os.path.join(OUT, name), 'w', encoding='utf-8').write(fn())
 open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n' % SITE)
-open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>%s%s</loc></url>\n' % (SITE, p) for p in ('/', '/download.html', '/about.html')) + '</urlset>\n')
+open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n' % (SITE, p, datetime.date.today().isoformat()) for p in ('/', '/download.html', '/about.html')) + '</urlset>\n')
 print('ok')
