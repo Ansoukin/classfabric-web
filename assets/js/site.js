@@ -234,7 +234,16 @@
   var rels = null, chan = 'stable';
   function fmt(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB'; }
   function pick() { if (!rels) return null; for (var i = 0; i < rels.length; i++) { var r = rels[i]; if (!r.draft && (chan === 'pre' ? r.prerelease : !r.prerelease)) return r; } return null; }
+  function fillHist() {
+    var box = $('#hist'); if (!box || !rels) return;
+    var list = rels.filter(function (r) { return !r.draft; }).slice(0, 12);
+    box.innerHTML = list.length ? list.map(function (r, i) {
+      var n = (r.assets || []).length;
+      return '<li><a href="' + r.html_url + '" rel="noopener"><b>' + (r.name || r.tag_name) + '</b>' + (r.prerelease ? '<em class="bdg">预览版</em>' : '') + (i === 0 ? '<em class="bdg cur">最新</em>' : '') + '<span class="hd">' + (r.published_at || '').slice(0, 10) + '</span><span class="hn">' + n + ' 个文件</span><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></a></li>';
+    }).join('') : '<li class="none">暂无历史版本。</li>';
+  }
   function fillRel() {
+    fillHist();
     var r = pick(), box = $('#assets'), dl = $('[data-dl]');
     $$('[data-badge]').forEach(function (e) { e.hidden = chan !== 'pre'; });
     var tip = $('#chanTip'); if (tip) tip.textContent = chan === 'pre' ? '最新预览版' : '最新稳定版';

@@ -86,7 +86,7 @@ def navbar(cur):
 
 import hashlib, datetime
 
-SITE_VER = '1.0.3'
+SITE_VER = '1.0.4'
 
 def build_id():
     h = hashlib.sha1()
@@ -145,6 +145,7 @@ def home():
                   'vdk-edit rv d2', 1280, 720, 680, 780, ' id="heroDesk" role="group" aria-label="ClassFabric 演示：右键托盘图标，打开档案编辑，填入课表，主界面随即在屏幕上方显示今日课程并发出上课提醒。点击画面可自行操作。"', 'hTrayIco')
           + '</div></section>\n')
 
+    h += ('<section class="axstrip"><div class="wrap"><div class="axgrid four">' + ''.join('<div class="axc rv d%d"><span class="axi">%s</span><div><b>%s</b><p>%s</p></div></div>' % (k, ic(i), t, d) for k, (i, t, d) in enumerate([('sync', '紧跟上游', '积极同步 ClassIsland 的新功能与修复'), ('check', '无缝沿用', '课表、自动化、插件、主题直接继续使用'), ('plug', '社区增强', '更多天气源、多语言（实验中）等'), ('doc', '开源免费', 'GPL-3.0 协议，支持 Windows 10 及以上')])) + '</div></div></section>\n')
     h += '<section class="mani"><div class="wrap"><p class="mtxt" id="mtxt">' + ''.join('<span class="mw">%s</span>' % c for c in "积极同步上游。无缝沿用配置。再多一点点，属于我们自己的增强。") + '</p></div></section>\n'
     def bigmq(a, b):
         r1 = ''.join('<span>%s</span><i>·</i>' % t for t in a) * 3
@@ -254,13 +255,16 @@ def home():
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="stp4">' +
           ''.join('<li class="rv d%d"><div class="top"><span class="nd">%s</span><span class="no">%s</span></div><h4>%s</h4><p>%s</p><span class="ch">%s</span></li>' % (k, ic(i), n, b, c, d) for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
 
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2><div class="rel">'
+    amap = ('<div class="axmap rv"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div><div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div><div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
+            '<div class="axkeep rv"><span>你的配置</span><b>课表</b><b>自动化</b><b>插件</b><b>主题</b><em>直接沿用，无需重新设置</em></div>')
+    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2>' + amap + '<div class="rel">'
           '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版，既不是它的完美替代品，也不是竞品。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
           '<p>名字里的 Fabric，取自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来；正如 ClassIsland 的 Island，来自 iOS 的灵动岛。</p>'
           '<a class="btn glass" href="/about.html">了解更多</a></div>'
           '<div class="fit2 rv d1"><div><h4>适合你，如果……</h4><p>你想在 ClassIsland 生态上保持现有内容，又希望及时体验上游的新功能；或者想要开箱即用，装完就能用上上游、社区与我们开发的各类新功能。</p></div>'
           '<div class="no"><h4>可能不适合，如果……</h4><p>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</p></div></div></div></div></section>\n')
 
+    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">常见问题</h2><div class="faq faqhome rv">' + faq_html() + '</div></div></section>\n'
     h += ('<section class="final3"><div class="wrap"><h2 class="rv">立即体验 ClassFabric</h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
     h += '</main>\n'
     h += '<template id="tpl-settings">' + ui2.settings_app() + '</template>'
@@ -285,6 +289,7 @@ def download():
           '<ol class="dlx-steps"><li><i>1</i><div><b>安装或解压</b><p>安装程序按向导完成；压缩包解压到任意目录即可，不必放在系统盘。</p></div></li>'
           '<li><i>2</i><div><b>启动</b><p>主界面会出现在屏幕上方，右键托盘图标即可编辑档案、换课或打开设置。</p></div></li>'
           '<li><i>3</i><div><b>接着用</b><p>用过 ClassIsland 的话，原有的课表、自动化、插件与主题可直接沿用。</p></div></li></ol>'
+          '<div class="dlx-h"><h3>历史版本</h3><span>需要回退？可以选择更早的版本。</span></div><ul class="hist" id="hist"><li class="none">正在读取版本信息…</li></ul>'
           '<div class="dlx-info"><div class="infob"><b>Linux 与 macOS</b><span>代码中保留了相关支持，但暂无测试环境，因此暂不提供官方构建。欢迎自行从源码构建，或帮助测试。</span></div>'
           '<div class="infob"><b>预览版说明</b><span>预览版包含尚未稳定的新功能，仅在 GitHub 发布了预览版时才可选择；遇到问题欢迎反馈。</span></div>'
           '<div class="infob"><b>更新与反馈</b><span>新版本均发布在 GitHub Releases。</span><div class="btnrow"><a class="fb" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="fb" href="/about.html">了解 ClassFabric</a></div></div></div></div>'
@@ -312,18 +317,38 @@ def faq_html():
 def about():
     h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html')
     h += navbar('about')
-    h += ('<main><section class="phead"><div class="wrap"><h1>关于 ClassFabric</h1><p>它是什么，与 ClassIsland 是什么关系，已经做了什么，接下来想做什么。</p></div></section><div class="wrap"><div class="ab">'
+    def card(i, t, d, extra=''):
+        return '<div class="axc"><span class="axi">%s</span><div><b>%s</b><p>%s</p>%s</div></div>' % (ic(i), t, d, extra)
+    facts = ''.join(card(*x) for x in [('sync', '同步上游', '积极跟进 ClassIsland 的新功能与修复'), ('check', '无缝沿用', '课表、自动化、插件与主题直接继续使用'), ('plug', '来自社区的增强', '更多天气源、多语言（实验中）等'), ('doc', '开源免费', '沿用上游的 GPL-3.0 协议')])
+    amap = ('<div class="axmap"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div>'
+            '<div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div>'
+            '<div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
+            '<div class="axkeep"><span>你的配置</span><b>课表</b><b>自动化</b><b>插件</b><b>主题</b><em>直接沿用，无需重新设置</em></div>')
+    steps = ''.join('<li><i>%s</i><div><b>%s</b><p>%s</p></div></li>' % x for x in [('1', '下载并安装', '从下载页获取适用于 Windows 的版本，安装或解压即可。'), ('2', '启动', '主界面出现在屏幕上方，界面中显示的名称为 ClassFabric。'), ('3', '接着用', '原有的课表、自动化、插件与主题可直接沿用。')])
+    done = ''.join(card(*x) for x in [
+        ('sync', '紧跟上游', '同步 ClassIsland 的新功能与修复。'),
+        ('cloud', '更多天气源', '除小米天气外，新增 OpenWeather 与和风天气。'),
+        ('text', '多语言（实验中）', '界面文字由写死改为可翻译的形式，支持简体中文、繁體中文与 English，已完成约 40%，欢迎在 Crowdin 上参与翻译。', '<div class="axbar"><i></i></div>'),
+        ('plug', '更好的插件预览', '插件市场的详情页可以预览更多内容。')])
+    road = ''.join('<li><span class="axd"></span><div><b>%s</b><p>%s</p></div><em>规划中</em></li>' % x for x in [
+        ('云功能 · 远程提醒', '从远端向大屏发送提醒。'),
+        ('云功能 · 集中管理', '统一管理多台设备。上游暂未提供，社区项目 <a href="https://github.com/1sIancl/ClassislandControlHub" rel="noopener">ClassislandControlHub</a> 正在积极开发。'),
+        ('云功能 · 云端备份', '通过 SFTP、WebDAV、OpenList 等方式备份档案与配置。'),
+        ('更好的自动化', '主要借助社区知名插件 SystemTools 实现。'),
+        ('更好的性能表现', '持续优化。')])
+    h += ('<main><section class="phead"><div class="wrap"><h1>关于 ClassFabric</h1><p>它是什么，与 ClassIsland 是什么关系，已经做了什么，接下来想做什么。</p>'
+          '<div class="axpills"><span>个人修改版</span><span>紧跟上游</span><span>沿用配置</span><span>GPL-3.0</span></div></div></section><div class="wrap"><div class="ab">'
           '<nav class="toc" aria-label="本页目录"><a href="#what">是什么</a><a href="#relation">与 ClassIsland 的关系</a><a href="#switch">如何切换</a><a href="#fit">适合谁</a><a href="#done">已经做了</a><a href="#planned">计划中</a><a href="#name">名字由来</a><a href="#join">参与贡献</a><a href="#faq">常见问题</a></nav><div class="prose">'
-          '<section id="what"><h2>ClassFabric 是什么</h2><p>ClassFabric 是基于 HelloWRC 的 ClassIsland 二次开发的<strong>个人修改版</strong>。在保持积极同步上游最新特性的同时，融入来自个人与社区的修改，例如多语言、云功能、更好的自动化、更好的性能表现与更多功能。</p><p>其中一部分已经完成，另一部分仍处于规划阶段，详见下文「已经做了」与「计划中」。</p></section>'
-          '<section id="relation"><h2>与 ClassIsland 的关系</h2><p>ClassFabric 不是 ClassIsland 的完美替代品，也不是它的竞品，而是在其基础上二次开发的版本。ClassIsland 的作者是 HelloWRC；ClassFabric 沿用上游的 GPL-3.0 开源协议，软件的「关于」页中也保留了上游的版权声明。</p></section>'
-          '<section id="switch"><h2>从 ClassIsland 切换，需要做什么</h2><p>不需要复杂的前期工作。ClassFabric 的底层代码与上游保持一致，只需下载并安装，原有的课表、自动化、插件与主题即可接着使用。</p><div class="callout">我们正在把底层代码尽量还原到与上游一致，同时保持界面中显示的名称为 ClassFabric，目的就是让切换对你「无感」。</div></section>'
-          '<section id="fit"><h2>适合谁，不适合谁</h2><p><strong>适合：</strong>想在 ClassIsland 生态上保持现有内容，又希望及时体验上游新功能的人；以及希望开箱即用，装完就能体验上游、社区与我们开发的各类新功能的人。</p><p><strong>不太适合：</strong>希望环境长期保持不变的人，或对稳定性有极高要求的场合。ClassFabric 会积极同步上游的更改，版本变化相对频繁。</p></section>'
-          '<section id="done"><h2>已经做了什么</h2><ul><li><strong>紧跟上游</strong>：同步 ClassIsland 的新功能与修复。</li><li><strong>更多天气源</strong>：除小米天气外，新增 OpenWeather 与和风天气。</li><li><strong>多语言（实验中）</strong>：ClassIsland 的界面文字原本是写死的，我们已将其中大部分改为可翻译的形式，目前支持简体中文、繁體中文与 English，约完成 40%。仍有不少文字与界面需要适配，欢迎在 Crowdin 上参与翻译。</li><li><strong>更好的插件预览</strong>：插件市场的详情页可预览更多内容。</li></ul><p>想了解具体改动，可以查看 <a href="' + GH + '/commits/main" rel="noopener">GitHub 提交记录</a>。</p></section>'
-          '<section id="planned"><h2>计划中</h2><p>以下内容仍在规划阶段，<strong>尚未可用</strong>。</p><div class="plan"><div><h4>云功能 · 远程提醒</h4><p>从远端向大屏发送提醒。</p></div>'
-          '<div><h4>云功能 · 集中管理</h4><p>统一管理多台设备。上游暂未提供，社区项目 <a href="https://github.com/1sIancl/ClassislandControlHub" rel="noopener">ClassislandControlHub</a> 正在积极开发。</p></div>'
-          '<div><h4>云功能 · 云端备份</h4><p>通过 SFTP、WebDAV、OpenList 等方式备份档案与配置。</p></div><div><h4>更好的自动化</h4><p>主要借助社区知名插件 SystemTools 实现。</p></div><div><h4>更好的性能表现</h4><p>持续优化。</p></div></div></section>'
-          '<section id="name"><h2>名字由来</h2><p>ClassIsland 的 Island，来自 iOS 的「灵动岛」。ClassFabric 的 Fabric，则来自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来。</p></section>'
-          '<section id="join"><h2>参与贡献</h2><p>欢迎任何有价值的贡献：在 GitHub 提交 Issue 或 PR 即可。我们也会考虑定期将有意义的改动提交给上游，一起建设 ClassIsland 生态。</p><div class="cta" style="justify-content:flex-start"><a class="btn glass" href="' + GH + '" rel="noopener">GitHub 仓库</a><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a></div></section>'
+          '<section id="what"><h2>ClassFabric 是什么</h2><p class="axlead">ClassFabric 是基于 HelloWRC 的 ClassIsland 二次开发的<strong>个人修改版</strong>。</p><p>在保持积极同步上游最新特性的同时，融入来自个人与社区的修改，例如多语言、云功能、更好的自动化、更好的性能表现与更多功能。其中一部分已经完成，另一部分仍处于规划阶段，详见下文「已经做了」与「计划中」。</p><div class="axgrid two">' + facts + '</div></section>'
+          '<section id="relation"><h2>与 ClassIsland 的关系</h2><p>ClassFabric 不是 ClassIsland 的完美替代品，也不是它的竞品，而是在其基础上二次开发的版本。ClassIsland 的作者是 HelloWRC；ClassFabric 沿用上游的 GPL-3.0 开源协议，软件的「关于」页中也保留了上游的版权声明。</p>' + amap + '</section>'
+          '<section id="switch"><h2>从 ClassIsland 切换，需要做什么</h2><p>不需要复杂的前期工作。ClassFabric 的底层代码与上游保持一致，只需下载并安装，原有的课表、自动化、插件与主题即可接着使用。</p><ol class="axsteps">' + steps + '</ol><div class="callout">我们正在把底层代码尽量还原到与上游一致，同时保持界面中显示的名称为 ClassFabric，目的就是让切换对你「无感」。</div></section>'
+          '<section id="fit"><h2>适合谁，不适合谁</h2><div class="axfit"><div class="yes"><h4>' + ic('check') + '适合</h4><ul><li>想在 ClassIsland 生态上保持现有内容，又希望及时体验上游新功能的人</li><li>希望开箱即用，装完就能体验上游、社区与我们开发的各类新功能的人</li></ul></div>'
+          '<div class="no"><h4>' + ic('info') + '不太适合</h4><ul><li>希望环境长期保持不变的人</li><li>对稳定性有极高要求的场合</li></ul><p>ClassFabric 会积极同步上游的更改，版本变化相对频繁。</p></div></div></section>'
+          '<section id="done"><h2>已经做了什么</h2><div class="axgrid two">' + done + '</div><p>想了解具体改动，可以查看 <a href="' + GH + '/commits/main" rel="noopener">GitHub 提交记录</a>。</p></section>'
+          '<section id="planned"><h2>计划中</h2><p>以下内容仍在规划阶段，<strong>尚未可用</strong>。</p><ul class="axroad">' + road + '</ul></section>'
+          '<section id="name"><h2>名字由来</h2><div class="axname"><div><span class="eq"><b>Class</b><i>+</i><b>Island</b></span><p>Island，来自 iOS 的「灵动岛」。</p></div><div class="ar">→</div><div><span class="eq g"><b>Class</b><i>+</i><b>Fabric</b></span><p>Fabric，取自 Minecraft 社区知名的模组加载器，寓意将社区与个人的功能连接起来。</p></div></div></section>'
+          '<section id="join"><h2>参与贡献</h2><p>欢迎任何有价值的贡献：在 GitHub 提交 Issue 或 PR 即可。我们也会考虑定期将有意义的改动提交给上游，一起建设 ClassIsland 生态。</p>'
+          '<div class="axjoin"><a href="' + GH + '" rel="noopener"><span>' + GHSVG.replace(' class="ghi"', '') + '</span><b>GitHub 仓库</b><small>查看源码与提交记录</small></a><a href="' + GH + '/issues" rel="noopener"><span>' + ic('info') + '</span><b>反馈问题</b><small>提交 Issue</small></a><a href="' + GH + '/pulls" rel="noopener"><span>' + ic('sync') + '</span><b>提交 PR</b><small>欢迎任何有价值的改动</small></a></div></section>'
           '<section id="faq" class="faq"><h2>常见问题</h2>' + faq_html() + '</section>'
           '</div></div></div></main>\n')
     return h + FOOT
