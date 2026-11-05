@@ -81,7 +81,7 @@
     });
     if (kind === 'rem') remC = c;
     inView(st, function () { if (kind === 'hero') return; c.start(); }, 0.3);
-    if (kind === 'hero') st._c = c;
+    st._c = c;
   });
   var tabs = $$('#remTabs .sub-i');
   tabs.forEach(function (t) {

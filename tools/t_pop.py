@@ -1,9 +1,9 @@
 import sys, time, subprocess, json
 from playwright.sync_api import sync_playwright
 from PIL import Image
-S='/tmp/claude-0/-home-claude/c795c74b-c6b4-50da-bfd3-372ff0092d48/scratchpad/'
+S='/tmp/claude-0/-home-claude/c7b6b142-8192-5443-8ece-e8846ebd1eed/scratchpad/'
 widths=[int(x) for x in sys.argv[1:]] or [1440,768,390]
-srv=subprocess.Popen(['python3','-m','http.server','8771'],cwd='/home/claude/cf-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
+srv=subprocess.Popen(['python3','-m','http.server','8771'],cwd='/home/claude/classfabric-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
 JS_OUT='''(sel)=>{const e=document.querySelector(sel); if(!e) return null; const r=e.getBoundingClientRect(); let a=e.parentElement; const bad=[];
  while(a&&a!==document.body){const cs=getComputedStyle(a); if(/(hidden|clip|auto|scroll)/.test(cs.overflow+cs.overflowX+cs.overflowY)){const q=a.getBoundingClientRect(); if(r.left<q.left-1||r.right>q.right+1||r.top<q.top-1||r.bottom>q.bottom+1) bad.push((a.className||a.tagName)+':'+[Math.round(r.left-q.left),Math.round(q.right-r.right),Math.round(r.top-q.top),Math.round(q.bottom-r.bottom)].join('/'))} a=a.parentElement}
  return {w:Math.round(r.width),h:Math.round(r.height),clip:bad}}'''

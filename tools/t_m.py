@@ -1,10 +1,10 @@
 import sys, time, subprocess, json
 from playwright.sync_api import sync_playwright
 from PIL import Image
-S='/tmp/claude-0/-home-claude/c795c74b-c6b4-50da-bfd3-372ff0092d48/scratchpad/'
+S='/tmp/claude-0/-home-claude/c7b6b142-8192-5443-8ece-e8846ebd1eed/scratchpad/'
 page=sys.argv[1]; theme=sys.argv[2]; cols=int(sys.argv[3]); sc=float(sys.argv[4]); w=int(sys.argv[5]) if len(sys.argv)>5 else 390
 UA='Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'
-srv=subprocess.Popen(['python3','-m','http.server','8773'],cwd='/home/claude/cf-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
+srv=subprocess.Popen(['python3','-m','http.server','8773'],cwd='/home/claude/classfabric-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
 try:
     with sync_playwright() as p:
         b=p.chromium.launch(); ctx=b.new_context(user_agent=UA,viewport={'width':w,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True)

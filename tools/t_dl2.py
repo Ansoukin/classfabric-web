@@ -1,7 +1,7 @@
 import sys, time, subprocess, json
 from playwright.sync_api import sync_playwright
 from PIL import Image
-S='/tmp/claude-0/-home-claude/c795c74b-c6b4-50da-bfd3-372ff0092d48/scratchpad/'
+S='/tmp/claude-0/-home-claude/c7b6b142-8192-5443-8ece-e8846ebd1eed/scratchpad/'
 names=[]
 for arch in ('x64','x86','arm64'):
     names+=['ClassFabric_windows_%s_selfContained_installer.exe'%arch,'ClassFabric_app_windows_%s_selfContained_folder.zip'%arch,'ClassFabric_app_windows_%s_full_folder.zip'%arch,'ClassFabric_app_windows_%s_full_singleFile.exe'%arch]
@@ -13,7 +13,7 @@ SC=[('win64','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrom
     ('android','Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/130 Mobile Safari/537.36',390),
     ('mac','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/130 Safari/537.36',1280)]
 page=sys.argv[1] if len(sys.argv)>1 else 'download.html'
-srv=subprocess.Popen(['python3','-m','http.server','8769'],cwd='/home/claude/cf-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
+srv=subprocess.Popen(['python3','-m','http.server','8769'],cwd='/home/claude/classfabric-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
 try:
     with sync_playwright() as p:
         b=p.chromium.launch(); ims=[]

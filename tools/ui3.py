@@ -46,7 +46,7 @@ def themes(mob=False, app=''):
     tu = ''.join('<li class="tu rv d%d"><span class="tv %s">%s</span><div><b>%s</b><small>%s</small></div></li>' % (i, a, b, c, d) for i, (a, b, c, d) in enumerate(tune))
     return ('<div class="thx">'
             '<div class="thx-head rv"><div class="copy"><span class="tag o">#主题</span><h3>自由的主题系统</h3><p>内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。</p></div>'
-            '<div class="thx-num" aria-hidden="true"><b class="g">3</b><span>套内置主题<br>随时切换</span></div></div>'
+            '</div>'
             '<div class="thx-reel rv" role="img" aria-label="三套主题的岛条效果"><div class="rw"><div class="trk">' + r1 + '</div></div><div class="rw rev"><div class="trk">' + r2 + '</div></div></div>'
             '<div class="thx-grid">' + tiles + '</div>'
             '<ul class="thx-tune">' + tu + '</ul>'

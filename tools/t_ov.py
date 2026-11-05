@@ -14,7 +14,7 @@ for(const e of document.querySelectorAll('main *, footer *, header *, nav *')){
  if(e.scrollWidth>e.clientWidth+2&&getComputedStyle(e).display!=='inline')out.push(['SW',e.className||e.tagName,e.textContent.trim().slice(0,24),e.scrollWidth-e.clientWidth]);
 }
 return [document.documentElement.scrollWidth-vw,out.slice(0,25)]})()"""
-srv=subprocess.Popen(['python3','-m','http.server','8765'],cwd='/home/claude/cf-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);time.sleep(1)
+srv=subprocess.Popen(['python3','-m','http.server','8765'],cwd='/home/claude/classfabric-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);time.sleep(1)
 try:
   with sync_playwright() as p:
     b=p.chromium.launch()

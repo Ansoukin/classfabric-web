@@ -1,7 +1,7 @@
 import time, subprocess
 from playwright.sync_api import sync_playwright
-S='/tmp/claude-0/-home-claude/c795c74b-c6b4-50da-bfd3-372ff0092d48/scratchpad/'
-srv=subprocess.Popen(['python3','-m','http.server','8772'],cwd='/home/claude/cf-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
+S='/tmp/claude-0/-home-claude/c7b6b142-8192-5443-8ece-e8846ebd1eed/scratchpad/'
+srv=subprocess.Popen(['python3','-m','http.server','8772'],cwd='/home/claude/classfabric-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
 try:
     with sync_playwright() as p:
         b=p.chromium.launch(); pg=b.new_page(viewport={'width':1440,'height':900}); errs=[]

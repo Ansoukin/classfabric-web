@@ -15,7 +15,7 @@ JS = r"""
  return out}
 """
 page, theme, w = sys.argv[1], sys.argv[2], int(sys.argv[3])
-srv = subprocess.Popen(['python3','-m','http.server','8767'],cwd='/home/claude/cf-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
+srv = subprocess.Popen(['python3','-m','http.server','8767'],cwd='/home/claude/classfabric-web',stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(.8)
 try:
     with sync_playwright() as p:
         b=p.chromium.launch(); pg=b.new_page(viewport={'width':w,'height':900})
