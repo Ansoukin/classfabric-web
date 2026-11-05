@@ -54,11 +54,17 @@
       else if (rt === 'fd') { t = '免安装 · 依赖运行时'; d = '解压即用，需本机已有 .NET 桌面运行时，体积较小。'; sc = 3; }
       else { t = '免安装版'; d = '解压即用。'; sc = 3; }
     } else { t = (l.split('.').pop() || 'file').toUpperCase() + ' 包'; d = ''; sc = 5; ic = ICON.pkg; }
-    return { a: a, os: os, arch: ar, t: t, d: d, sc: sc, ic: ic };
+    return { a: a, os: os, arch: ar, t: t, d: d, sc: sc, ic: ic, rt: rt, form: form };
+  }
+
+  function chips(p) {
+    var h = '<em class="bdg sm">' + ARCHN[p.arch] + '</em>';
+    if (p.form === 'inst' || p.form === 'dir') h += p.rt === 'fd' ? '<em class="bdg sm amber">需 .NET 桌面运行时</em>' : '<em class="bdg sm green">自带运行时</em>';
+    return h;
   }
 
   function card(p, rec) {
-    return '<a class="ac' + (rec ? ' rec' : '') + '" href="' + p.a.browser_download_url + '" rel="noopener"><span class="ai"><svg viewBox="0 0 24 24"><path d="' + p.ic + '"/></svg></span><span class="at"><b>' + p.t + (rec ? '<u>推荐</u>' : '') + '</b>' + (p.d ? '<span>' + p.d + '</span>' : '') + '<code>' + p.a.name + '</code></span><span class="am"><em>' + fmt(p.a.size) + '</em><i class="dlb"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></i></span></a>';
+    return '<a class="ac' + (rec ? ' rec' : '') + '" href="' + p.a.browser_download_url + '" rel="noopener"><span class="ai"><svg viewBox="0 0 24 24"><path d="' + p.ic + '"/></svg></span><span class="at"><b>' + p.t + (rec ? '<u>推荐</u>' : '') + '</b><span class="chs">' + chips(p) + '</span>' + (p.d ? '<span class="ds">' + p.d + '</span>' : '') + '<code>' + p.a.name + '</code></span><span class="am"><em>' + fmt(p.a.size) + '</em><i class="dlb"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></i></span></a>';
   }
   function bySc(a, b) { return a.sc - b.sc; }
 
@@ -86,15 +92,15 @@
     var tip = $('#chanTip'); if (tip) tip.textContent = chan === 'pre' ? '最新预览版' : '最新稳定版';
     fillHist();
     if (!r) {
-      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; });
+      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; e.classList.remove('sk'); });
       $$('[data-date]').forEach(function (e) { e.textContent = '—'; });
       if (box) box.innerHTML = '<div class="none">' + (chan === 'pre' ? '目前没有发布预览版，请先使用稳定版。' : '暂无可下载的版本。') + '</div>';
       if (dl) dl.classList.add('dis');
       if (sub) sub.textContent = '';
       return;
     }
-    $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; });
-    $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); });
+    $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; e.classList.remove('sk'); });
+    $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); e.classList.remove('sk'); });
     $$('[data-releaselink]').forEach(function (e) { e.href = r.html_url; });
 
     var items = (r.assets || []).map(parse).filter(Boolean);
@@ -130,12 +136,11 @@
     if (!box) return;
     var h = '';
     if (present.length > 1) h += '<div class="archbar seg4" role="tablist" aria-label="处理器架构">' + present.map(function (x) {
-      var n = win.filter(function (p) { return p.arch === x; }).length;
-      return '<button type="button" role="tab" data-arch="' + x + '" class="' + (x === arch ? 'on' : '') + '">' + ARCHN[x] + (x === P.arch && P.os === 'windows' ? '<small>你的设备</small>' : '') + '<i>' + n + '</i></button>';
+      return '<button type="button" role="tab" data-arch="' + x + '" class="' + (x === arch ? 'on' : '') + '">' + ARCHN[x] + (x === P.arch && P.os === 'windows' ? '<small>你的设备</small>' : '') + '</button>';
     }).join('') + '</div>';
     var list = win.filter(function (p) { return p.arch === arch; }).sort(bySc);
     h += '<div class="alist">' + (list.length ? list.map(function (p) { return card(p, p === best); }).join('') : '<div class="none">该版本暂无 Windows 文件，请前往 GitHub 查看。</div>') + '</div>';
-    if (oth.length) h += '<details class="aoth"><summary>其他平台与文件<i>' + oth.length + '</i></summary><div class="alist">' + oth.sort(bySc).map(function (p) { return card(p, false); }).join('') + '</div></details>';
+    if (oth.length) h += '<details class="aoth"><summary>其他平台与文件<em class="cnt">' + oth.length + ' 个文件</em></summary><div class="alist">' + oth.sort(bySc).map(function (p) { return card(p, false); }).join('') + '</div></details>';
     box.innerHTML = h;
     $$('[data-arch]', box).forEach(function (b) { b.addEventListener('click', function () { arch = b.dataset.arch; render(); }); });
   }
@@ -162,7 +167,7 @@
     fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=20').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (r) { go(r); try { localStorage.setItem('cf_rels', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
       .catch(function () {
-        $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; });
+        $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; e.classList.remove('sk'); });
         var box = $('#assets'); if (box) box.innerHTML = '<div class="none">暂时无法读取版本信息，请前往 <a href="https://github.com/' + REPO + '/releases" rel="noopener">GitHub Releases</a> 下载。</div>';
         var hs = $('#hist'); if (hs) hs.innerHTML = '<li class="none">暂时无法读取。</li>';
       });

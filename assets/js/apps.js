@@ -86,6 +86,12 @@
         (st.step && st.mode === 'swap' && ready ? '<label class="cbx"><input type="checkbox" data-a="perm"' + (st.perm ? ' checked' : '') + '><i>' + I.check + '</i>永久换课</label>' : '') +
         (ready && !st.done ? '<span class="btn2 acc" data-a="ok">' + I.check + '确认换课</span>' : '') + '</div>';
       root.innerHTML = h;
+      var fl = root.querySelector('.fly.sl'), sg = root.closest('.vdks');
+      if (fl && sg) {
+        var sr = sg.getBoundingClientRect(), k = sr.width / sg.offsetWidth || 1, fr = fl.getBoundingClientRect();
+        var room = (sr.bottom - fr.top) / k - (sg.closest('.m') ? 52 : 62);
+        if (room < fl.scrollHeight) fl.style.maxHeight = Math.max(110, room) + 'px';
+      }
     }
     root.addEventListener('click', function (e) {
       var t = e.target;
@@ -327,8 +333,10 @@
     function place(th){
       var f = body.querySelector('[data-fly]'); if(!f) return;
       if (th){ var nbEl = body.querySelector('.nb[data-new="'+pp.target+'"]'); var tb = (nbEl||body).getBoundingClientRect(), bb = body.getBoundingClientRect(); anchor = tb.left - bb.left - 6; atop = tb.bottom - bb.top + 4; }
-      var bw = body.clientWidth, w = f.firstChild.offsetWidth;
-      f.style.left = Math.max(8, Math.min(anchor, bw - w - 8))+'px'; var ph = f.firstChild.offsetHeight; f.style.top = Math.max(6, Math.min(atop, body.clientHeight - Math.min(ph,body.clientHeight-130) - 8))+'px';
+      var bw = body.clientWidth, bh = body.clientHeight, pop = f.firstChild, w = pop.offsetWidth;
+      pop.style.maxHeight = Math.max(160, bh - 12) + 'px';
+      var ph = Math.min(pop.offsetHeight, bh - 12);
+      f.style.left = Math.max(8, Math.min(anchor, bw - w - 8))+'px'; f.style.top = Math.max(6, Math.min(atop, bh - ph - 6))+'px';
     }
     function cur(){ return blocks[st.tl]; }
     body.addEventListener('click', function(e){

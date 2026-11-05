@@ -2,6 +2,7 @@
 import os, sys, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ui2
+import ui3 as U3
 from ui import *
 
 OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -66,6 +67,16 @@ def vdesk(inner, cls, w=1280, h=720, mw=680, mh=780, extra='', tray_id='vTray'):
 def static_isl(h, w='50%'):
     return h.replace('class="isl bar', 'class="isl static bar').replace('<div class="isl"', '<div class="isl static"').replace('<div class="isl mask', '<div class="isl static mask')
 
+def _fin(h, m, path='/'):
+    if m:
+        from mobile import JS_REDIR_M
+        h = h.replace('width=device-width,initial-scale=1', 'width=device-width,initial-scale=1,viewport-fit=cover', 1)
+        h = h.replace('<meta name="viewport"', JS_REDIR_M + '<meta name="viewport"', 1)
+        h = h.replace('<link rel="stylesheet" href="/assets/css/site.css">\n', '<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/m.css">\n', 1)
+    elif path == '/':
+        h = h.replace('<meta name="viewport"', JS_REDIR_D + '<meta name="viewport"', 1)
+    return h
+
 def jsonld(path, title, desc):
     import json
     org = {"@type": "Organization", "@id": SITE + "/#org", "name": "ClassFabric", "url": SITE + "/", "logo": {"@type": "ImageObject", "url": SITE + "/assets/img/icon-192.png", "width": 192, "height": 192}, "sameAs": [GH]}
@@ -88,10 +99,14 @@ def jsonld(path, title, desc):
         g.append({"@type": "SoftwareApplication", "@id": SITE + "/#app", "name": "ClassFabric", "operatingSystem": "Windows 10, Windows 11", "applicationCategory": "EducationalApplication", "downloadUrl": SITE + "/download.html", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CNY"}})
     return '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False, separators=(',', ':')) + '</script>\n'
 
-def head(title, desc, path, extra='', alt=None):
+JS_REDIR_D = ('<script>(function(){try{var u=navigator.userAgent,s=location.search,k="cf_view";if(/[?&]view=pc\\b/.test(s))localStorage.setItem(k,"pc");else if(/[?&]view=m\\b/.test(s))localStorage.setItem(k,"m");'
+              'var v=localStorage.getItem(k),ph=/iPhone|iPod|Android.+Mobile|Windows Phone|IEMobile|BlackBerry|Opera Mini|Mobile.+Firefox/i.test(u);'
+              'if(v==="m"||(ph&&v!=="pc")){var p=location.pathname;location.replace((p==="/"||p==="/index.html"?"/m/":"/m"+p)+location.hash)}}catch(e){}})()</script>\n')
+
+def head(title, desc, path, extra='', alt=None, m=False):
     url = SITE + path
     alt_tag = ('<link rel="alternate" media="only screen and (max-width: 640px)" href="%s%s">\n' % (SITE, alt)) if alt else ''
-    return ('<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    out = ('<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
             '<title>%s</title>\n<meta name="description" content="%s">\n<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">\n<link rel="canonical" href="%s">\n'
             '<link rel="alternate" hreflang="zh-CN" href="%s">\n<link rel="alternate" hreflang="x-default" href="%s">\n%s<meta name="application-name" content="ClassFabric">\n<meta name="theme-color" content="#141312">\n'
             '<link rel="icon" href="/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">\n<link rel="apple-touch-icon" href="/assets/img/icon-180.png">\n'
@@ -100,6 +115,7 @@ def head(title, desc, path, extra='', alt=None):
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
             '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n%s%s</head>\n') % (
         title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, jsonld(path, title, desc), extra)
+    return _fin(out, m, path)
 
 def navbar(cur):
     def a(href, label, key):
@@ -112,17 +128,17 @@ def navbar(cur):
 
 import hashlib, datetime
 
-SITE_VER = '1.0.4'
+SITE_VER = '1.0.5'
+RELEASE_DATE = '2026-11-05'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js'):
+    for f in ('assets/css/site.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
-    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
-    return now.strftime('%Y%m%d'), h.hexdigest()[:7], now.strftime('%Y-%m-%d %H:%M')
+    return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
 BD, BH, BT = build_id()
-BUILD = ('<div class="bld" title="构建于 %s（UTC+8）"><span class="dot"></span><span>站点版本 v%s</span><i></i><span>Build %s</span><i></i><code>%s</code></div>' % (BT, SITE_VER, BD, BH))
+BUILD = ('<div class="bld" title="V%s 发布于 %s"><span class="dot"></span><span>站点版本 v%s</span><i></i><span>Build %s</span><i></i><code>%s</code></div>' % (SITE_VER, BT, SITE_VER, BD, BH))
 
 FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class="brand" href="/"><img src="/assets/img/icon-64.png" width="26" height="26" alt="">ClassFabric</a>'
         '<p class="about">ClassIsland 的个人修改版班级大屏课表。紧跟上游，并加入来自社区与我们的改进。</p></div>'
@@ -130,7 +146,10 @@ FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class=
         '<div><h5>项目</h5><ul><li><a href="' + GH + '" rel="noopener">GitHub 仓库</a></li><li><a href="' + GH + '/issues" rel="noopener">反馈问题</a></li><li><a href="/about.html#join">参与贡献</a></li></ul></div>'
         '<div><h5>了解更多</h5><ul><li><a href="/about.html">关于 ClassFabric</a></li><li><a href="/about.html#faq">常见问题</a></li><li><a href="https://classisland.tech" rel="noopener">ClassIsland 官网</a></li></ul></div></div>'
         '<div class="legal">© 2026 ClassFabric　基于 HelloWRC 的 ClassIsland（© 2023–2026 HelloWRC）二次开发，以 GPL-3.0 协议开源。<br>ClassFabric 是个人修改版，并非 ClassIsland 官方项目；ClassIsland 的名称与原有功能归其原作者所有。</div>' + BUILD + '</div></footer>\n'
-        '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n<script src="/assets/js/widgets.js" defer></script>\n<script src="/assets/js/dl.js" defer></script>\n</body>\n</html>\n')
+        '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n<script src="/assets/js/widgets.js" defer></script>\n<script src="/assets/js/dl.js" defer></script>\n<script src="/assets/js/fx.js" defer></script>\n</body>\n</html>\n')
+
+FOOT_M = (FOOT.replace('<script src="/assets/js/apps.js" defer></script>\n', '').replace('<script src="/assets/js/widgets.js" defer></script>\n', '<script src="/assets/js/m.js" defer></script>\n')
+          .replace('<div class="bld"', '<p class="pcl"><a href="/?view=pc">查看电脑版网页</a></p><div class="bld"', 1))
 
 def ld():
     return ('<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ClassFabric","applicationCategory":"EducationApplication","operatingSystem":"Windows 10, Windows 11",'
@@ -151,25 +170,15 @@ PLUGINS = [
 def panel_wall(inner, wx='50%', wy='50%', ws='170%', cls='pad'):
     return '<div class="panel %s" style="--wx:%s;--wy:%s;--ws:%s"><div class="wp"></div><div style="position:relative">%s</div></div>' % (cls, wx, wy, ws, inner)
 
-def home():
+def home(mob=False):
+    import mobile as M
+    M.init(globals())
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
-             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '', '/m/')
+             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '', None if mob else '/m/', m=mob)
     h += navbar('home')
     h += '<main>\n'
-    h += ('<section class="hero"><div class="wrap">'
-          '<p class="eyebrow rv"><img src="/assets/img/logo.png" alt="">ClassFabric<i></i>班级大屏课表</p>'
-          '<h1 class="rv"><span class="seo-only">ClassFabric：</span>紧跟上游，<span class="g">再进一步</span></h1>'
-          '<p class="sub rv d1">基于 ClassIsland 的个人修改版，原有课表、插件与主题无缝沿用</p>'
-          '<div class="cta rv d2"><a class="btn blue" href="' + REL + '" data-dl data-releaselink rel="noopener">' + ic('dl') + '立即下载</a><a class="btn glass" href="' + GH + '" rel="noopener">' +
-          '<svg viewBox="0 0 16 16" fill="currentColor" stroke="none"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub 仓库</a></div>'
-          '<p class="note rv d2">支持在 Windows 10/11 上运行　·　最新版本 <b data-ver>—</b>　·　GPL-3.0 开源</p>'
-          '<div class="dctl rv d2"><ol class="dsteps" id="dsteps"><li><i>1</i><span>右键托盘图标</span></li><li><i>2</i><span>打开「编辑档案」</span></li><li><i>3</i><span>新建课表，填入课程</span></li><li><i>4</i><span>主界面随即就位</span></li></ol><button type="button" class="dreplay" id="dreplay" hidden>' + ic('sync') + '重播演示</button></div>'
-          + vdesk('<div class="visl hisl">' + '<div class="isl-stack" data-demo="hero" id="hIsl">' + HERO_STATES + '</div></div>'
-                  '<div class="vwin hwin">' + ui2.editor_app() + '</div>'
-                  '<div class="vtray-menu htray">' + tray_menu() + '</div>'
-                  '<svg class="cursor" id="hCur" viewBox="0 0 24 24"><path d="M4 2.5v17l4.6-4.4 3 6.9 2.9-1.3-3-6.8h6.5z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg>',
-                  'vdk-edit rv d2', 1280, 720, 680, 780, ' id="heroDesk" role="group" aria-label="ClassFabric 演示：右键托盘图标，打开档案编辑，填入课表，主界面随即在屏幕上方显示今日课程并发出上课提醒。点击画面可自行操作。"', 'hTrayIco')
-          + '</div></section>\n')
+    U3.init(globals())
+    h += U3.hero(mob)
 
     h += ('<section class="axstrip"><div class="wrap"><div class="axgrid four">' + ''.join('<div class="axc rv d%d"><span class="axi">%s</span><div><b>%s</b><p>%s</p></div></div>' % (k, ic(i), t, d) for k, (i, t, d) in enumerate([('sync', '紧跟上游', '积极同步 ClassIsland 的新功能与修复'), ('check', '无缝沿用', '课表、自动化、插件、主题直接继续使用'), ('plug', '社区增强', '更多天气源、多语言（实验中）等'), ('doc', '开源免费', 'GPL-3.0 协议，支持 Windows 10 及以上')])) + '</div></div></section>\n')
     h += '<section class="mani"><div class="wrap"><p class="mtxt" id="mtxt">' + ''.join('<span class="mw">%s</span>' % c for c in "积极同步上游。无缝沿用配置。再多一点点，属于我们自己的增强。") + '</p></div></section>\n'
@@ -177,8 +186,8 @@ def home():
         r1 = ''.join('<span>%s</span><i>·</i>' % t for t in a) * 3
         r2 = ''.join('<span>%s</span><i>·</i>' % t for t in b) * 3
         return '<div class="bigmq" aria-hidden="true"><div class="r1"><div class="t">' + r1 + '</div></div><div class="r2"><div class="t">' + r2 + '</div></div></div>\n'
-    def fc(icn, t, d='', trail=''):
-        return '<div class="fcard">%s<div class="tx"><b>%s</b>%s</div>%s</div>' % (ic(icn), t, ('<span>%s</span>' % d) if d else '', trail)
+    def fc(icn, t, d='', trail='', bd=None):
+        return '<div class="fcard">%s<div class="tx"><b>%s%s</b>%s</div>%s</div>' % (ic(icn), t, (U3.bdg(bd[0], bd[1], None, 'sm')) if bd else '', ('<span>%s</span>' % d) if d else '', trail)
     ok = '<span class="ok">' + ic('check') + '已同步</span>'
     used = '<span class="ok">' + ic('check') + '已沿用</span>'
     on = '<span class="tg on"><i></i></span>'
@@ -210,11 +219,12 @@ def home():
     row2 = ''.join(wrapi(x) for x in (ST[4], ST[5], ST[6], ST[7]))
     h += ('<section class="sec show"><div class="wrap"><h2 class="claim rv">上课与下课，<span class="g">一目了然</span></h2></div>'
           '<div class="marq rv" aria-label="灵动岛的各种状态"><div class="row"><div class="trk">' + row1 * 2 + '</div></div><div class="row rev"><div class="trk">' + row2 * 2 + '</div></div></div>'
-          '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video></figure></div></section>\n')
+          + ('' if mob else '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video></figure></div>') + '</section>\n')
 
     h += '<section class="sec light"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2>'
     row2 = '<div style="display:flex;gap:10px;justify-content:center;margin-top:14px;font-size:17px;font-family:var(--font)">' + ''.join('<div class="isl static" style="padding:0 1em">%s</div>' % t for t in ['12:30:44', ic('sun') + '&nbsp;9℃', ic('timer') + '&nbsp;元旦 62 天']) + '</div>'
     main_vis = panel_wall(fit('<div style="width:1000px;padding:14px 0 18px"><div style="display:flex;justify-content:center;font-size:19px"><div class="isl-stack">' + static_isl(idle('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"') + '</div></div>' + row2.replace('17px', '19px') + '</div>', 1000, 'position:relative;width:100%', 520), '50%', '2%', '190%', 'pad')
+    if mob: main_vis = M.main_panel()
     h += ('<div class="blk scene-over rv"><div class="copy"><span class="tag">#主界面</span><h3>直观的信息显示</h3><p>自动直观地显示今日的课程安排与当前进行的课程，并支持通过「组件」自定义主界面上显示的内容。</p></div>' + main_vis + '</div>')
     tabs = ('<div class="subs" id="remTabs">'
             '<button class="sub-i on" data-g="0" style="text-align:left;cursor:pointer;color:inherit">' + ic('bell') + '<div><h4>准备上课</h4><p>在上课前一段时间发出提醒，提示做好上课准备。室内课程默认提前 60 秒，室外课程默认提前 600 秒。</p></div></button>'
@@ -223,17 +233,21 @@ def home():
     rem_vis = ('<div class="panel" style="--wx:60%;--wy:34%;--ws:200%"><div class="wp"></div><div style="position:relative;padding:20px 0 0">'
                + fit('<div style="display:flex;justify-content:center;width:100%"><div class="isl-stack" data-demo="rem" id="remIsl" style="font-size:20px">' + REM_STATES + '</div></div>', 1000, 'position:relative;width:100%', 720)
                + '<div style="padding:18px 4% 0;position:relative;margin-bottom:-24px"><div class="app" data-app="settings" data-start="remind" data-h="600"></div></div></div></div>')
+    if mob: rem_vis = M.rem_panel()
     h += ('<div class="blk full ctr rv"><div class="copy"><span class="tag o">#提醒</span><h3>醒目的提醒系统</h3><p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>' + tabs + '</div>' + rem_vis + '</div>')
     subs = ('<div class="subs"><div class="sub-i">' + ic('cal') + '<div><h4>灵活的课表启用规则</h4><p>可为课表设置每周、某一天或循环启用的规则，支持多周轮换，到日期自动切换。</p></div></div>'
             '<div class="sub-i">' + ic('clock') + '<div><h4>时间与科目的自由定制</h4><p>不同课表可使用不同的时间表，并支持自定义科目，设置科目图标与主题色。</p></div></div>'
             '<div class="sub-i">' + ic('edit') + '<div><h4>简洁直观的编辑工具</h4><p>课表、时间表、科目分页编辑，时间表以时间轴方式直接拖动调整。</p></div></div></div>')
     ed_vis = '<div class="edpanel">' + vdesk('<div class="vwin">' + ui2.editor_app(seed='real') + '</div>', 'vdk-bare', 1280, 720, 680, 780).replace('<div class="vtask">', '<div class="vtask" hidden>', 1) + '</div>'
+    if mob: ed_vis = M.editor_section()
     h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击窗口上方的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
     swap_vis = '<div class="edpanel">' + vdesk('<div class="vwin" data-vwin="swap"><div class="sw2 w" data-app="swap" data-modal="1"></div></div><div class="vtray-menu" data-vmenu>' + tray_menu() + '</div>', 'vdk-swap', 800, 500, 720, 520, ' data-vtray="swap"', 'swTray') + '<p class="vcap">点击右下角的托盘图标，选择「换课…」，即可从托盘打开独立的换课窗口。</p></div>'
+    if mob: swap_vis = M.swap_section()
     h += ('<div class="blk rev zoomed rv"><div class="copy" style="order:2"><span class="tag gr">#调课</span><h3>提前调整课程</h3><p>支持当日与跨天换课，灵活应对调课情景。可以只换这一次，也可以勾选「永久换课」。</p>'
           '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>临时启用课表</h4><p>可在当日或未来某一天临时启用另一个课表，应对调休与换课。</p></div></div>'
           '<div class="sub-i">' + ic('import') + '<div><h4>从其它软件导入课表</h4><p>支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。</p></div></div></div></div>' + swap_vis + '</div>')
     auto_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="auto" data-h="640"></div></div>', '84%', '60%', '230%', '')
+    if mob: auto_vis = M.auto_shot()
     h += '<div class="flow rv"><span>当 <b class="f1">时间到了</b></span><i>→</i><span>若 <b class="f2">满足规则</b></span><i>→</i><span>就 <b class="f3">自动执行</b></span></div>\n'
     h += ('<div class="blk full rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
           '</div>' + auto_vis + '</div>')
@@ -242,20 +256,20 @@ def home():
     h += bigmq(['组件','主题','插件','自动化','外观'], ['拖动','搭配','安装','触发','个性化'])
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
     wid_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
+    if mob: wid_vis = M.wid_shot()
     h += ('<div class="blk full crop rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
           '<p>进入「编辑模式」，可以直接在主界面上拖动调整组件。</p></div>' + wid_vis + '</div>')
     thm_vis = panel_wall('<div style="padding:5% 4% 3%"><div class="app" data-app="settings" data-start="appearance" data-h="620"></div></div>', '50%', '90%', '230%', '')
-    TH = [('classic', '经典', '单行岛条，天气、日期、课程与倒计时同排显示。'), ('fluent', 'Fluent', '分体主界面，日期、时间与倒计时另起一行。'), ('rect', 'Rectangles', '方块背景之上的醒目岛条。')]
-    h += '<div class="thm4 rv">' + ''.join('<figure><img src="/assets/img/theme-%s-bar.webp" alt="%s主题" loading="lazy" width="656" height="119"><figcaption><b>%s</b><span>%s</span></figcaption></figure>' % (k, n, n, d) for k, n, d in TH) + '</div>'
-    h += ('<div class="blk full rv"><div class="copy"><span class="tag o">#主题</span><h3>自由的主题系统</h3><p>内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。</p></div>' + thm_vis + '</div>')
+    h += U3.themes(mob, '' if mob else thm_vis)
     plg_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="plugins" data-h="640"></div></div>', '20%', '20%', '230%', '')
+    if mob: plg_vis = M.plg_shot()
     h += '<div class="pmq rv" aria-label="社区插件"><div class="t">' + (''.join('<a class="pc" href="https://github.com/%s" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/%s" alt="" loading="lazy" width="48" height="48"><div><b>%s</b><small>%s</small></div></a>' % (repo, icon, name, desc) for name, repo, icon, desc in PLUGINS) * 2) + '</div></div>\n'
     h += ('<div class="blk full crop rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
     h += '</div></section>\n'
 
     G = [('tl', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('sj', '科目', '自定义科目的名称、图标与主题色。'), ('grid', '课表', '按周查看并填写课表，科目一键点选。'), ('sw', '调课', '周视图与日历视图，可预定临时启用的课表。')]
     gt = ''.join('<button role="tab" data-gt="%s"%s>%s</button>' % (g[0], ' class="on" aria-selected="true"' if i == 0 else '', g[1]) for i, g in enumerate(G))
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">档案编辑，<span class="g">所见即所得</span></h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
+    if not mob: h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">档案编辑，<span class="g">所见即所得</span></h2><div class="gal rv"><div class="gtabs" role="tablist">' + gt + '</div>'
           + vdesk('<div class="vwin">' + ui2.editor_app(seed='real') + '</div>', 'vdk-bare', 1280, 720, 680, 780, ' data-gallery="1"').replace('<div class="vtask">', '<div class="vtask" hidden>', 1) +
           '<p class="vcap" id="gcap">' + G[0][2] + '</p></div></div></section>\n')
 
@@ -274,6 +288,7 @@ def home():
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
 
     rec_vis = panel_wall('<div style="display:flex;gap:6%;align-items:flex-end;justify-content:center;padding:6% 5% 0">' + fit(recovery(), 420, 'position:relative;width:54%;margin-bottom:-4px') + '</div>', '70%', '70%', '240%', '')
+    if mob: rec_vis = panel_wall('<div style="padding:22px 14px 0">' + fit(recovery(), 420, 'position:relative;width:100%;margin-bottom:-4px') + '</div>', '70%', '70%', '240%', '')
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">除了这些…</h2>'
           '<div class="blk rv"><div class="copy"><span class="tag gr">#可靠</span><h3>出现问题，也能恢复</h3><p>内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。</p></div>' + rec_vis + '</div></div></section>\n')
 
@@ -293,10 +308,13 @@ def home():
     h += '<section class="sec"><div class="wrap"><h2 class="claim rv">常见问题</h2><div class="faq faqhome rv">' + faq_html() + '</div></div></section>\n'
     h += ('<section class="final3"><div class="wrap"><h2 class="rv">立即体验 ClassFabric</h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
     h += '</main>\n'
+    if mob:
+        return h.replace('<div class="copy" style="order:2">', '<div class="copy">').replace('blk rev zoomed rv', 'blk full rv').replace('blk scene-over rv', 'blk full rv') + FOOT_M
     h += '<template id="tpl-settings">' + ui2.settings_app() + '</template>'
     return h + FOOT
 
 def download():
+    U3.init(globals())
     h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n', '/m/download.html')
     h += navbar('dl')
     win = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg>'
@@ -306,16 +324,16 @@ def download():
           '<div class="wrap dlx"><div class="dlx-note" id="plat" hidden></div><div class="dlx-main"><div class="dlx-l">'
           '<div class="dlx-top"><span class="wlogo">' + win + '</span><div class="dtt"><h2>Windows</h2><span>Windows 10 及更高版本 · x64</span></div>'
           '<div class="seg4" id="chan" role="tablist" aria-label="版本通道"><button type="button" role="tab" class="on" data-chan="stable">稳定版</button><button type="button" role="tab" data-chan="pre">预览版</button></div></div>'
-          '<div class="dlx-ver"><small id="chanTip">最新稳定版</small><div class="vn"><b data-ver>读取中…</b><em class="bdg" data-badge hidden>预览版</em></div><span class="vdt">发布于 <span data-date>—</span></span></div>'
+          '<div class="dlx-ver"><small id="chanTip">最新稳定版</small><div class="vn"><b data-ver class="sk"></b><em class="bdg" data-badge hidden>预览版</em></div><span class="vdt">发布于 <span data-date>—</span></span></div>'
           '<div class="dlx-cta"><a class="fb acc lg" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '下载安装包</a><a class="fb lg" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div><p class="dlx-sub" data-dlsub></p></div>'
           '<ul class="dlx-req">' + ''.join('<li><span>%s</span><b>%s</b></li>' % r for r in req) + '</ul></div>'
           '<div class="dlx-h"><h3>选择文件</h3><span>不确定选哪个？安装程序适合大多数人。</span></div>'
-          '<div class="assets2" id="assets"><div class="none">正在读取版本信息…</div></div>'
+          '<div class="assets2" id="assets">'+U3.skel_rows(3)+'</div>'
           '<div class="dlx-h"><h3>下载之后</h3></div>'
           '<ol class="dlx-steps"><li><i>1</i><div><b>安装或解压</b><p>安装程序按向导完成；压缩包解压到任意目录即可，不必放在系统盘。</p></div></li>'
           '<li><i>2</i><div><b>启动</b><p>主界面会出现在屏幕上方，右键托盘图标即可编辑档案、换课或打开设置。</p></div></li>'
           '<li><i>3</i><div><b>接着用</b><p>用过 ClassIsland 的话，原有的课表、自动化、插件与主题可直接沿用。</p></div></li></ol>'
-          '<div class="dlx-h"><h3>历史版本</h3><span>需要回退？可以选择更早的版本。</span></div><ul class="hist" id="hist"><li class="none">正在读取版本信息…</li></ul>'
+          '<div class="dlx-h"><h3>历史版本</h3><span>需要回退？可以选择更早的版本。</span></div><ul class="hist" id="hist">'+''.join('<li class="skl"><i></i></li>' for _ in range(4))+'</ul>'
           '<div class="dlx-info"><div class="infob"><b>Linux 与 macOS</b><span>代码中保留了相关支持，但暂无测试环境，因此暂不提供官方构建。欢迎自行从源码构建，或帮助测试。</span></div>'
           '<div class="infob"><b>预览版说明</b><span>预览版包含尚未稳定的新功能，仅在 GitHub 发布了预览版时才可选择；遇到问题欢迎反馈。</span></div>'
           '<div class="infob"><b>更新与反馈</b><span>新版本均发布在 GitHub Releases。</span><div class="btnrow"><a class="fb" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="fb" href="/about.html">了解 ClassFabric</a></div></div></div></div>'
@@ -341,7 +359,7 @@ def faq_html():
 
 
 def about():
-    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html', '', '/m/about.html')
+    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html')
     h += navbar('about')
     def card(i, t, d, extra=''):
         return '<div class="axc"><span class="axi">%s</span><div><b>%s</b><p>%s</p>%s</div></div>' % (ic(i), t, d, extra)
@@ -383,4 +401,6 @@ for name, fn in (('index.html', home), ('download.html', download), ('about.html
     open(os.path.join(OUT, name), 'w', encoding='utf-8').write(fn())
 open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n' % SITE)
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n' % (SITE, p, datetime.date.today().isoformat()) for p in ('/', '/download.html', '/about.html')) + '</urlset>\n')
+os.makedirs(os.path.join(OUT, 'm'), exist_ok=True)
+open(os.path.join(OUT, 'm', 'index.html'), 'w', encoding='utf-8').write(home(True))
 print('ok')

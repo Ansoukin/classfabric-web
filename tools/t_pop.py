@@ -22,7 +22,7 @@ try:
             print(w,'hero cursor outside samples',bad,xs[:3])
             # swap dropdown
             sw=pg.locator('.vdk-swap').first; sw.scroll_into_view_if_needed(); pg.wait_for_timeout(700)
-            sw.locator('.ls').first.click(); pg.wait_for_timeout(250)
+            sw.locator('.ls').first.click(); pg.wait_for_timeout(250); sw.locator('[data-m=replace]').click(); pg.wait_for_timeout(250)
             try: sw.locator('[data-c]').click(timeout=1500); pg.wait_for_timeout(300)
             except Exception as e: print('no combo',str(e)[:60])
             print(w,'swap fly',pg.evaluate(JS_OUT,'.vdk-swap .fly.open'))
