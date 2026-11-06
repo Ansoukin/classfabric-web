@@ -109,13 +109,16 @@ def head(title, desc, path, extra='', alt=None, m=False):
     alt_tag = ('<link rel="alternate" media="only screen and (max-width: 640px)" href="%s%s">\n' % (SITE, alt)) if alt else ''
     out = ('<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
             '<title>%s</title>\n<meta name="description" content="%s">\n<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">\n<link rel="canonical" href="%s">\n'
-            '<link rel="alternate" hreflang="zh-CN" href="%s">\n<link rel="alternate" hreflang="x-default" href="%s">\n%s<meta name="application-name" content="ClassFabric">\n<meta name="theme-color" content="#141312">\n'
+            '<link rel="alternate" hreflang="zh-CN" href="%s">\n<link rel="alternate" hreflang="x-default" href="%s">\n%s<meta name="application-name" content="ClassFabric">\n<meta name="theme-color" content="#f4f6fb" media="(prefers-color-scheme: light)">\n<meta name="theme-color" content="#141312" media="(prefers-color-scheme: dark)">\n'
             '<link rel="icon" href="/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">\n<link rel="apple-touch-icon" href="/assets/img/icon-180.png">\n'
             '<meta property="og:type" content="website">\n<meta property="og:locale" content="zh_CN">\n<meta property="og:site_name" content="ClassFabric">\n<meta property="og:title" content="%s">\n<meta property="og:description" content="%s">\n'
             '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="ClassFabric 班级大屏课表">\n'
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
             '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n%s%s</head>\n') % (
         title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, jsonld(path, title, desc), extra)
+    spec = {'/': ['/download.html', '/about.html'], '/download.html': ['/', '/about.html'], '/about.html': ['/', '/download.html']}.get(path)
+    if spec and not m:
+        out = out.replace('</head>', '<script type="speculationrules">' + __import__('json').dumps({"prefetch": [{"source": "list", "urls": spec}]}, separators=(',', ':')) + '</script>\n</head>', 1)
     return _fin(out, m, path)
 
 def navbar(cur):
@@ -129,8 +132,8 @@ def navbar(cur):
 
 import hashlib, datetime
 
-SITE_VER = '1.0.5'
-RELEASE_DATE = '2026-11-05'
+SITE_VER = '1.0.6'
+RELEASE_DATE = '2026-11-06'
 
 def build_id():
     h = hashlib.sha1()
@@ -177,6 +180,10 @@ def home(mob=False):
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
              'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
     h += navbar('home')
+    if not mob:
+        h += ('<nav class="lnav" id="lnav" aria-label="页面章节"><div class="wrap"><a class="lt" href="#top">班级大屏课表</a><div class="ls">'
+              '<a href="#features">功能</a><a href="#custom">定制</a><a href="#grow">增强</a><a href="#start">开始使用</a><a href="#faqs">常见问题</a></div>'
+              '<a class="btn blue sm" href="/download.html">下载</a></div></nav>\n')
     h += '<main>\n'
     U3.init(globals())
     h += U3.hero(mob)
@@ -256,7 +263,7 @@ def home(mob=False):
         h += '</div></section>\n'
 
         h += bigmq(['组件','主题','插件','自动化','外观'], ['拖动','搭配','安装','触发','个性化'])
-        h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
+        h += '<section class="sec" id="custom"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
         wid_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
         if mob: wid_vis = M.wid_shot()
         h += ('<div class="blk full crop rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
@@ -293,7 +300,7 @@ def home(mob=False):
     jn = ('<div class="cd s2 rv d2 jnc"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="repo"><div class="rh">' + GHSVG.replace(' class="ghi"', '') + '<b>Ansoukin/ClassFabric</b></div><p>ClassIsland 的个人修改版班级大屏课表</p><div class="rc"><span>GPL-3.0</span><span>Windows</span><span>欢迎 PR</span></div></div>'
           '<div class="cta" style="justify-content:flex-start;margin-top:16px"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
     tray = ('<div class="cd s2 rv d1 trayc"><h4>一切，都在托盘里</h4><p>右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。</p><div class="vis traystage"><div class="tzoom">' + tray_menu() + '</div></div></div>')
-    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
+    h += '<section class="sec" id="grow"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
 
     rec_txt = '内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。'
     if mob:
@@ -306,7 +313,7 @@ def home(mob=False):
               + '<div class="n4-wide crop rv">' + rec_vis + '</div></section>\n')
 
     st = [('01', 'dl', '下载', '前往下载页，获取适用于 Windows 的最新版本。', '安装程序 · 免安装压缩包'), ('02', 'play', '运行', '按文件类型安装或解压后启动，主界面会出现在屏幕上方。', '右键托盘图标，打开设置'), ('03', 'check', '接着用', '如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。', '无需重新配置')]
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="stp4">' +
+    h += ('<section class="sec" id="start"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="stp4">' +
           ''.join('<li class="rv d%d"><div class="top"><span class="nd">%s</span><span class="no">%s</span></div><h4>%s</h4><p>%s</p><span class="ch">%s</span></li>' % (k, ic(i), n, b, c, d) for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
 
     amap = ('<div class="axmap rv"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div><div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div><div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
@@ -318,7 +325,7 @@ def home(mob=False):
           '<div class="fit2 rv d1"><div><h4>适合你，如果……</h4><p>你想在 ClassIsland 生态上保持现有内容，又希望及时体验上游的新功能；或者想要开箱即用，装完就能用上上游、社区与我们开发的各类新功能。</p></div>'
           '<div class="no"><h4>可能不适合，如果……</h4><p>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</p></div></div></div></div></section>\n')
 
-    h += '<section class="sec"><div class="wrap"><h2 class="claim rv">常见问题</h2><div class="faq faqhome rv">' + faq_html() + '</div></div></section>\n'
+    h += '<section class="sec" id="faqs"><div class="wrap"><h2 class="claim rv">常见问题</h2><div class="faq faqhome rv">' + faq_html() + '</div></div></section>\n'
     if mob:
         h += ('<section class="final3"><div class="wrap"><h2 class="rv">立即体验 ClassFabric</h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
     else:
@@ -331,7 +338,7 @@ def home(mob=False):
 
 def download():
     U3.init(globals())
-    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n', '/m/download.html')
+    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n')
     h += navbar('dl')
     win = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg>'
     req = [('系统', 'Windows 10 及更高版本'), ('架构', '<b data-archs>x64</b>'), ('运行时', '安装程序与自包含版已内置，无需另装'), ('配置', '直接沿用 ClassIsland 的课表、自动化、插件与主题'), ('许可', 'GPL-3.0 开源，免费使用')]

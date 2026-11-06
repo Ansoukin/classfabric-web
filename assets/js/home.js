@@ -63,4 +63,17 @@
       if (es[0].isIntersecting) { if (!timer) timer = setInterval(step, 2000); } else { clearInterval(timer); timer = null; }
     }, { threshold: 0.4 }).observe(row);
   });
+  var ln = $('#lnav');
+  if (ln && hasIO) {
+    var links = $$('.ls a', ln), map = {};
+    links.forEach(function (a) { var t = $(a.getAttribute('href')); if (t) map[t.id] = a; });
+    var vis = {};
+    var nio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { vis[e.target.id] = e.isIntersecting; });
+      var cur = null;
+      Object.keys(map).forEach(function (id) { if (vis[id]) cur = id; });
+      links.forEach(function (a) { a.classList.toggle('on', cur && map[cur] === a); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(map).forEach(function (id) { nio.observe(document.getElementById(id)); });
+  }
 })();

@@ -74,7 +74,7 @@ def custom(bigmq, panel_wall, themes_html, plugins):
     wid = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
     plg = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="plugins" data-h="640"></div></div>', '20%', '20%', '230%', '')
     out = bigmq(['组件', '主题', '插件', '自动化', '外观'], ['拖动', '搭配', '安装', '触发', '个性化'])
-    out += '<section class="sec n4-cus"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2></div>'
+    out += '<section class="sec n4-cus" id="custom"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2></div>'
     out += split('#组件', 'p', '使用组件搭配你的主界面', '通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。进入「编辑模式」，可以直接在主界面上拖动调整组件。',
                  chips(['课表', '日期', '时钟', '天气', '倒计时', '轮播', '滚动', '分组', '堆叠']))
     out += '<div class="n4-wide crop rv">' + wid + '</div>'

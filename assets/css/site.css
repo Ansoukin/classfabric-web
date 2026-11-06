@@ -2227,3 +2227,13 @@ html.tt *,html.tt *::before,html.tt *::after{transition:background-color .4s,col
 .hero.hz .note{color:#bccbe8!important}
 .hero.hz .note b{color:#fff!important}
 .hero.hz .eyebrow img{filter:none!important}
+
+:root{--ease-out:cubic-bezier(.16,1,.3,1);--ease-in:cubic-bezier(.7,0,.84,0);--ease-io:cubic-bezier(.65,0,.35,1);--t-fast:.12s;--t-base:.22s;--t-slow:.45s}
+h1,h2,h3,h4,.claim,.mtxt{text-wrap:balance}
+p,li{text-wrap:pretty}
+:focus-visible{outline:2px solid var(--g1,#0a84ff);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--g1,#0a84ff) 24%,transparent)}
+.btn,.fb,.ibtn,.links a{transition:transform var(--t-fast) var(--ease-out),background var(--t-base) var(--ease-out),border-color var(--t-base) var(--ease-out),color var(--t-base) var(--ease-out),opacity var(--t-base) var(--ease-out)}
+.btn:active,.fb:active{transform:scale(.97)}
+.sub-i,.cd,.thx-t,.pc,.acc-i,.axc,.fcard{transition-timing-function:var(--ease-out)}
+.js .rv{transition-timing-function:var(--ease-out);transition-duration:.7s}
+[id]{scroll-margin-top:112px}
