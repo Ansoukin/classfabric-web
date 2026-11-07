@@ -45,7 +45,7 @@ def stage():
                 '<button class="sub-i on" data-g="0">' + ic('bell') + '<div><h4>准备上课</h4><p>在上课前一段时间发出提醒。室内课程默认提前 60 秒，室外课程默认提前 600 秒。</p></div></button>'
                 '<button class="sub-i" data-g="1">' + ic('school') + '<div><h4>上课</h4><p>在上课时发出提醒，并在主界面标出当前课程与剩余时间。</p></div></button>'
                 '<button class="sub-i" data-g="2">' + ic('clock') + '<div><h4>课间休息</h4><p>在下课时发出提醒，显示本节课间的时长与下一节课。</p></div></button></div>')
-    flow = '<div class="n5-flow"><span>当 <b>时间到了</b></span><i></i><span>若 <b>满足规则</b></span><i></i><span>就 <b>自动执行</b></span></div>'
+    flow = '<div class="n5-fflow"><span>当 <b>时间到了</b></span><i></i><span>若 <b>满足规则</b></span><i></i><span>就 <b>自动执行</b></span></div>'
 
     S = [
         ('#主界面', '直观的信息显示', '<p>自动直观地显示今日的课程安排与当前进行的课程，并支持通过「组件」自定义主界面上显示的内容。</p>', '', p0),
@@ -157,21 +157,17 @@ def grow():
           '<p>自动化新增了大量触发器、规则集与动作，实现参考了 SystemTools 插件的能力。</p>'
           '<div class="n5-tv"><div class="n5-big">75<em>+</em></div><div class="n5-cap">触发器 + 规则集 + 动作，合计 75+ 项</div>'
           '<a class="n5-ln" href="' + ST + '" rel="noopener">查看 SystemTools' + arr + '</a></div></article>')
-    GITEE = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#C71D23" d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.592.593v1.482a.594.594 0 0 1-.593.592H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .327.266.592.593.592h5.63c.982 0 1.778-.796 1.778-1.778v-.296a.593.593 0 0 0-.592-.593h-4.15a.592.592 0 0 1-.592-.592v-1.482a.593.593 0 0 1 .593-.592h6.815c.327 0 .593.265.593.592v3.408a4 4 0 0 1-4 4H5.926a.593.593 0 0 1-.593-.593V9.778a4.444 4.444 0 0 1 4.445-4.444h8.296Z"/></svg>')
+    GITEE = ('<svg viewBox="0 0 1024 1024" aria-hidden="true"><path fill="#C71D23" d="M512 1024C229.222 1024 0 794.778 0 512S229.222 0 512 0s512 229.222 512 512-229.222 512-512 512zm259.149-568.883h-290.74a25.293 25.293 0 0 0-25.292 25.293l-.026 63.206c0 13.952 11.315 25.293 25.267 25.293h177.024c13.978 0 25.293 11.315 25.293 25.267v12.646a75.853 75.853 0 0 1-75.853 75.853h-240.23a25.293 25.293 0 0 1-25.267-25.293V417.203a75.853 75.853 0 0 1 75.827-75.853h353.946a25.293 25.293 0 0 0 25.267-25.292l.077-63.207a25.293 25.293 0 0 0-25.268-25.293H417.152a189.62 189.62 0 0 0-189.62 189.645V771.15c0 13.977 11.316 25.293 25.294 25.293h372.94a170.65 170.65 0 0 0 170.65-170.65V480.384a25.293 25.293 0 0 0-25.293-25.267z"/></svg>')
     ch = ('<article class="n5-t w5 rv"><span class="n5-eb">#更新</span><h4>多通道下载与更新</h4>'
           '<p>除官方 PDCC 外，可从 GitHub 与 Gitee 下载更新。保留 PDCC 是为方便恢复原版，之后将提供自建 PDCC。</p>'
           '<div class="n5-tv"><div class="n5-src"><span>' + ic('cloud') + 'PDCC<small>官方 · 恢复原版</small></span><span>' + GHSVG.replace(' class="ghi"', '') + 'GitHub<small>Releases</small></span><span>' + GITEE + 'Gitee<small>Releases</small></span></div></div></article>')
-    ok = lambda s: '<span class="a ok">' + ic('check') + s + '</span>'
-    fx = ('<article class="n5-t w7 rv d1 n5-fix" data-st="after"><span class="n5-eb">#修复</span><h4>大量修复与优化</h4>'
-          '<p>听从社区意见，修复并优化了许多问题，部分直接来自社区 Issue。下面是其中两个，切换看看修复前后的差别。</p>'
-          '<div class="n5-seg" role="tablist" aria-label="修复前后对比"><button type="button" role="tab" data-s="before" aria-selected="false">修复前</button><button type="button" role="tab" data-s="after" aria-selected="true">修复后</button></div>'
-          '<ul class="n5-fxl">'
-          '<li class="n5-fxi"><a class="n5-fxh" href="' + IS + '2032" rel="noopener"><code>#2032</code><span>系统切换为深色模式后，天气简报的温度置空</span></a>'
-          '<div class="n5-fxd"><span class="n5-sw"><span class="n5-mi b">' + ic('sun') + '<span class="miss">--</span></span><span class="n5-mi a">' + ic('sun') + '9℃</span></span>'
-          '<span class="n5-fxc n5-sw"><span class="b">深色模式 · 温度为空</span>' + ok('深色模式 · 温度正常') + '</span></div></li>'
-          '<li class="n5-fxi"><a class="n5-fxh" href="' + IS + '2039" rel="noopener"><code>#2039</code><span>更改时间偏移后，以 cron 为触发器的自动化会执行两次</span></a>'
-          '<div class="n5-fxd"><span class="n5-run">' + ic('clock') + '<span class="n5-dots"><i></i><i class="dup"></i></span><span class="n5-sw"><span class="b">×2</span><span class="a">×1</span></span></span>'
-          '<span class="n5-fxc n5-sw"><span class="b">更改时间偏移 · 触发两次</span>' + ok('更改时间偏移 · 仅触发一次') + '</span></div></li></ul>'
+    iss = ''.join('<li><a href="%s%s" rel="noopener"><code>#%s</code><span>%s</span>%s</a></li>' % (IS, n, n, s, ic('check')) for n, s in (('2032', '系统切换为深色模式后，天气简报的温度置空'), ('2039', '更改时间偏移后，以 cron 为触发器的自动化会执行两次')))
+    steps = [('info', '社区反馈', '问题与建议来自社区的 Issue，每一条都公开可查。', '<ul class="n5-iss">' + iss + '</ul>'),
+             ('bolt', '修复与优化', '在 ClassFabric 中逐个修复，并顺手优化相关体验。', ''),
+             ('sync', '随更新送达', '修复随新版本发布，也会考虑定期提交回上游。', '')]
+    flow = '<ol class="n5-fflow">' + ''.join('<li style="--i:%d"><i class="n5-fnd">%s</i><div><b>%s</b><p>%s</p>%s</div></li>' % (i, ic(ic_), h, d, x) for i, (ic_, h, d, x) in enumerate(steps)) + '</ol>'
+    fx = ('<article class="n5-t w7 rv d1 n5-fix"><span class="n5-eb">#修复</span><h4>大量修复与优化</h4>'
+          '<p>听从社区意见，修复并优化了许多问题。从反馈到修复再到发布，每一步都看得见。</p>' + flow +
           '<a class="n5-ln" href="' + GH + '/releases" rel="noopener">查看全部更新日志' + arr + '</a></article>')
     jn = ('<div class="n5-join rv"><div><b>欢迎参与共建</b><span>在 GitHub 提交 Issue 与 PR；有价值的改动，也会考虑定期提交回上游。</span></div>'
           '<div class="n5-btns"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div>')

@@ -17,14 +17,12 @@
     r.addEventListener('pointerdown', function () { r._touched = 1; });
   });
 
-  /* 修复前 / 修复后：进入视口时自动演示一次，之后由访客自己切换 */
+  /* 修复流程：进入视口时依次点亮 */
   $$('.n5-fix').forEach(function (c) {
-    var tabs = $$('[role=tab]', c), timer = 0, touched = false;
-    function set(s) { c.dataset.st = s; tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.s === s ? 'true' : 'false'); }); }
-    tabs.forEach(function (t) { t.addEventListener('click', function () { touched = true; clearTimeout(timer); set(t.dataset.s); }); });
-    if (hasIO && !reduce) new IntersectionObserver(function (es, io) {
-      if (!es[0].isIntersecting) return; io.disconnect();
-      set('before'); timer = setTimeout(function () { if (!touched) set('after'); }, 1800);
-    }, { threshold: .5 }).observe($('.n5-fxl', c) || c);
+    if (!hasIO || reduce) return;
+    c.classList.add('arm');
+    new IntersectionObserver(function (es, io) {
+      if (!es[0].isIntersecting) return; io.disconnect(); c.classList.add('on');
+    }, { threshold: .35 }).observe(c);
   });
 })();

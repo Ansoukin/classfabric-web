@@ -46,32 +46,17 @@
 .n5-t .chips-row .chip{transition:background .35s,color .35s,border-color .35s}
 .n5-bento{content-visibility:auto;contain-intrinsic-size:auto 900px}
 
-/* ===== 大量修复与优化：修复前 / 修复后 ===== */
-.n5-seg{display:inline-flex;align-self:flex-start;margin-top:var(--s-3);padding:2px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg3)}
-.n5-seg button{height:28px;padding:0 var(--s-3);border:0;border-radius:var(--r-s);background:transparent;color:var(--muted);font:inherit;font-size:var(--fs-1);font-weight:600;cursor:pointer;transition:background var(--t-base) var(--ease-out),color var(--t-base) var(--ease-out)}
-.n5-seg button[aria-selected=true]{background:var(--accent);color:var(--on-wall)}
-.n5-fxl{list-style:none;margin:var(--s-3) 0 0;padding:0;display:grid;gap:var(--s-2)}
-.n5-fxi{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--s-3);padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg3)}
-.n5-fxh{display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-2);align-items:baseline;font-size:var(--fs-1);line-height:1.5}
-.n5-fxh code{color:var(--accent);font-weight:600}
-.n5-fxh:hover span{text-decoration:underline}
-.n5-fxd{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-1);min-width:148px}
-.n5-sw{display:inline-grid;justify-items:end}
-.n5-sw>*{grid-area:1/1;transition:opacity var(--t-base) var(--ease-out)}
-.n5-fix .a{opacity:0}
-.n5-fix[data-st=after] .a{opacity:1}
-.n5-fix[data-st=after] .b{opacity:0}
-.n5-mi{display:inline-flex;align-items:center;gap:var(--s-2);height:32px;padding:0 var(--s-3);border-radius:999px;background:var(--on-wall-bg);color:var(--on-wall);font-size:var(--fs-1);font-weight:600}
-.n5-mi svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.n5-mi .miss{color:var(--on-wall-soft);letter-spacing:.12em}
-.n5-run{display:inline-flex;align-items:center;gap:var(--s-2);height:32px;padding:0 var(--s-3);border-radius:999px;background:var(--on-wall-bg);color:var(--on-wall);font-size:var(--fs-1);font-weight:600}
-.n5-run svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.n5-dots{display:inline-flex;align-items:center;gap:var(--s-1)}
-.n5-dots i{display:block;width:10px;height:10px;border-radius:50%;background:var(--on-wall);transition:transform var(--t-base) var(--ease-out),opacity var(--t-base) var(--ease-out),width var(--t-base) var(--ease-out),margin var(--t-base) var(--ease-out)}
-.n5-fix[data-st=before] .n5-dots i.dup{opacity:.55}
-.n5-fix[data-st=after] .n5-dots i.dup{width:0;margin-left:calc(var(--s-1) * -1);transform:scale(0);opacity:0}
-.n5-fxc{font-size:var(--fs-1);color:var(--faint)}
-.n5-fxc .ok{color:var(--accent);font-weight:600}
-.n5-fxc svg{width:12px;height:12px;vertical-align:-1px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-@media(max-width:640px){.n5-fxi{grid-template-columns:1fr}.n5-fxd{align-items:flex-start}.n5-sw{justify-items:start}}
-@media(prefers-reduced-motion:reduce){.n5-sw>*,.n5-dots i,.n5-seg button{transition:none}}
+/* ===== 大量修复与优化：反馈 → 修复 → 送达 ===== */
+.n5-fflow{list-style:none;margin:var(--s-4) 0 0;padding:0;display:grid;gap:var(--s-4)}
+.n5-fflow>li{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr);gap:var(--s-3)}
+.n5-fflow>li:not(:last-child)::after{content:"";position:absolute;left:15px;top:36px;bottom:calc(var(--s-4) * -1 + 4px);width:2px;border-radius:var(--r-s);background:var(--accent);opacity:.5;transform-origin:top}
+.n5-fnd{display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--accent);border-radius:50%;background:var(--bg3);color:var(--accent)}
+.n5-fnd svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.n5-fflow b{display:block;font-size:var(--fs-2);line-height:32px}
+.n5-fflow p{margin:0;font-size:var(--fs-1);line-height:1.7;color:var(--muted)}
+.n5-fflow .n5-iss{margin-top:var(--s-2)}
+.n5-fix.arm .n5-fflow>li{opacity:0;transform:translateY(var(--s-2))}
+.n5-fix.arm .n5-fflow>li::after{transform:scaleY(0)}
+.n5-fix.arm.on .n5-fflow>li{opacity:1;transform:none;transition:opacity var(--t-slow) var(--ease-out),transform var(--t-slow) var(--ease-out);transition-delay:calc(var(--i) * 300ms)}
+.n5-fix.arm.on .n5-fflow>li::after{transform:scaleY(1);transition:transform var(--t-slow) var(--ease-out);transition-delay:calc(var(--i) * 300ms + 160ms)}
+@media(prefers-reduced-motion:reduce){.n5-fix.arm .n5-fflow>li,.n5-fix.arm .n5-fflow>li::after{opacity:1;transform:none;transition:none}}
