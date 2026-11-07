@@ -187,9 +187,15 @@
       else paneEl.innerHTML = rowPane();
       paneEl.scrollTop = keep;
     }
-    function draw() { drawRows(); drawTabs(); drawPane(); }
+    function bindText() {
+      var f = paneEl.querySelector('.wxin'), c = cur(); if (!f || !c) return;
+      f.textContent = c.text || ''; f.addEventListener('input', function () { c.text = f.textContent; emit(); });
+    }
+    function draw() { drawRows(); drawTabs(); drawPane(); bindText(); emit(); }
 
-    function make(t) { var l = find(t); return { t: t, ico: l.ico, id: guid(), kids: CONTAINERS.indexOf(t) >= 0 ? [] : null }; }
+    function make(t) { var l = find(t); return { t: t, ico: l.ico, id: guid(), text: t === '文本' ? '你好，我是文本' : t === '倒计时' ? '元旦' : '', kids: CONTAINERS.indexOf(t) >= 0 ? [] : null }; }
+    function emit() { pg.dispatchEvent(new CustomEvent('wxdraw', { bubbles: true, detail: st.rows })); }
+    pg.addEventListener('wxreq', emit);
     function addAt(r, idx, t) {
       var row = st.rows[r]; if (idx == null || idx > row.items.length) idx = row.items.length;
       row.items.splice(idx, 0, make(t)); st.r = r; st.cr = r; st.i = idx; st.tab = 'comp'; st.menu = null; st.sub = false; draw();
@@ -274,6 +280,8 @@
       s.setPointerCapture(e.pointerId); set(e); s.onpointermove = set; s.onpointerup = function () { s.onpointermove = null; };
     });
     document.addEventListener('click', function (e) { if (st.menu && e.composedPath().indexOf(pg) < 0) { st.menu = null; st.sub = false; drawRows(); } });
+    var seed = (pg.closest('[data-seed]') || { dataset: {} }).dataset.seed;
+    if (seed) { seed.split(',').forEach(function (t) { st.rows[0].items.push(make(t)); }); st.i = -1; }
     draw();
   }
 

@@ -1,0 +1,19 @@
+/* 下载页弹窗。只使用 tokens.css 中的 token，见 AGENTS.md */
+.cfm{width:min(520px,100% - 32px);margin:auto;padding:0;border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg2);color:var(--fg);box-shadow:var(--sh-win);opacity:0;transform:translateY(var(--s-3)) scale(.98);transition:opacity var(--t-base) var(--ease-out),transform var(--t-slow) var(--ease-out),overlay var(--t-slow) allow-discrete,display var(--t-slow) allow-discrete}
+.cfm[open]{opacity:1;transform:none}
+@starting-style{.cfm[open]{opacity:0;transform:translateY(var(--s-3)) scale(.98)}}
+.cfm::backdrop{background:color-mix(in srgb,var(--scrim) 62%,transparent)}
+.cfm-b{padding:var(--s-5)}
+.cfm-i{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:var(--r-m);color:var(--accent);margin-bottom:var(--s-3)}
+.cfm-i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cfm h3{margin:0 0 var(--s-2);font-size:var(--fs-3);letter-spacing:-.01em}
+.cfm p{margin:0;color:var(--muted);font-size:var(--fs-2);line-height:1.75}
+.cfm code{font-size:var(--fs-1);word-break:break-all}
+.cfm-f{display:grid;gap:var(--s-2);margin-top:var(--s-4)}
+.cfm-c{display:flex;align-items:center;gap:var(--s-2);margin-top:var(--s-3);padding:var(--s-2) var(--s-3);border:1px solid var(--line);border-radius:var(--r-s);background:var(--bg3)}
+.cfm-c code{flex:1;min-width:0;color:var(--fg)}
+.cfm-c button{flex:none;height:28px;padding:0 var(--s-3);border:1px solid var(--line);border-radius:var(--r-s);background:none;color:var(--fg);font:inherit;font-size:var(--fs-1);cursor:pointer}
+.cfm-c button:hover{border-color:var(--faint)}
+.cfm .fb{width:100%}
+.cfm-x{display:flex;gap:var(--s-2)}
+.cfm-x .fb{flex:1}

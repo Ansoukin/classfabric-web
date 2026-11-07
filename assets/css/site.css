@@ -1335,7 +1335,7 @@ html,body{overflow-x:clip}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;font-size:clamp(15px,1.5vw,17px);font-weight:600;letter-spacing:.04em;color:var(--muted)}
 .eyebrow img{width:26px;height:auto}
 .eyebrow i{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.5}
-.phead{border-bottom:0!important;background:linear-gradient(180deg,rgba(7,10,18,.5),rgba(7,10,18,.94) 78%,var(--bg)),#0a2a6b url(../img/wall.webp) 50% 30%/cover no-repeat!important}
+.phead{border-bottom:0!important;background:linear-gradient(180deg,rgba(7,10,18,.5),rgba(7,10,18,.94) 78%),#0a2a6b url(../img/wall.webp) 50% 30%/cover no-repeat!important}
 .toc a:hover,.toc a.on{color:var(--fg)}
 
 :root[data-theme=light] .links a{color:#4a5368}
@@ -2206,7 +2206,7 @@ html.tt *,html.tt *::before,html.tt *::after{transition:background-color .4s,col
 }
 .bdg[hidden],[hidden].bdg{display:none!important}
 
-.hz{position:relative;min-height:min(94svh,880px);display:flex;align-items:center;padding:clamp(118px,13vw,160px) 0 clamp(70px,9vw,120px);overflow:hidden;color:#fff;background:linear-gradient(180deg,rgba(7,10,18,.38),rgba(7,10,18,.76) 55%,rgba(7,10,18,.8) 84%,var(--bg)),#0a2a6b url(../img/wall.webp) 50% 28%/cover no-repeat!important}
+.hz{position:relative;min-height:min(94svh,880px);display:flex;align-items:center;padding:clamp(118px,13vw,160px) 0 clamp(70px,9vw,120px);overflow:hidden;color:#fff;background:linear-gradient(180deg,rgba(7,10,18,.38),rgba(7,10,18,.76) 55%,rgba(7,10,18,.8)),#0a2a6b url(../img/wall.webp) 50% 28%/cover no-repeat!important}
 .hz .wrap{position:relative;text-align:center}
 .hz-isl{display:flex;justify-content:center;margin-bottom:clamp(26px,4vw,46px)}
 .hz-isl .isl-stack{font-size:clamp(10.5px,1.45vw,18px)}
@@ -2237,3 +2237,25 @@ p,li{text-wrap:pretty}
 .sub-i,.cd,.thx-t,.pc,.acc-i,.axc,.fcard{transition-timing-function:var(--ease-out)}
 .js .rv{transition-timing-function:var(--ease-out);transition-duration:.7s}
 [id]{scroll-margin-top:112px}
+
+.dlh,.phead{background:radial-gradient(46% 78% at 24% 60%,rgba(4,9,26,.74),transparent 78%),linear-gradient(180deg,rgba(5,10,28,.26),rgba(5,10,28,0) 30%,rgba(5,10,28,0) 80%,var(--bg) 100%),#0a2a6b url(../img/wall.webp) 50% 30%/cover no-repeat!important;border-bottom:0!important}
+.phead{background:radial-gradient(50% 80% at 50% 58%,rgba(4,9,26,.74),transparent 78%),linear-gradient(180deg,rgba(5,10,28,.26),rgba(5,10,28,0) 30%,rgba(5,10,28,0) 80%,var(--bg) 100%),#0a2a6b url(../img/wall.webp) 50% 30%/cover no-repeat!important}
+.dlh h1,.phead h1{text-shadow:0 2px 30px rgba(0,8,30,.6)}
+
+.vtask{background:rgba(243,243,243,.94);border-top:1px solid rgba(0,0,0,.08)}
+.vtask .tb{width:44px;height:40px;border-radius:5px}
+.vtask .tb:hover{background:rgba(0,0,0,.05)}
+.vtask .tb svg,.vtask .tb img{transition:transform .12s var(--ease-out)}
+.vtask .tb:active svg,.vtask .tb:active img{transform:scale(.88)}
+.vtask .tb.run::after{width:6px;height:3px;margin-left:-3px;bottom:1px;background:rgba(0,0,0,.45)}
+.vtask .tb.on::after{width:16px;margin-left:-8px;bottom:1px;background:#0067c0}
+.vtask .vtray{color:#1b1b1b}
+.vtask .vtray .tg2 svg,.vtask .vtray .sys svg{width:16px;height:16px;fill:none;stroke:#1b1b1b;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.vtask .vtray .tg2:hover,.vtask .vtray .sys:hover{background:rgba(0,0,0,.05)}
+.vtray .ime{font-size:12.5px}
+.vtray .clk{font-size:12px;line-height:1.25;font-family:"Segoe UI Variable","Segoe UI",var(--ui),sans-serif}
+
+.vtask .tb img{height:auto;max-width:none}
+.vtask .vtray .tg2 img{height:auto;width:auto}
+.vtask .vtray .tg2.ctray img{width:16px;height:16px}
+.vtask .vtray .sys{padding:0 6px}

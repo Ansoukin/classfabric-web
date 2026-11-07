@@ -52,6 +52,7 @@ P = {
  'tri': '<path d="M3 20h18L12 4z"/><path d="M12 10v5"/>',
  'arrowr': '<path d="M4 12h16M14 6l6 6-6 6"/>',
  'ext': '<path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/>',
+ 'roundsq': '<rect x="4" y="4" width="16" height="16" rx="6"/>',
  'dl': '<path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/>',
 }
 

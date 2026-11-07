@@ -1,0 +1,20 @@
+import re,sys,collections,os
+R=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def load(f):
+    s=open(os.path.join(R,'assets/css',f),encoding='utf8').read()
+    return re.sub(r'/\*.*?\*/','',s,flags=re.S)
+def rep(name,css):
+    cols=collections.Counter(m.lower() for m in re.findall(r'#[0-9a-fA-F]{3,8}\b|rgba?\([^)]*\)|hsla?\([^)]*\)',css))
+    rad=collections.Counter(re.findall(r'border-radius:([^;}]+)',css))
+    sh=collections.Counter(re.findall(r'box-shadow:([^;}]+)',css))
+    fs=collections.Counter(re.findall(r'font-size:([^;}]+)',css))
+    print('=====',name,len(css),'bytes')
+    print('colors distinct',len(cols),'total',sum(cols.values()));print(cols.most_common(25))
+    print('radius distinct',len(rad),'total',sum(rad.values()));print(rad.most_common(20))
+    print('shadow distinct',len(sh),'total',sum(sh.values()));print(sh.most_common(6))
+    print('font-size distinct',len(fs),'total',sum(fs.values()));print(fs.most_common(20))
+a,b=load('site.css'),load('home2.css')
+rep('site.css',a);rep('home2.css',b)
+sel=lambda c:set(x.strip() for blk in re.findall(r'([^{}]+)\{',c) for x in blk.split(',') if x.strip() and not x.strip().startswith('@'))
+dup=sorted(sel(a)&sel(b));print('selectors defined in both',len(dup));print(dup[:40])
+print(re.search(r':root\{[^}]*\}',a).group(0)[:1500])

@@ -64,7 +64,7 @@
   }
 
   function card(p, rec) {
-    return '<a class="ac' + (rec ? ' rec' : '') + '" href="' + p.a.browser_download_url + '" rel="noopener"><span class="ai"><svg viewBox="0 0 24 24"><path d="' + p.ic + '"/></svg></span><span class="at"><b>' + p.t + (rec ? '<u>推荐</u>' : '') + '</b><span class="chs">' + chips(p) + '</span>' + (p.d ? '<span class="ds">' + p.d + '</span>' : '') + '<code>' + p.a.name + '</code></span><span class="am"><em>' + fmt(p.a.size) + '</em><i class="dlb"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></i></span></a>';
+    return '<a class="ac' + (rec ? ' rec' : '') + '"' + (p.rt === 'fd' ? ' data-rt="fd"' : '') + ' href="' + p.a.browser_download_url + '" rel="noopener"><span class="ai"><svg viewBox="0 0 24 24"><path d="' + p.ic + '"/></svg></span><span class="at"><b>' + p.t + (rec ? '<u>推荐</u>' : '') + '</b><span class="chs">' + chips(p) + '</span>' + (p.d ? '<span class="ds">' + p.d + '</span>' : '') + '<code>' + p.a.name + '</code></span><span class="am"><em>' + fmt(p.a.size) + '</em><i class="dlb"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></i></span></a>';
   }
   function bySc(a, b) { return a.sc - b.sc; }
 
@@ -120,7 +120,7 @@
         dl.removeAttribute('href'); dl.classList.add('share');
         dl.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 15V4m0 0L8 8m4-4l4 4M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6"/></svg>把下载链接发到电脑';
         if (!dl.__s) { dl.__s = 1; dl.addEventListener('click', function (e) { e.preventDefault(); shareLink(dl); }); }
-      } else dl.href = best ? best.a.browser_download_url : r.html_url;
+      } else { dl.href = best ? best.a.browser_download_url : r.html_url; if (best && best.rt === 'fd') dl.setAttribute('data-rt', 'fd'); else dl.removeAttribute('data-rt'); }
     }
     if (sub) {
       if (mobile) sub.textContent = '检测到 ' + OSN[P.os] + ' 设备，ClassFabric 目前仅支持 Windows 电脑';
@@ -182,4 +182,34 @@
     }).catch(function () { });
   }
   load();
+
+  var NET = 'https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0', WINGET = 'winget install Microsoft.DotNet.DesktopRuntime.10', dlg = null;
+  function openNet(href, name) {
+    if (!dlg) {
+      dlg = document.createElement('dialog'); dlg.className = 'cfm'; dlg.setAttribute('aria-labelledby', 'cfmT');
+      dlg.innerHTML = '<div class="cfm-b"><span class="cfm-i"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>'
+        + '<h3 id="cfmT">这个版本需要 .NET 10 桌面运行时</h3>'
+        + '<p>你选择的文件依赖本机已安装的 .NET 桌面运行时，没有它程序无法启动。请先安装 .NET 10 桌面运行时（Desktop Runtime），再运行 ClassFabric。</p>'
+        + '<div class="cfm-c"><code></code><button type="button" data-copy>复制</button></div>'
+        + '<div class="cfm-f"><a class="fb acc lg" href="' + NET + '" target="_blank" rel="noopener">前往 .NET 10 下载页</a>'
+        + '<div class="cfm-x"><a class="fb" data-go href="#">我已安装，继续下载</a><button type="button" class="fb" data-close>取消</button></div></div>'
+        + '<p style="margin-top:var(--s-3);font-size:var(--fs-1)">不想另装运行时？选择带「自带运行时」标记的安装程序即可。</p></div>';
+      document.body.appendChild(dlg);
+      $('code', dlg).textContent = WINGET;
+      $('[data-close]', dlg).addEventListener('click', function () { dlg.close(); });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      $('[data-go]', dlg).addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 200); });
+      $('[data-copy]', dlg).addEventListener('click', function (e) {
+        var b = e.currentTarget, done = function () { b.textContent = '已复制'; setTimeout(function () { b.textContent = '复制'; }, 1800); };
+        if (navigator.clipboard) navigator.clipboard.writeText(WINGET).then(done, function () { }); else done();
+      });
+    }
+    $('[data-go]', dlg).href = href;
+    if (dlg.showModal) dlg.showModal(); else window.open(NET, '_blank');
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-rt="fd"]');
+    if (!a || a.classList.contains('share') || e.defaultPrevented || e.button) return;
+    e.preventDefault(); openNet(a.href, a.textContent);
+  });
 })();

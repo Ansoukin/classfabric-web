@@ -7,10 +7,10 @@ try:
     b=p.chromium.launch(); pg=b.new_page(viewport={'width':W,'height':900}); c=pg.context.new_cdp_session(pg); c.send('Performance.enable')
     pg.add_init_script("window.__lcp=0;new PerformanceObserver(l=>{for(const e of l.getEntries())window.__lcp=e.startTime}).observe({type:'largest-contentful-paint',buffered:true});window.__lt=0;try{new PerformanceObserver(l=>{for(const e of l.getEntries())window.__lt+=e.duration}).observe({type:'longtask',buffered:true})}catch(e){}")
     reqs=[]
-def _r(r):
-    try: reqs.append((r.url.split('localhost:8772')[-1][:60],len(r.body()) if r.ok and 'localhost' in r.url else 0))
-    except Exception: pass
-pg.on('response',_r)
+    def _r(r):
+        try: reqs.append((r.url.split('localhost:8772')[-1][:60],len(r.body()) if r.ok and 'localhost' in r.url else 0))
+        except Exception: pass
+    pg.on('response',_r)
     pg.goto('http://localhost:8772/'+page+'?view=pc'); pg.wait_for_load_state('load'); pg.wait_for_timeout(1500)
     m={x['name']:x['value'] for x in c.send('Performance.getMetrics')['metrics']}
     print(page,'nodes',pg.evaluate('document.getElementsByTagName("*").length'),'LCP',round(pg.evaluate('window.__lcp')),'longtask ms',round(pg.evaluate('window.__lt')),

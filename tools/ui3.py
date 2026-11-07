@@ -13,17 +13,23 @@ def bdg(txt, kind='', icn=None, cls=''):
 
 
 def hero(mob=False):
-    REL, GH, GHSVG = E['REL'], E['GH'], E['GHSVG']
+    REL, GH, GHSVG, ic_ = E['REL'], E['GH'], E['GHSVG'], ic
     gh = GHSVG.replace(' class="ghi"', '')
     isl = E['static_isl'](E['idle']('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"')
-    return ('<section class="hero hz" id="top"><div class="wrap">'
-            '<div class="hz-isl rv" aria-hidden="true"><div class="isl-stack">' + isl + '</div></div>'
+    bg = r2 = ''
+    if not mob:
+        bg = '<div class="hz-bg" aria-hidden="true">' + E['vtask'](False).replace('%s', 'hzTray', 1) + '</div>'
+        r2 = ('<div class="hz-r2" aria-hidden="true"><div class="isl static"><span data-now="time">00:00:00</span></div>'
+              '<div class="isl static">' + ic_('sun') + '&nbsp;9℃</div><div class="isl static">' + ic_('timer') + '&nbsp;<span data-cd>元旦</span></div></div>')
+    return ('<section class="hero hz" id="top"><div class="hz-pin">' + bg +
+            '<div class="hz-isl" aria-hidden="true"><div class="isl-stack">' + isl + '</div></div>' + r2 +
+            '<div class="hz-txt wrap">'
             '<p class="eyebrow rv d1"><img src="/assets/img/logo.png" width="26" height="26" alt="">ClassFabric<i></i>班级大屏课表</p>'
             '<h1 class="rv d1"><span class="seo-only">ClassFabric：</span>紧跟上游，<span class="g">再进一步</span></h1>'
             '<p class="sub rv d2">基于 ClassIsland 的个人修改版，原有课表、插件与主题无缝沿用</p>'
-            '<div class="cta rv d2"><a class="btn blue" href="' + REL + '" data-dl data-releaselink rel="noopener">' + ic('dl') + '立即下载</a><a class="btn glass" href="' + GH + '" rel="noopener">' + gh + 'GitHub 仓库</a></div>'
+            '<div class="cta rv d2"><a class="btn blue" href="' + REL + '" data-dl data-releaselink rel="noopener">' + ic_('dl') + '立即下载</a><a class="btn glass" href="' + GH + '" rel="noopener">' + gh + 'GitHub 仓库</a></div>'
             '<p class="note rv d3">支持在 Windows 10/11 上运行　·　最新版本 <b data-ver class="sk"></b>　·　GPL-3.0 开源</p>'
-            '</div></section>\n')
+            '</div></div></section>\n')
 
 
 TH = [('classic', '经典', '单行岛条，天气、日期、课程与倒计时同排显示。', '#d9ab6e'),

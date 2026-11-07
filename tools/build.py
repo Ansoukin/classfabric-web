@@ -49,18 +49,15 @@ def fit(inner, dw, style='', dwm=None, cls='', extra=''):
         cls, dw, (' data-dwm="%d"' % dwm) if dwm else '', style, extra, dw, inner)
 
 def vtask(running=False):
-    folder = '<svg viewBox="0 0 24 24"><path fill="#f6c453" d="M2.5 6.5a2 2 0 012-2h5l2 2.2h8a2 2 0 012 2V18a2 2 0 01-2 2h-15a2 2 0 01-2-2z"/><path fill="#fbdb7d" d="M2.5 10h19v8a2 2 0 01-2 2h-15a2 2 0 01-2-2z"/></svg>'
-    globe = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#2b88d8"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="#bfe3ff" stroke-width="1.2"/></svg>'
-    store = '<svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="2.5" fill="#3a7bd5"/><path d="M8 7V6a4 4 0 018 0v1" fill="none" stroke="#bfe3ff" stroke-width="1.5"/></svg>'
-    win = '<svg viewBox="0 0 24 24"><path fill="#4cc2ff" d="M3 5.5l8-1.1v7.1H3zM12 4.3L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zM12 12.5h9V21l-9-1.3z"/></svg>'
-    srch = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg>'
-    wifi = '<svg viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0119 0M5.5 12.5a9.5 9.5 0 0113 0M8.7 16a5 5 0 016.6 0"/><circle cx="12" cy="19" r=".6"/></svg>'
-    vol = '<svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>'
-    bat = '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="16" height="8" rx="2"/><path d="M21 11v2"/><path d="M6 11h8" stroke-width="2.4"/></svg>'
-    chev = '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>'
-    return ('<div class="vtask"><span class="tb">' + win + '</span><span class="tb">' + srch + '</span><span class="tb run">' + folder + '</span><span class="tb run">' + globe + '</span><span class="tb">' + store + '</span>'
-            '<span class="tb cfapp' + (' on' if running else ' run') + '"><img src="/assets/img/icon-64.png" alt=""></span>'
-            '<div class="vtray"><span class="tg2 hide">' + chev + '</span><span class="tg2 ctray" id="%s" title="ClassFabric"><img src="/assets/img/icon-64.png" alt=""></span><span class="sys">' + wifi + vol + bat + '</span><span class="clk" data-clock>10:12<br>2026/11/2</span></div></div>')
+    def W(n, w):
+        return '<img src="/assets/img/win/%s.png" alt="" style="width:%dpx" draggable="false">' % (n, w)
+    tb = ''.join('<span class="tb%s">%s</span>' % (' on0' if n == 'start' else '', W(n, w)) for n, w in
+                 [('start', 24), ('search', 22), ('taskview', 24), ('widgets', 24), ('chat', 24), ('explorer', 24), ('edge', 24), ('store', 23)])
+    cf = '<img src="/assets/img/icon-180.png" alt="" style="width:24px" draggable="false">'
+    return ('<div class="vtask">' + tb + '<span class="tb cfapp' + (' on' if running else ' run') + '">' + cf + '</span>'
+            '<div class="vtray"><span class="tg2 hide">' + W('chev', 12) + '</span><span class="tg2 ime">英</span>'
+            '<span class="tg2 ctray" id="%s" title="ClassFabric"><img src="/assets/img/icon-64.png" alt=""></span>'
+            '<span class="sys">' + W('sys', 40) + '</span><span class="clk" data-clock>10:12<br>2026/11/2</span><span class="tg2 ntf">' + W('moon', 13) + '</span></div></div>')
 
 def vdesk(inner, cls, w=1280, h=720, mw=680, mh=780, extra='', tray_id='vTray'):
     return ('<div class="vdk %s" data-vd data-w="%d" data-h="%d" data-mw="%d" data-mh="%d"%s><div class="vdks">%s%s</div></div>' % (cls, w, h, mw, mh, extra, inner, vtask(False).replace('%s', tray_id, 1)))
@@ -137,7 +134,7 @@ RELEASE_DATE = '2026-11-06'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css'):
+    for f in ('assets/css/site.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/tokens.css', 'assets/css/modal.css'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
@@ -178,7 +175,7 @@ def home(mob=False):
     import mobile as M
     M.init(globals())
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
-             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
+             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
     h += navbar('home')
     if not mob:
         h += ('<nav class="lnav" id="lnav" aria-label="页面章节"><div class="wrap"><a class="lt" href="#top">班级大屏课表</a><div class="ls">'
@@ -188,7 +185,8 @@ def home(mob=False):
     U3.init(globals())
     h += U3.hero(mob)
 
-    h += ('<section class="axstrip"><div class="wrap"><div class="axgrid four">' + ''.join('<div class="axc rv d%d"><span class="axi">%s</span><div><b>%s</b><p>%s</p></div></div>' % (k, ic(i), t, d) for k, (i, t, d) in enumerate([('sync', '紧跟上游', '积极同步 ClassIsland 的新功能与修复'), ('check', '无缝沿用', '课表、自动化、插件、主题直接继续使用'), ('plug', '社区增强', '更多天气源、多语言（实验中）等'), ('doc', '开源免费', 'GPL-3.0 协议，支持 Windows 10 及以上')])) + '</div></div></section>\n')
+    if mob:
+        h += ('<section class="axstrip"><div class="wrap"><div class="axgrid four">' + ''.join('<div class="axc rv d%d"><span class="axi">%s</span><div><b>%s</b><p>%s</p></div></div>' % (k, ic(i), t, d) for k, (i, t, d) in enumerate([('sync', '紧跟上游', '积极同步 ClassIsland 的新功能与修复'), ('check', '无缝沿用', '课表、自动化、插件、主题直接继续使用'), ('plug', '社区增强', '更多天气源、多语言（实验中）等'), ('doc', '开源免费', 'GPL-3.0 协议，支持 Windows 10 及以上')])) + '</div></div></section>\n')
     h += '<section class="mani"><div class="wrap"><p class="mtxt" id="mtxt">' + ''.join('<span class="mw">%s</span>' % c for c in "积极同步上游。无缝沿用配置。再多一点点，属于我们自己的增强。") + '</p></div></section>\n'
     def bigmq(a, b):
         r1 = ''.join('<span>%s</span><i>·</i>' % t for t in a) * 3
@@ -202,11 +200,16 @@ def home(mob=False):
     c_sync = fc('sync', '新功能', 'ClassIsland 发布的新功能', ok) + fc('bolt', '问题修复', 'ClassIsland 的修复与改进', ok) + fc('info', '上游版本', '底层代码与上游保持一致', ok)
     c_mig = fc('cal', '课表与档案', '', used) + fc('bolt', '自动化', '', used) + fc('plug', '插件', '', used) + fc('brush', '主题', '', used)
     c_enh = fc('cloud', '更多天气源', '小米天气 · OpenWeather · 和风天气', on) + fc('text', '多语言', '实验中', on) + fc('plug', '更好的插件预览', '', on) + fc('sync', '持续同步上游', '', on)
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
-          '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p><div class="fstack">' + c_sync + '</div></div>'
-          '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p><div class="fstack">' + c_mig + '</div></div>'
-          '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p><div class="fstack">' + c_enh + '</div></div>'
-          '</div></div></section>\n')
+    if mob:
+        h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
+              '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p><div class="fstack">' + c_sync + '</div></div>'
+              '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p><div class="fstack">' + c_mig + '</div></div>'
+              '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p><div class="fstack">' + c_enh + '</div></div>'
+              '</div></div></section>\n')
+
+    else:
+        U4.init(dict(globals(), **locals()))
+        h += U4.sync(c_sync, c_mig, c_enh, panel_wall)
 
     def sidle(past, cur, fut):
         return '<div class="isl static on"><span class="pa">%s</span>%s<span class="sep"></span><span class="fu">%s</span></div>' % (''.join('<span class="s p">%s</span>' % c for c in past), cur, ''.join('<span class="s">%s</span>' % c for c in fut))
@@ -214,20 +217,23 @@ def home(mob=False):
         return '<div class="isl static on bar two"><span>%s</span><span class="nx">下节课是: <em>物理</em><small>10:30-11:10</small></span></div>' % l
     def smask(t, icn):
         return '<div class="isl static on mask">%s<span>%s</span>%s</div>' % (ic('info'), t, ic(icn))
-    ST = [sbar2('距上课还剩 <b>16</b> 秒'),
+    ST = [sbar2('距上课还剩 <b data-cd2="48">48</b> 秒'),
           '<div class="isl static on bar">准备上课，请回到座位并保持安静，做好上课准备。</div>',
           smask('上课', 'atom'),
           sidle('语数英', '<span class="cur">' + ic('clock') + '<span>课间休息</span><small>10:20-10:30</small></span>', '物化生历政地'),
           smask('即将上课', 'atom'),
-          sidle('语数', '<span class="cur">' + ic('text') + '<span>英语</span><span class="pill">-31s</span></span>', '物化生历政地'),
+          sidle('语数', '<span class="cur">' + ic('text') + '<span>英语</span><span class="pill" data-cd2="31" data-fmt="-{n}s">-31s</span></span>', '物化生历政地'),
           smask('课间休息', 'clock'),
           sbar2('本节课间休息长 <b>10</b> 分钟')]
     wrapi = lambda x: '<div class="mq-i"><div class="isl-stack">' + x + '</div></div>'
     row1 = ''.join(wrapi(x) for x in (ST[0], ST[1], ST[2], ST[3]))
     row2 = ''.join(wrapi(x) for x in (ST[4], ST[5], ST[6], ST[7]))
-    h += ('<section class="sec show"><div class="wrap"><h2 class="claim rv">上课与下课，<span class="g">一目了然</span></h2></div>'
-          '<div class="marq rv" aria-label="灵动岛的各种状态"><div class="row"><div class="trk">' + row1 * 2 + '</div></div><div class="row rev"><div class="trk">' + row2 * 2 + '</div></div></div>'
-          + ('' if mob else '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video></figure></div>') + '</section>\n')
+    if mob:
+        h += ('<section class="sec show"><div class="wrap"><h2 class="claim rv">上课与下课，<span class="g">一目了然</span></h2></div>'
+              '<div class="marq rv" aria-label="灵动岛的各种状态"><div class="row"><div class="trk">' + row1 * 2 + '</div></div><div class="row rev"><div class="trk">' + row2 * 2 + '</div></div></div>'
+              + ('' if mob else '<div class="wrap"><figure class="vid rv" id="vid"><video muted loop playsinline preload="none" data-src="https://www.classisland.tech/assets/notification-demo.web-Os7FSQPD.mp4" aria-label="提醒演示视频"></video></figure></div>') + '</section>\n')
+    else:
+        h += U4.show(ST)
 
     if mob:
         h += '<section class="sec light"><div class="wrap"><h2 class="claim rv">一款<span class="g">功能强</span>的大屏课表软件</h2>'
@@ -285,10 +291,8 @@ def home(mob=False):
     else:
         U4.init(dict(globals(), **locals()))
         h += U4.stage()
-        thm_vis = panel_wall('<div style="padding:5% 4% 3%"><div class="app" data-app="settings" data-start="appearance" data-h="620"></div></div>', '50%', '90%', '230%', '')
-        pm = '<div class="pmq rv" aria-label="社区插件"><div class="t">' + (''.join('<a class="pc" href="https://github.com/%s" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/%s" alt="" loading="lazy" width="48" height="48"><div><b>%s</b><small>%s</small></div></a>' % (repo, icon, name, desc) for name, repo, icon, desc in PLUGINS) * 2) + '</div></div>\n'
-        h += U4.custom(bigmq, panel_wall, U3.themes(mob, thm_vis), pm)
-    h += bigmq(['更多天气源','托盘菜单','恢复模式','持续同步'], ['OpenWeather','和风天气','SFTP 备份','云端同步'])
+        h += U4.custom(bigmq, panel_wall)
+    if mob: h += bigmq(['更多天气源','托盘菜单','恢复模式','持续同步'], ['OpenWeather','和风天气','SFTP 备份','云端同步'])
     wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
     ln = ('<div class="cd s3 rv d1"><h4>多语言 <span style="font-size:13px;color:var(--faint);font-weight:500">实验中</span></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
           '<div class="vis"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div style="font-size:12.5px;color:var(--faint);margin-top:8px">适配进度 约 40%</div></div></div>')
@@ -300,7 +304,7 @@ def home(mob=False):
     jn = ('<div class="cd s2 rv d2 jnc"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="repo"><div class="rh">' + GHSVG.replace(' class="ghi"', '') + '<b>Ansoukin/ClassFabric</b></div><p>ClassIsland 的个人修改版班级大屏课表</p><div class="rc"><span>GPL-3.0</span><span>Windows</span><span>欢迎 PR</span></div></div>'
           '<div class="cta" style="justify-content:flex-start;margin-top:16px"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
     tray = ('<div class="cd s2 rv d1 trayc"><h4>一切，都在托盘里</h4><p>右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。</p><div class="vis traystage"><div class="tzoom">' + tray_menu() + '</div></div></div>')
-    h += '<section class="sec" id="grow"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
+    h += U4.grow() if not mob else '<section class="sec" id="grow"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
 
     rec_txt = '内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。'
     if mob:
@@ -338,7 +342,7 @@ def home(mob=False):
 
 def download():
     U3.init(globals())
-    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n')
+    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/modal.css">\n')
     h += navbar('dl')
     win = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg>'
     req = [('系统', 'Windows 10 及更高版本'), ('架构', '<b data-archs>x64</b>'), ('运行时', '安装程序与自包含版已内置，无需另装'), ('配置', '直接沿用 ClassIsland 的课表、自动化、插件与主题'), ('许可', 'GPL-3.0 开源，免费使用')]
