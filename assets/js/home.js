@@ -13,10 +13,47 @@
   function tick() {
     var d = new Date(), t = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
     $$('[data-now="time"]').forEach(function (e) { e.textContent = t; });
+    $$('.idt').forEach(function (e) { e.textContent = '周' + DAYS[d.getDay()] + ' ' + pad(d.getMonth() + 1) + '/' + pad(d.getDate()); });
     var n = daysToNY();
     $$('[data-cd]').forEach(function (e) { e.textContent = '元旦 ' + n + ' 天'; });
   }
   tick(); setInterval(tick, 1000);
+
+  /* 课程表：以一张固定课表为基础，按访客本机的真实时间判断「上课 / 课间 / 午休 / 放学」 */
+  var TT = [['语', 480, 520], ['数', 530, 570], ['英', 580, 620], ['物', 630, 670], ['化', 680, 720], ['生', 840, 880], ['历', 890, 930], ['政', 940, 980], ['地', 990, 1030]];
+  var NAME = { '语': '语文', '数': '数学', '英': '英语', '物': '物理', '化': '化学', '生': '生物', '历': '历史', '政': '政治', '地': '地理' };
+  var SCI = '物化生';
+  var icTpl = $('#schedIc');
+  function icon(n) { var i = icTpl && icTpl.content.querySelector('[data-n="' + n + '"]'); return i ? i.innerHTML : ''; }
+  function hm(m) { return pad(Math.floor(m / 60)) + ':' + pad(m % 60); }
+  function schedState(d) {
+    var sec = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds(), m = sec / 60, i;
+    if (m < TT[0][1]) return { key: 'pre', n: 0, ic: 'clock', name: '尚未上课', small: hm(TT[0][1]) + ' 开始' };
+    for (i = 0; i < TT.length; i++) {
+      if (m >= TT[i][1] && m < TT[i][2]) return { key: 'L' + i, n: i, cur: i, ic: SCI.indexOf(TT[i][0]) > -1 ? 'atom' : 'text', name: NAME[TT[i][0]], left: TT[i][2] * 60 - sec };
+      if (i < TT.length - 1 && m >= TT[i][2] && m < TT[i + 1][1]) { var long = TT[i + 1][1] - TT[i][2] >= 60; return { key: 'B' + i, n: i + 1, ic: 'clock', name: long ? '午休' : '课间休息', small: hm(TT[i][2]) + '-' + hm(TT[i + 1][1]) }; }
+    }
+    return { key: 'post', n: TT.length, ic: 'clock', name: '已放学', small: '今日课程结束' };
+  }
+  function renderSched(el) {
+    var d = new Date(), st = schedState(d), cur;
+    $$('.idt', el).forEach(function (e) { e.textContent = '周' + DAYS[d.getDay()] + ' ' + pad(d.getMonth() + 1) + '/' + pad(d.getDate()); });
+    if (el._k !== st.key) {
+      el._k = st.key;
+      $$('.s,.cur,.sep', el).forEach(function (e) { e.parentNode.removeChild(e); });
+      var add = function (cls, html) { var e = document.createElement('span'); e.className = cls; e.innerHTML = html || ''; el.appendChild(e); return e; };
+      TT.slice(0, st.n).forEach(function (l) { add('s p', l[0]); });
+      cur = add('cur', icon(st.ic) + '<span>' + st.name + '</span>' + (st.small ? '<small>' + st.small + '</small>' : '<span class="pill"></span>'));
+      var fut = TT.slice(st.cur != null ? st.n + 1 : st.n);
+      if (fut.length) add('sep');
+      fut.forEach(function (l) { add('s', l[0]); });
+      var vd = el.closest('.vdk-main'); if (vd) setTimeout(function () { place(vd); }, 80);
+    }
+    var pill = $('.pill', el);
+    if (pill && st.left != null) pill.textContent = '-' + (st.left < 60 ? st.left + 's' : Math.floor(st.left / 60) + ':' + pad(st.left % 60));
+  }
+  function schedAll() { $$('[data-sched]').forEach(renderSched); }
+  schedAll(); setInterval(schedAll, 1000);
 
   var TICK = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tick')) || 2) * 1000;
   var cd2 = $$('[data-cd2]');
@@ -32,7 +69,7 @@
   function place(vd) {
     var k = +vd.dataset.k || 1, st = vd.firstElementChild, sr = st.getBoundingClientRect(), rows = [];
     $$('.n5-anno', vd).forEach(function (a) {
-      var t = $(a.dataset.t, vd); if (!t) return;
+      var t = $(a.dataset.t, vd); a.style.display = t ? '' : 'none'; if (!t) return;
       var r = t.getBoundingClientRect(), x = (r.left + r.width / 2 - sr.left) / k, y = (r.bottom - sr.top) / k;
       var row = 0, w = a.firstElementChild.offsetWidth || 80;
       rows.forEach(function (p) { if (Math.abs(p.x - x) < (p.w + w) / 2 + 10 && p.row === row) row++; });
@@ -133,17 +170,6 @@
     });
   });
 
-  $$('.n5-cmp').forEach(function (b) {
-    var r = $('input', b), set = function (v) { b.style.setProperty('--p', v + '%'); };
-    r.addEventListener('input', function () { set(r.value); });
-    if (hasIO) new IntersectionObserver(function (es, io) {
-      if (!es[0].isIntersecting) return; io.disconnect();
-      var t0 = performance.now();
-      (function f(t) { var k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3); if (!r._touched) { r.value = 100 - 50 * e; set(r.value); if (k < 1) requestAnimationFrame(f); } })(t0);
-    }, { threshold: .6 }).observe(b);
-    r.addEventListener('pointerdown', function () { r._touched = 1; });
-  });
-
   var FF = { sans: 'inherit', serif: '"Songti SC","Noto Serif CJK SC","Source Han Serif SC",serif', mono: 'ui-monospace,"Cascadia Code",Consolas,monospace' };
   $$('.n5-tune').forEach(function (t) {
     var isl = $('.n5-tisl', t);
@@ -176,7 +202,7 @@
     else if (t === '日期') { var d = new Date(); inner.appendChild(span('wxt', '周' + DAYS[d.getDay()] + ' ' + pad(d.getMonth() + 1) + '/' + pad(d.getDate()))); }
     else if (t === '时钟') { el = span('wxt'); el.setAttribute('data-now', 'time'); inner.appendChild(el); tick(); }
     else if (t === '倒计时') { el = span('wxt'); el.innerHTML = '距离 <b></b> 还有 <b></b> 天'; var bs = el.querySelectorAll('b'); bs[0].textContent = c.text || '元旦'; bs[1].textContent = daysToNY(); inner.appendChild(el); }
-    else if (tpl[t]) inner.appendChild(tpl[t].cloneNode(true));
+    else if (tpl[t]) { var cl = tpl[t].cloneNode(true); inner.appendChild(cl); if (cl.hasAttribute && cl.hasAttribute('data-sched')) renderSched(cl); }
     else if (c.kids && c.kids.length) c.kids.forEach(function (k) { var s = span('wxk'); s.style.display = 'flex'; fill(s, k, tpl); inner.appendChild(s); });
     else inner.appendChild(span('wxt dim', t));
   }

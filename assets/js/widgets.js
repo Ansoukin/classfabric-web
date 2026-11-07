@@ -276,8 +276,18 @@
     var drag = null;
     pg.addEventListener('pointerdown', function (e) {
       var li = e.target.closest('.li'); if (!li || e.button) return;
-      drag = { li: li, x: e.clientX, y: e.clientY, on: false, ghost: null, id: e.pointerId };
+      drag = { li: li, x: e.clientX, y: e.clientY, on: false, ghost: null, id: e.pointerId, touch: e.pointerType !== 'mouse', armed: e.pointerType === 'mouse' };
+      if (drag.touch) { var d = drag; d.timer = setTimeout(function () { if (drag === d) { d.armed = true; begin(d.x, d.y); if (navigator.vibrate) try { navigator.vibrate(8); } catch (_) {} } }, 160); }
     });
+    function begin(x, y) {
+      if (!drag || drag.on) return;
+      drag.on = true; drag.li.classList.add('wxsrc');
+      var g = drag.li.cloneNode(true); g.className = 'li wxghost'; g.style.width = drag.li.offsetWidth + 'px';
+      g.style.left = (x - 30) + 'px'; g.style.top = (y - 20) + 'px'; document.body.appendChild(g); drag.ghost = g;
+    }
+    /* 触摸长按进入拖拽后，阻止该次手势滚动页面 */
+    document.addEventListener('touchmove', function (e) { if (drag && drag.on && e.cancelable) e.preventDefault(); }, { passive: false });
+    pg.addEventListener('contextmenu', function (e) { if (e.target.closest('.li')) e.preventDefault(); });
     function dropTarget(x, y) {
       var rows = rowsEl.querySelectorAll('.wxrow'), hit = null;
       rows.forEach(function (r) { var b = r.getBoundingClientRect(); if (y >= b.top - 2 && y <= b.bottom + 2 && x >= b.left && x <= b.right) hit = r; });
@@ -289,23 +299,23 @@
     document.addEventListener('pointermove', function (e) {
       if (!drag) return;
       if (!drag.on) {
-        if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) < 6) return;
-        drag.on = true; drag.li.classList.add('wxsrc');
-        var g = drag.li.cloneNode(true); g.className = 'li wxghost'; g.style.width = drag.li.offsetWidth + 'px';
-        document.body.appendChild(g); drag.ghost = g;
+        var mv = Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y);
+        if (drag.touch && !drag.armed) { if (mv > 10) { clearTimeout(drag.timer); drag = null; } return; }
+        if (mv < 6) return;
+        begin(e.clientX, e.clientY);
       }
       drag.ghost.style.left = (e.clientX - 30) + 'px'; drag.ghost.style.top = (e.clientY - 20) + 'px';
       var d = dropTarget(e.clientX, e.clientY);
       rowsEl.querySelectorAll('.wxrow').forEach(function (r) { r.classList.toggle('drop', !!d && r === d.el); });
     });
     document.addEventListener('pointerup', function (e) {
-      if (!drag) return; var d0 = drag; drag = null;
+      if (!drag) return; var d0 = drag; drag = null; clearTimeout(d0.timer);
       rowsEl.querySelectorAll('.wxrow').forEach(function (r) { r.classList.remove('drop'); });
       if (!d0.on) { addAt(st.r, null, d0.li.dataset.w); return; }
       d0.li.classList.remove('wxsrc'); if (d0.ghost) d0.ghost.remove();
       var d = dropTarget(e.clientX, e.clientY); if (d) addAt(d.r, d.idx, d0.li.dataset.w);
     });
-    document.addEventListener('pointercancel', function () { if (!drag) return; if (drag.ghost) drag.ghost.remove(); drag.li.classList.remove('wxsrc'); drag = null; });
+    document.addEventListener('pointercancel', function () { if (!drag) return; clearTimeout(drag.timer); if (drag.ghost) drag.ghost.remove(); drag.li.classList.remove('wxsrc'); drag = null; });
 
     pg.addEventListener('pointerdown', function (e) {
       var s = e.target.closest('[data-sld]'); if (!s) return;

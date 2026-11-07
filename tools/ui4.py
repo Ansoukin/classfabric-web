@@ -9,7 +9,7 @@ def init(g):
 
 
 def _isl_idle():
-    return E['static_isl'](E['idle']('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"')
+    return E['static_isl'](E['idle']('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on" data-sched')
 
 
 def _step(i, n, tag, title, body, extra=''):
@@ -84,7 +84,7 @@ def mix(panel_wall):
     inner = ('<div class="n5-mixin"><div class="n5-misl" data-wx-island aria-live="polite"></div>'
              '<div class="n5-mwin"><div class="app" data-app="settings" data-start="widgets" data-h="600" data-seed="文本=Hello World!" data-script="1"></div></div></div>')
     tpl = ('<template data-wx-tpl><span data-k="天气简报" class="wx">' + ic('sun') + '9℃</span>'
-           '<span data-k="课程表" class="wsch"><span class="s p">语</span><span class="s p">数</span><span class="s p">英</span>'
+           '<span data-k="课程表" class="wsch" data-sched><span class="s p">语</span><span class="s p">数</span><span class="s p">英</span>'
            '<span class="cur">' + ic('clock') + '<span>课间休息</span><small>10:20-10:30</small></span><span class="sep"></span>'
            + ''.join('<span class="s">%s</span>' % c for c in '物化生历政地') + '</span></template>')
     out = split('#组件', '让主界面更多样', '主界面由「组件」搭配而成：文本、日期、时钟、天气、课表、倒计时，以及轮播、滚动、分组与堆叠容器。下方就是真实的组件页，点击或拖动组件库里的项目，上方的主界面会随之伸缩。')
@@ -154,16 +154,25 @@ def grow():
           '<span class="n5-cmpl a">原版</span><span class="n5-cmpl b">ClassFabric</span><i class="n5-cmph" aria-hidden="true"></i>'
           '<input type="range" min="0" max="100" value="50" aria-label="对比原版与 ClassFabric 的插件详情"></div></div></article>')
     ac = ('<article class="n5-t w5 rv d1"><span class="n5-eb">#自动化</span><h4>更多行动与触发器</h4>'
-          '<p>自动化里有更丰富的行动与触发器，实现参考了 SystemTools 插件的能力。</p>'
-          '<div class="n5-tv"><div class="n5-big">更多<em>行动</em></div><div class="n5-cap">参考 SystemTools 的行动 · 触发器 · 规则</div>'
+          '<p>自动化新增了大量触发器、规则集与动作，实现参考了 SystemTools 插件的能力。</p>'
+          '<div class="n5-tv"><div class="n5-big">75<em>+</em></div><div class="n5-cap">触发器 + 规则集 + 动作，合计 75+ 项</div>'
           '<a class="n5-ln" href="' + ST + '" rel="noopener">查看 SystemTools' + arr + '</a></div></article>')
-    ch = ('<article class="n5-t w6 rv"><span class="n5-eb">#更新</span><h4>多通道下载与更新</h4>'
+    GITEE = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#C71D23" d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.592.593v1.482a.594.594 0 0 1-.593.592H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .327.266.592.593.592h5.63c.982 0 1.778-.796 1.778-1.778v-.296a.593.593 0 0 0-.592-.593h-4.15a.592.592 0 0 1-.592-.592v-1.482a.593.593 0 0 1 .593-.592h6.815c.327 0 .593.265.593.592v3.408a4 4 0 0 1-4 4H5.926a.593.593 0 0 1-.593-.593V9.778a4.444 4.444 0 0 1 4.445-4.444h8.296Z"/></svg>')
+    ch = ('<article class="n5-t w5 rv"><span class="n5-eb">#更新</span><h4>多通道下载与更新</h4>'
           '<p>除官方 PDCC 外，可从 GitHub 与 Gitee 下载更新。保留 PDCC 是为方便恢复原版，之后将提供自建 PDCC。</p>'
-          '<div class="n5-tv"><div class="n5-src"><span>' + ic('cloud') + 'PDCC<small>官方 · 恢复原版</small></span><span>' + GHSVG.replace(' class="ghi"', '') + 'GitHub</span><span>' + ic('cloud') + 'Gitee</span></div></div></article>')
-    fx = ('<article class="n5-t w6 rv d1"><span class="n5-eb">#修复</span><h4>大量修复与优化</h4>'
-          '<p>听从社区意见，修复并优化了许多问题，部分来自社区 Issue。</p>'
-          '<div class="n5-tv"><ul class="n5-iss"><li><a href="' + IS + '2032" rel="noopener"><code>#2032</code><span>系统切换为深色模式后，天气简报的温度置空</span>' + ic('check') + '</a></li>'
-          '<li><a href="' + IS + '2039" rel="noopener"><code>#2039</code><span>更改时间偏移后，以 cron 为触发器的自动化会执行两次</span>' + ic('check') + '</a></li></ul></div></article>')
+          '<div class="n5-tv"><div class="n5-src"><span>' + ic('cloud') + 'PDCC<small>官方 · 恢复原版</small></span><span>' + GHSVG.replace(' class="ghi"', '') + 'GitHub<small>Releases</small></span><span>' + GITEE + 'Gitee<small>Releases</small></span></div></div></article>')
+    ok = lambda s: '<span class="a ok">' + ic('check') + s + '</span>'
+    fx = ('<article class="n5-t w7 rv d1 n5-fix" data-st="after"><span class="n5-eb">#修复</span><h4>大量修复与优化</h4>'
+          '<p>听从社区意见，修复并优化了许多问题，部分直接来自社区 Issue。下面是其中两个，切换看看修复前后的差别。</p>'
+          '<div class="n5-seg" role="tablist" aria-label="修复前后对比"><button type="button" role="tab" data-s="before" aria-selected="false">修复前</button><button type="button" role="tab" data-s="after" aria-selected="true">修复后</button></div>'
+          '<ul class="n5-fxl">'
+          '<li class="n5-fxi"><a class="n5-fxh" href="' + IS + '2032" rel="noopener"><code>#2032</code><span>系统切换为深色模式后，天气简报的温度置空</span></a>'
+          '<div class="n5-fxd"><span class="n5-sw"><span class="n5-mi b">' + ic('sun') + '<span class="miss">--</span></span><span class="n5-mi a">' + ic('sun') + '9℃</span></span>'
+          '<span class="n5-fxc n5-sw"><span class="b">深色模式 · 温度为空</span>' + ok('深色模式 · 温度正常') + '</span></div></li>'
+          '<li class="n5-fxi"><a class="n5-fxh" href="' + IS + '2039" rel="noopener"><code>#2039</code><span>更改时间偏移后，以 cron 为触发器的自动化会执行两次</span></a>'
+          '<div class="n5-fxd"><span class="n5-run">' + ic('clock') + '<span class="n5-dots"><i></i><i class="dup"></i></span><span class="n5-sw"><span class="b">×2</span><span class="a">×1</span></span></span>'
+          '<span class="n5-fxc n5-sw"><span class="b">更改时间偏移 · 触发两次</span>' + ok('更改时间偏移 · 仅触发一次') + '</span></div></li></ul>'
+          '<a class="n5-ln" href="' + GH + '/releases" rel="noopener">查看全部更新日志' + arr + '</a></article>')
     jn = ('<div class="n5-join rv"><div><b>欢迎参与共建</b><span>在 GitHub 提交 Issue 与 PR；有价值的改动，也会考虑定期提交回上游。</span></div>'
           '<div class="n5-btns"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div>')
     return ('<section class="sec n5-grow" id="grow"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2>'

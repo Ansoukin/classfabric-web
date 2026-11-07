@@ -135,7 +135,7 @@ RELEASE_DATE = '2026-11-06'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/tokens.css', 'assets/css/modal.css'):
+    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
@@ -150,7 +150,7 @@ FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class=
         '<div class="legal">© 2026 ClassFabric　基于 HelloWRC 的 ClassIsland（© 2023–2026 HelloWRC）二次开发，以 GPL-3.0 协议开源。<br>ClassFabric 是个人修改版，并非 ClassIsland 官方项目；ClassIsland 的名称与原有功能归其原作者所有。</div>' + BUILD + '</div></footer>\n'
         '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n<script src="/assets/js/widgets.js" defer></script>\n<script src="/assets/js/dl.js" defer></script>\n<script src="/assets/js/fx.js" defer></script>\n</body>\n</html>\n')
 
-FOOT_M = (FOOT.replace('<script src="/assets/js/apps.js" defer></script>\n', '').replace('<script src="/assets/js/widgets.js" defer></script>\n', '<script src="/assets/js/m.js" defer></script>\n')
+FOOT_M = (FOOT.replace('<script src="/assets/js/apps.js" defer></script>\n', '').replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/bento.js" defer></script>').replace('<script src="/assets/js/widgets.js" defer></script>\n', '<script src="/assets/js/m.js" defer></script>\n')
           .replace('<div class="bld"', '<p class="pcl"><a href="/?view=pc">查看电脑版网页</a></p><div class="bld"', 1))
 
 def ld():
@@ -176,7 +176,7 @@ def home(mob=False):
     import mobile as M
     M.init(globals())
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
-             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
+             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="stylesheet" href="/assets/css/bento.css">\n' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
     h += navbar('home', [('features','功能'),('custom','定制'),('grow','增强'),('start','开始使用'),('faqs','常见问题')])
     h += '<main>\n'
     U3.init(globals())
@@ -290,18 +290,8 @@ def home(mob=False):
         h += U4.stage()
         h += U4.custom(bigmq, panel_wall)
     if mob: h += bigmq(['更多天气源','托盘菜单','恢复模式','持续同步'], ['OpenWeather','和风天气','SFTP 备份','云端同步'])
-    wx = ('<div class="cd s3 rv"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p><div class="vis"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
-    ln = ('<div class="cd s3 rv d1"><h4>多语言 <span style="font-size:13px;color:var(--faint);font-weight:500">实验中</span></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
-          '<div class="vis"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div style="font-size:12.5px;color:var(--faint);margin-top:8px">适配进度 约 40%</div></div></div>')
-    pv = ('<div class="cd s2 rv pvc"><h4>更好的插件预览</h4><p>插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。</p><div class="vis"><div class="pvw">'
-          '<div class="pvh"><span class="pva"><img src="https://cdn.jsdelivr.net/gh/HelloWRC/GrantUiAccess@master/GrantUiAccess/icon.png" alt="" width="46" height="46"></span><div><b>UIAccess 提权</b><small>2.0.0.0 · HelloWRC, Doubx690i</small></div><span class="pvb">安装</span></div>'
-          '<div class="pvt"><span class="on">详情</span><span>版本</span><span>依赖</span></div>'
-          '<div class="pvmd"><h5>UIAccess 提权</h5><p>为 ClassIsland 提升 UIAccess 令牌，使其可以置顶到全屏 UWP 应用和系统界面上。</p>'
-          '<div class="pvimg"><div class="isl-stack" style="font-size:12px">' + smask('上课', 'atom') + '</div></div></div></div></div></div>')
-    jn = ('<div class="cd s2 rv d2 jnc"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p><div class="vis"><div class="repo"><div class="rh">' + GHSVG.replace(' class="ghi"', '') + '<b>Ansoukin/ClassFabric</b></div><p>ClassIsland 的个人修改版班级大屏课表</p><div class="rc"><span>GPL-3.0</span><span>Windows</span><span>欢迎 PR</span></div></div>'
-          '<div class="cta" style="justify-content:flex-start;margin-top:16px"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
-    tray = ('<div class="cd s2 rv d1 trayc"><h4>一切，都在托盘里</h4><p>右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。</p><div class="vis traystage"><div class="tzoom">' + tray_menu() + '</div></div></div>')
-    h += U4.grow() if not mob else '<section class="sec" id="grow"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2><div class="cards2">' + wx + ln + pv + tray + jn + '</div></div></section>\n'
+    if mob: U4.init(dict(globals(), **locals()))
+    h += U4.grow()
 
     rec_txt = '内置恢复模式：可以安全模式或诊断模式继续使用，直接打开日志目录，恢复备份，必要时分级重置配置，减轻维护压力。'
     if mob:
@@ -335,7 +325,8 @@ def home(mob=False):
     if mob:
         return h.replace('<div class="copy" style="order:2">', '<div class="copy">').replace('blk rev zoomed rv', 'blk full rv').replace('blk scene-over rv', 'blk full rv') + FOOT_M
     h += '<template id="tpl-settings">' + ui2.settings_app() + '</template>'
-    return h + FOOT.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/home.js" defer></script>')
+    h += '<template id="schedIc">' + ''.join('<i data-n="%s">%s</i>' % (n, ic(n)) for n in ('clock', 'text', 'atom')) + '</template>'
+    return h + FOOT.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/bento.js" defer></script>\n<script src="/assets/js/home.js" defer></script>')
 
 def download():
     U3.init(globals())
