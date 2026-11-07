@@ -53,6 +53,11 @@
     return '<div class="exp wxe' + (open ? ' open' : '') + '"><div class="eh"><span class="wxi">' + WI[icon] + '</span><div class="tx"><b>' + t + '</b><span>' + d + '</span></div>' + tg(trailOn) + '<span class="car">' + WI.chev + '</span></div><div class="eb">' + body + '</div></div>';
   }
   function combo(t) { return '<span class="sel wxsel" data-o="继承|是|否"><span class="v">' + t + '</span>' + WI.chev + '</span>'; }
+  function fxc(key, h) { return h.replace('<div class="sc wxs', '<div data-fx="' + key + '" class="sc wxs'); }
+  function fxb(icon, t, d, key, body) { return exp(icon, t, d, false, false, body).replace('<div class="exp wxe', '<div data-fx="' + key + '" class="exp wxe'); }
+  function srow(label, ctl) { return '<div class="wxsub2 wxctl"><b>' + label + '</b>' + ctl + '</div>'; }
+  function clr(bg) { return '<span class="wxclr" data-wx="clr" data-p="0"><i' + (bg ? ' style="background:#2e2220"' : '') + '></i>' + WI.chev + '</span>'; }
+  var PAL = ['#ffffff', '#80b6ef', '#ffd166', '#ff6b81', '#7ee0a0'], BGP = ['#2e2220', '#1f5fbf', '#2b8a3e', '#a61e4d', '#b36200'];
   function head(icon, t) { return '<div class="wxh">' + WI[icon] + t + '</div>'; }
 
   function initPage(pg) {
@@ -140,31 +145,56 @@
       var t = c.t;
       if (t === '文本') return card('lines', '文本内容', '要显示的文本。', '<span class="inp wxin" contenteditable="true" spellcheck="false"></span>') +
         card('fill', '自定义字体颜色', '选择要显示文本的颜色。', '<span class="wxclr"><i></i>' + WI.chev + '</span>' + tg(true)) +
-        card('font', '字体大小', '修改要显示的文本的大小。', sld(0));
+        fxc('fsc', card('font', '字体大小', '修改要显示的文本的大小。', sld(38)));
       if (t === '分割线') return '<div class="wxnone">此组件没有可调整的设置。</div>';
-      if (t === '时钟') return card('clock', '显示秒', '在时钟上显示秒数。', tg(true)) + card('font', '字体大小', '修改要显示的文本的大小。', sld(0));
+      if (t === '时钟') return card('clock', '显示秒', '在时钟上显示秒数。', tg(true)) + fxc('fsc', card('font', '字体大小', '修改要显示的文本的大小。', sld(38)));
       if (t === '倒计时') return card('cal', '倒计时名称', '倒计时要显示的名称。', '<span class="inp wxin" contenteditable="true" spellcheck="false"></span>') + card('clock', '目标日期', '倒计时的目标日期。', combo('选择日期'));
       if (CONTAINERS.indexOf(t) >= 0) return '<div class="wxnone">容器内的组件：' + ((c.kids && c.kids.length) ? c.kids.map(function (k) { return k.t; }).join('、') : '暂无') + '</div>';
-      return card('font', '字体大小', '修改要显示的文本的大小。', sld(0));
+      return fxc('fsc', card('font', '字体大小', '修改要显示的文本的大小。', sld(38)));
     }
     function advPane(c) {
       var al = ['aL', 'aC', 'aR', 'aS'].map(function (k, n) { return '<span class="' + (n === 0 ? 'on' : '') + '" data-wx="al">' + WI[k] + '</span>'; }).join('');
-      return card('eye', '按规则则隐藏', '在指定规则满足时，自动隐藏此组件。注意此处的隐藏不会释放组件资源。', tg(false)) +
+      return fxc('hide', card('eye', '按规则则隐藏', '在指定规则满足时，自动隐藏此组件。注意此处的隐藏不会释放组件资源。', tg(false))) +
         head('paint', '外观') +
-        card('half', '不透明度', '组件整体的不透明度。', sld(100)) +
+        fxc('op', card('half', '不透明度', '组件整体的不透明度。', sld(100))) +
         exp('paint', '自定义背景效果', '自定义主界面的背景效果，仅在较新版本的 Windows 上可用，可能会产生额外性能开销。', false, false, '').replace('<span class="tg"><i></i><span>关</span></span>', combo('继承')) +
-        card('fill', '自定义背景颜色', '当前组件背景颜色，禁用时将使用上级默认值。', tg(false)) +
-        card('check2', '自定义背景不透明度', '当前组件的背景的不透明度，禁用将使用上级默认值。', tg(false)) +
-        card('round', '自定义背景圆角半径', '当前组件背景圆角半径，调至最大数值时左右边缘为半圆。', tg(false)) +
+        fxb('fill', '自定义背景颜色', '当前组件背景颜色，禁用时将使用上级默认值。', 'bg', srow('背景颜色', clr(true))) +
+        fxb('check2', '自定义背景不透明度', '当前组件的背景的不透明度，禁用将使用上级默认值。', 'bgop', srow('不透明度', sld(60))) +
+        fxb('round', '自定义背景圆角半径', '当前组件背景圆角半径，调至最大数值时左右边缘为半圆。', 'rd', srow('圆角半径', sld(30))) +
         head('font', '字体') +
-        exp('font', '字体大小', '调整组件上各类字体的大小，将覆盖【外观】设置和主界面行中设置的字体大小。', false, false, '<div class="wxnone">开启后可分别调整各类字体的大小。</div>') +
-        card('fill', '字体颜色', '调整字体颜色，将覆盖【外观】设置和主界面行中设置的值。', tg(false)) +
+        fxb('font', '字体大小', '调整组件上各类字体的大小，将覆盖【外观】设置和主界面行中设置的字体大小。', 'fs', srow('字体大小', sld(38))) +
+        fxb('fill', '字体颜色', '调整字体颜色，将覆盖【外观】设置和主界面行中设置的值。', 'fc', srow('字体颜色', clr(false))) +
         head('gridi', '布局') +
-        card('split', '对齐方式', '指定组件在显示容器中对齐的方式。', '<span class="wxal">' + al + '</span>') +
-        card('pin', '固定宽度', '启用后，组件将使用固定宽度，不会自动适应内容宽度。', tg(false)) +
-        exp('width', '宽度限制', '限制控件的最大和最小宽度。', false, true, '<div class="wxsub2">' + tg(false).replace('<span>关</span>', '<span></span>') + '<b>最小宽度</b></div><div class="wxsub2">' + tg(false).replace('<span>关</span>', '<span></span>') + '<b>最大宽度</b></div>').replace(/<span class="tg"><i><\/i><span>关<\/span><\/span><span class="car">/, '<span class="car">') +
-        exp('margin', '自定义边距', '设置此组件与其他组件的距离。', false, false, '<div class="wxnone">开启后可分别设置上下左右的边距。</div>') +
+        fxc('al', card('split', '对齐方式', '指定组件在显示容器中对齐的方式。', '<span class="wxal">' + al + '</span>')) +
+        fxc('fw', card('pin', '固定宽度', '启用后，组件将使用固定宽度，不会自动适应内容宽度。', tg(false))) +
+        exp('width', '宽度限制', '限制控件的最大和最小宽度。', false, true, '<div class="wxsub2">' + tg(false).replace('<span>关</span>', '<span></span>') + '<b>最小宽度</b></div><div class="wxsub2">' + tg(false).replace('<span>关</span>', '<span></span>') + '<b>最大宽度</b></div>').replace(/<span class="tg"><i><\/i><span>关<\/span><\/span><span class="car">/, '<span class="car">').replace('<div class="exp wxe', '<div data-fx="wl" class="exp wxe') +
+        fxb('margin', '自定义边距', '设置此组件与其他组件的距离。', 'mg', srow('左右边距', sld(40))) +
         '<div class="wxid">' + WI.code + c.id + '</div>';
+    }
+    function readFx(c) {
+      if (!c) return; var fx = c.fx || (c.fx = {});
+      paneEl.querySelectorAll('[data-fx]').forEach(function (n) {
+        var k = n.dataset.fx, o = fx[k] || (fx[k] = {});
+        if (k === 'al') { o.v = [].slice.call(n.querySelectorAll('.wxal span')).findIndex(function (x) { return x.classList.contains('on'); }); return; }
+        if (k === 'wl') { var ts = n.querySelectorAll('.wxsub2 .tg'); o.min = ts[0].classList.contains('on'); o.max = ts[1].classList.contains('on'); return; }
+        var tgl = n.querySelector('.tg'); o.on = tgl ? tgl.classList.contains('on') : true;
+        var sl = n.querySelector('.sld b'); if (sl) o.v = parseFloat(sl.style.left);
+        var cl = n.querySelector('.wxclr'); if (cl) { o.i = +cl.dataset.p; o.c = cl.firstChild.style.background; }
+        if (n.classList.contains('exp')) n.classList.toggle('open', o.on);
+      });
+      emit();
+    }
+    function restoreFx(c) {
+      if (!c || !c.fx) return;
+      paneEl.querySelectorAll('[data-fx]').forEach(function (n) {
+        var k = n.dataset.fx, o = c.fx[k]; if (!o) return;
+        if (k === 'al') { n.querySelectorAll('.wxal span').forEach(function (x, i) { x.classList.toggle('on', i === o.v); }); return; }
+        if (k === 'wl') { var ts = n.querySelectorAll('.wxsub2 .tg'); ts[0].classList.toggle('on', !!o.min); ts[1].classList.toggle('on', !!o.max); return; }
+        var tgl = n.querySelector('.tg'); if (tgl) { tgl.classList.toggle('on', !!o.on); var l = tgl.querySelector('span'); if (l && /^[开关]$/.test(l.textContent)) l.textContent = o.on ? '开' : '关'; }
+        var sl = n.querySelector('.sld'); if (sl && o.v != null) { sl.firstElementChild.style.width = o.v + '%'; sl.lastElementChild.style.left = o.v + '%'; }
+        var cl = n.querySelector('.wxclr'); if (cl && o.c) { cl.dataset.p = o.i; cl.firstChild.style.background = o.c; }
+        if (n.classList.contains('exp')) n.classList.toggle('open', !!o.on);
+      });
     }
     function rowPane() {
       return card('eye', '按规则则隐藏', '在指定规则满足时，自动隐藏此组件。注意此处的隐藏不会释放组件资源。', tg(false)) +
@@ -185,7 +215,7 @@
       else if (st.tab === 'comp' && c) paneEl.innerHTML = compPane(c);
       else if (st.tab === 'adv' && c) paneEl.innerHTML = advPane(c);
       else paneEl.innerHTML = rowPane();
-      paneEl.scrollTop = keep;
+      restoreFx(c); paneEl.scrollTop = keep;
     }
     function bindText() {
       var f = paneEl.querySelector('.wxin'), c = cur(); if (!f || !c) return;
@@ -227,7 +257,8 @@
         if (k.indexOf('wrap-') === 0) { var cc = cur(), w = make(k.slice(5)); w.kids = [cc]; st.rows[st.cr].items[st.i] = w; st.menu = null; st.sub = false; st.tab = 'comp'; draw(); return; }
         if (k === 'radd') { st.rows.splice(st.r + 1, 0, { items: [] }); toast('已向下创建新主界面行。'); drawRows(); return; }
         if (k === 'rdel') { if (st.rows.length > 1) st.rows.splice(st.r, 1); else st.rows[0].items = []; st.r = Math.max(0, Math.min(st.r, st.rows.length - 1)); st.cr = st.r; st.i = -1; st.menu = null; st.tab = 'lib'; draw(); return; }
-        if (k === 'al') { a.parentNode.querySelectorAll('span').forEach(function (x) { x.classList.toggle('on', x === a); }); return; }
+        if (k === 'al') { a.parentNode.querySelectorAll('span').forEach(function (x) { x.classList.toggle('on', x === a); }); readFx(cur()); return; }
+        if (k === 'clr') { var fxk = a.closest('[data-fx]').dataset.fx, i2 = ((+a.dataset.p || 0) + 1) % 5; a.dataset.p = i2; a.firstChild.style.background = (fxk === 'bg' ? BGP : PAL)[i2]; readFx(cur()); return; }
         if (k === 'toastx') { toastEl.classList.remove('on'); return; }
         return;
       }
@@ -240,6 +271,8 @@
       if (st.menu && !t.closest('.wxmenu')) { st.menu = null; st.sub = false; drawRows(); }
     });
 
+    paneEl.addEventListener('click', function () { setTimeout(function () { readFx(cur()); }, 0); });
+    paneEl.addEventListener('pointermove', function (e) { if (e.buttons && e.target.closest('[data-sld]')) readFx(cur()); });
     var drag = null;
     pg.addEventListener('pointerdown', function (e) {
       var li = e.target.closest('.li'); if (!li || e.button) return;
@@ -281,8 +314,72 @@
     });
     document.addEventListener('click', function (e) { if (st.menu && e.composedPath().indexOf(pg) < 0) { st.menu = null; st.sub = false; drawRows(); } });
     var seed = (pg.closest('[data-seed]') || { dataset: {} }).dataset.seed;
-    if (seed) { seed.split(',').forEach(function (t) { st.rows[0].items.push(make(t)); }); st.i = -1; }
+    if (seed) { seed.split(',').forEach(function (t) { var q = t.split('='), it = make(q[0]); if (q[1]) it.text = q[1]; st.rows[0].items.push(it); }); st.i = -1; }
     draw();
+    if (pg.closest('[data-script]') && !matchMedia('(prefers-reduced-motion: reduce)').matches) autoplay(pg);
+  }
+
+  /* 自动演示：滚动到该章节时，模拟鼠标完成「改文本 → 删除 → 拖入日期与课表」；用户一操作即中断 */
+  function autoplay(pg) {
+    var host = pg.closest('.n5-mix'); if (!host || !('IntersectionObserver' in window)) return;
+    var cur = null, abort = false, running = false;
+    var ARROW = '<svg viewBox="0 0 20 24" width="20" height="24"><path d="M2 1l15 12h-7l4 8-3 1.5-4-8-5 5z"/></svg>';
+    function sleep(ms) { return new Promise(function (res, rej) { setTimeout(function () { abort ? rej('stop') : res(); }, ms); }); }
+    function pos(el, fx, fy) {
+      var r = el.getBoundingClientRect(), h = host.getBoundingClientRect();
+      return { x: r.left - h.left + r.width * (fx == null ? .5 : fx), y: r.top - h.top + r.height * (fy == null ? .5 : fy), cx: r.left + r.width * (fx == null ? .5 : fx), cy: r.top + r.height * (fy == null ? .5 : fy) };
+    }
+    function show() { if (!cur) { cur = document.createElement('div'); cur.className = 'wxcur'; cur.innerHTML = ARROW; host.appendChild(cur); var s = pos(pg, .5, .35); cur.style.transform = 'translate(' + s.x + 'px,' + s.y + 'px)'; cur.getBoundingClientRect(); cur.classList.add('on'); } }
+    async function go(el, fx, fy, ms) { show(); var t = pos(el, fx, fy); cur.style.transform = 'translate(' + t.x + 'px,' + t.y + 'px)'; await sleep(ms || 700); return t; }
+    async function click(el, fx, fy) { var t = await go(el, fx, fy); cur.classList.add('dn'); await sleep(120); el.click(); cur.classList.remove('dn'); await sleep(280); return t; }
+    function q(s) { return pg.querySelector(s); }
+    function ptr(type, target, x, y) { target.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: x, clientY: y, button: 0, pointerId: 91, isPrimary: true })); }
+    async function drag(li, row, fx) {
+      var a = await go(li); cur.classList.add('dn'); ptr('pointerdown', li, a.cx, a.cy); await sleep(140);
+      var b = pos(row, fx, .5), n = 14;
+      cur.style.transition = 'none';
+      for (var i = 1; i <= n; i++) {
+        var k = i / n, e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        var x = a.x + (b.x - a.x) * e, y = a.y + (b.y - a.y) * e; cur.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+        ptr('pointermove', document, a.cx + (b.cx - a.cx) * e, a.cy + (b.cy - a.cy) * e); await sleep(38);
+      }
+      cur.style.transition = ''; await sleep(220); ptr('pointerup', document, b.cx, b.cy); cur.classList.remove('dn'); await sleep(420);
+    }
+    async function typeIn(f, text) {
+      f.focus(); var r = document.createRange(); r.selectNodeContents(f); var s = getSelection(); s.removeAllRanges(); s.addRange(r); await sleep(520);
+      for (var n = f.textContent.length; n > 0; n--) { f.textContent = f.textContent.slice(0, n - 1); f.dispatchEvent(new Event('input', { bubbles: true })); await sleep(55); }
+      await sleep(260);
+      for (var i = 1; i <= text.length; i++) {
+        f.textContent = text.slice(0, i); f.dispatchEvent(new Event('input', { bubbles: true }));
+        var rg = document.createRange(); rg.selectNodeContents(f); rg.collapse(false); s.removeAllRanges(); s.addRange(rg); await sleep(190);
+      }
+    }
+    async function script() {
+      running = true;
+      try {
+        await sleep(700);
+        await click(q('.wxc'));
+        await click(q('[data-wx="tab-comp"]'));
+        var f = q('.wxin'); await click(f, .3);
+        await typeIn(f, '你好世界！');
+        await sleep(1700);
+        await click(q('.wxc'));
+        await click(q('[data-wx="del"]'));
+        for (var w of ['日期', '课程表']) {
+          if (!q('.li[data-w="' + w + '"]')) await click(q('[data-wx="tab-lib"]'));
+          await drag(q('.li[data-w="' + w + '"]'), q('.wxrow'), w === '日期' ? .15 : .9);
+          await sleep(500);
+        }
+        await sleep(600);
+      } catch (e) { if (e !== 'stop') throw e; }
+      finally { running = false; if (cur) { cur.classList.remove('on'); var c = cur; setTimeout(function () { c.remove(); }, 400); cur = null; } }
+    }
+    function stop(e) { if (e.isTrusted && running) { abort = true; } }
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (t) { host.addEventListener(t, stop, { capture: true, passive: true }); });
+    var done = false;
+    new IntersectionObserver(function (es, io) {
+      if (es[0].isIntersecting && !done) { done = true; io.disconnect(); script(); }
+    }, { threshold: 0.55 }).observe(host);
   }
 
   function boot() { document.querySelectorAll('.sapp .wxpg').forEach(initPage); }

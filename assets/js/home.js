@@ -89,18 +89,21 @@
     }, { threshold: 0.4 }).observe(row);
   });
 
-  var ln = $('#lnav');
-  if (ln && hasIO) {
-    var links = $$('.ls a', ln), map = {};
-    links.forEach(function (a) { var t = $(a.getAttribute('href')); if (t) map[t.id] = a; });
-    var vis = {};
-    var nio = new IntersectionObserver(function (es) {
+  var nav = $('#nav'), hero = $('.hero');
+  if (nav && hero) {
+    var onScroll = function () { nav.classList.toggle('past', hero.getBoundingClientRect().bottom < 60); };
+    window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  }
+  var sl = $$('.slinks a');
+  if (sl.length && hasIO) {
+    var map = {}, vis = {};
+    sl.forEach(function (a) { var t = document.getElementById(a.getAttribute('href').slice(1)); if (t) map[t.id] = a; });
+    var sio = new IntersectionObserver(function (es) {
       es.forEach(function (e) { vis[e.target.id] = e.isIntersecting; });
-      var c = null;
-      Object.keys(map).forEach(function (id) { if (vis[id]) c = id; });
-      links.forEach(function (a) { a.classList.toggle('on', c && map[c] === a); });
+      var c = null; Object.keys(map).forEach(function (id) { if (vis[id]) c = id; });
+      sl.forEach(function (a) { a.classList.toggle('on', !!c && map[c] === a); });
     }, { rootMargin: '-45% 0px -50% 0px' });
-    Object.keys(map).forEach(function (id) { nio.observe(document.getElementById(id)); });
+    Object.keys(map).forEach(function (id) { sio.observe(document.getElementById(id)); });
   }
 
   $$('[data-sw]').forEach(function (sw) {
@@ -130,6 +133,17 @@
     });
   });
 
+  $$('.n5-cmp').forEach(function (b) {
+    var r = $('input', b), set = function (v) { b.style.setProperty('--p', v + '%'); };
+    r.addEventListener('input', function () { set(r.value); });
+    if (hasIO) new IntersectionObserver(function (es, io) {
+      if (!es[0].isIntersecting) return; io.disconnect();
+      var t0 = performance.now();
+      (function f(t) { var k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3); if (!r._touched) { r.value = 100 - 50 * e; set(r.value); if (k < 1) requestAnimationFrame(f); } })(t0);
+    }, { threshold: .6 }).observe(b);
+    r.addEventListener('pointerdown', function () { r._touched = 1; });
+  });
+
   var FF = { sans: 'inherit', serif: '"Songti SC","Noto Serif CJK SC","Source Han Serif SC",serif', mono: 'ui-monospace,"Cascadia Code",Consolas,monospace' };
   $$('.n5-tune').forEach(function (t) {
     var isl = $('.n5-tisl', t);
@@ -157,14 +171,30 @@
     var t = c.t, el;
     inner.innerHTML = '';
     var span = function (cls, txt) { var s = document.createElement('span'); s.className = cls; if (txt != null) s.textContent = txt; return s; };
-    if (t === '文本') inner.appendChild(span('wt', c.text || '你好，我是文本'));
+    if (t === '文本') inner.appendChild(span('wxt', c.text || ''));
     else if (t === '分割线') inner.appendChild(span('sep'));
-    else if (t === '日期') { var d = new Date(); inner.appendChild(span('wt', '周' + DAYS[d.getDay()] + ' ' + pad(d.getMonth() + 1) + '/' + pad(d.getDate()))); }
-    else if (t === '时钟') { el = span('wt'); el.setAttribute('data-now', 'time'); inner.appendChild(el); tick(); }
-    else if (t === '倒计时') { el = span('wt'); el.innerHTML = '距离 <b></b> 还有 <b></b> 天'; var bs = el.querySelectorAll('b'); bs[0].textContent = c.text || '元旦'; bs[1].textContent = daysToNY(); inner.appendChild(el); }
+    else if (t === '日期') { var d = new Date(); inner.appendChild(span('wxt', '周' + DAYS[d.getDay()] + ' ' + pad(d.getMonth() + 1) + '/' + pad(d.getDate()))); }
+    else if (t === '时钟') { el = span('wxt'); el.setAttribute('data-now', 'time'); inner.appendChild(el); tick(); }
+    else if (t === '倒计时') { el = span('wxt'); el.innerHTML = '距离 <b></b> 还有 <b></b> 天'; var bs = el.querySelectorAll('b'); bs[0].textContent = c.text || '元旦'; bs[1].textContent = daysToNY(); inner.appendChild(el); }
     else if (tpl[t]) inner.appendChild(tpl[t].cloneNode(true));
     else if (c.kids && c.kids.length) c.kids.forEach(function (k) { var s = span('wxk'); s.style.display = 'flex'; fill(s, k, tpl); inner.appendChild(s); });
-    else inner.appendChild(span('wt dim', t));
+    else inner.appendChild(span('wxt dim', t));
+  }
+
+  function applyFx(w, c) {
+    var fx = c.fx || {}, s = w.firstChild.style, on = function (k) { return fx[k] && fx[k].on; };
+    w.style.display = on('hide') ? 'none' : '';
+    s.opacity = fx.op && fx.op.v != null && fx.op.v < 100 ? fx.op.v / 100 : '';
+    var sc = 1; if (fx.fsc && fx.fsc.v != null) sc *= .7 + fx.fsc.v * .008; if (on('fs') && fx.fs.v != null) sc *= .7 + fx.fs.v * .008;
+    s.fontSize = Math.abs(sc - 1) > .01 ? sc + 'em' : '';
+    s.color = on('fc') ? fx.fc.c : '';
+    s.background = on('bg') ? 'color-mix(in srgb,' + fx.bg.c + ' ' + (on('bgop') ? fx.bgop.v : 100) + '%,transparent)' : '';
+    s.borderRadius = on('rd') ? (fx.rd.v / 100 * 1.35) + 'em' : '';
+    var al = fx.al ? fx.al.v : 0;
+    s.minWidth = on('fw') ? '10em' : (fx.wl && fx.wl.min ? '7em' : '');
+    s.maxWidth = fx.wl && fx.wl.max ? '8em' : '';
+    s.justifyContent = al === 1 ? 'center' : al === 2 ? 'flex-end' : '';
+    s.margin = on('mg') ? '0 ' + (fx.mg.v / 100 * 1.2) + 'em' : '';
   }
 
   function sync(isl, rows, tpl) {
@@ -190,7 +220,7 @@
             });
           })(w);
         }
-        fill(w.firstChild, c, tpl);
+        fill(w.firstChild, c, tpl); applyFx(w, c);
         var want = prev ? prev.nextSibling : host.firstChild;
         if (w.parentNode !== host || (w !== want && w.previousSibling !== prev)) host.insertBefore(w, want);
         prev = w;

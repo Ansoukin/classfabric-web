@@ -440,8 +440,6 @@
       root.querySelectorAll('.nv .it[data-go]').forEach(function(n){n.classList.toggle('on',n.dataset.go===k)}); mark(k); });
     host.addEventListener('click', function(e){ var n=e.target.closest('.nv .it[data-go]'); if(n) mark(n.dataset.go); });
   });
-  var ln=document.getElementById('lnav');
-  if(ln){ var hero=document.querySelector('.hero'); function t(){ var y=hero?hero.getBoundingClientRect().bottom:300; ln.classList.toggle('on', y<60); } window.addEventListener('scroll',t,{passive:true}); t(); }
 })();
 
 (function () {
@@ -473,14 +471,15 @@
 (function () {
   document.querySelectorAll('.sapp').forEach(function (root) {
     root.addEventListener('click', function (e) {
+      var pt = e.target.closest('.pl-pg .ptabs.sm [data-pt]');
+      if (pt) { var pg0 = pt.closest('.pl-pg'); pg0.querySelectorAll('.ptabs.sm [data-pt]').forEach(function (x) { x.classList.toggle('on', x === pt); }); pg0.querySelectorAll('[data-pp]').forEach(function (n) { n.hidden = n.dataset.pp !== pt.dataset.pt; }); return; }
       var r = e.target.closest('.pl-pg .lst .row'); if (!r) return;
       var pg = r.closest('.pl-pg'), name = r.querySelector('.rt b').childNodes[0].textContent.trim(), desc = r.querySelector('.rt > span').textContent;
       pg.querySelectorAll('.lst .row').forEach(function (x) { x.classList.toggle('on', x === r); });
       pg.querySelector('.plr .ph h3').textContent = name;
-      var md = pg.querySelector('.md'); md.querySelector('h1').textContent = name;
-      var ps = md.querySelectorAll('p'), full = /UIAccess/.test(name);
-      ps.forEach(function (p, i) { if (i === 0) p.textContent = desc; else p.hidden = !full; });
-      var bq = md.querySelector('blockquote'); if (bq) bq.hidden = !full;
+      var md = pg.querySelector('.md'), full = /UIAccess/.test(name); md.querySelector('h1').textContent = name;
+      Array.prototype.forEach.call(md.children, function (n) { if (n.tagName === 'H1') return; if (n.hasAttribute('data-first')) n.textContent = desc; else n.hidden = !full; });
+      var t0 = pg.querySelector('.ptabs.sm [data-pt="0"]'); if (t0) t0.click();
     });
   });
 })();

@@ -187,9 +187,14 @@ def pg_plugins():
     return ('<div class="pg pl-pg"><h2>插件</h2><div class="plw"><div class="pll"><div class="inp srch">' + ic('search') + '搜索插件...</div>'
             '<div class="ptabs"><span class="on">市场</span><span>已安装</span><span class="rf">' + ic('sync') + '刷新</span><span>···</span></div><div class="lst">' + r + '</div></div>'
             '<div class="plr"><div class="ph">' + icon('ua').replace('class="pi"', 'class="pi big"') + '<div><h3>UIAccess 提权</h3><div class="pm">2.0.0.0 <u>|</u> <a>项目主页</a> <u>|</u> HelloWRC, Doubx690i <u>|</u> ' + ic('info') + ' 未加载</div><span class="inst">' + ic('dl') + ' 安装</span></div></div>'
-            '<div class="ptabs sm"><span class="on">概览</span><span>依赖项</span></div>'
-            '<div class="md"><div class="mshot"></div><h1>UIAccess 提权</h1><blockquote>提权方法及核心由 Doubx690i(Dubi906w/kriastans) 提供。</blockquote>'
-            '<p>本插件可以为 ClassIsland 提升 UIAccess 令牌，使 ClassIsland 可以置顶到全屏 UWP 应用和系统界面上。</p><p><b>注意事项:</b> - 您需要以管理员身份运行 ClassIsland 才能正常使用本插件的功能。- 本插件进行的操作涉及敏感操作，可能会触发安全软件拦截。建议将 ClassIsland 工作目录添加到安全软件的排除名单中，以避免误报。</p><h1 style="font-size:22px">截图</h1></div></div></div></div>')
+            '<div class="ptabs sm"><span class="on" data-pt="0">概览</span><span data-pt="1">依赖项</span></div>'
+            '<div class="md" data-pp="0"><h1>UIAccess 提权</h1><blockquote>提权方法及核心由 Doubx690i(Dubi906w/kriastans) 提供。</blockquote>'
+            '<p data-first>本插件可以为 ClassIsland 提升 UIAccess 令牌，使 ClassIsland 可以置顶到全屏 UWP 应用和系统界面上。</p>'
+            '<div class="al"><b>[CAUTION]</b><p>注意事项：</p><ul><li>您需要以管理员身份运行 ClassIsland 才能正常使用本插件的功能。</li><li>本插件进行的操作涉及敏感操作，可能会触发安全软件拦截。建议将 ClassIsland 工作目录添加到安全软件的排除名单中，以避免误报。</li></ul></div>'
+            '<h2>使用方法</h2><ol><li>在插件市场下载并安装插件</li><li>在 ClassIsland 应用文件属性 -&gt; 【兼容性】页面中勾选【以管理员身份运行此程序】，以在运行 ClassIsland 时自动以管理员身份运行。<div class="al sm"><b>[NOTE]</b><p>如果您设置了开机自启，这可能会导致每次启动系统时，都会显示 UAC 弹窗。</p></div></li><li>启动 ClassIsland，如果一切没有问题，插件会自动为应用提升 UIAccess。</li></ol>'
+            '<h2>致谢</h2><p>提权方法及核心由 Doubx690i(Dubi906w/kriastans) 提供。</p><p>本项目使用了以下第三方库：</p><ul><li>uiaccess</li><li>ClassIsland.PluginSdk</li></ul>'
+            '<h2>许可证</h2><p>本项目基于 GNU General Public License v3.0 许可。</p></div>'
+            '<div class="deps" data-pp="1" hidden><div class="dh"><span>插件 ID</span><span>必选?</span></div></div></div></div></div>')
 
 def pg_themes():
     def tc(img, name, on):

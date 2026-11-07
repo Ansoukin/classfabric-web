@@ -1,8 +1,8 @@
 /* 下载页弹窗。只使用 tokens.css 中的 token，见 AGENTS.md */
-.cfm{width:min(520px,100% - 32px);margin:auto;padding:0;border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg2);color:var(--fg);box-shadow:var(--sh-win);opacity:0;transform:translateY(var(--s-3)) scale(.98);transition:opacity var(--t-base) var(--ease-out),transform var(--t-slow) var(--ease-out),overlay var(--t-slow) allow-discrete,display var(--t-slow) allow-discrete}
+.cfm{width:min(520px,100% - 32px);margin:auto;padding:0;border:1px solid var(--stroke-flyout);border-radius:var(--r-m);background:var(--bg2);color:var(--fg);box-shadow:var(--sh-win);opacity:0;transform:translateY(var(--s-3)) scale(.98);transition:opacity var(--t-base) var(--ease-out),transform var(--t-slow) var(--ease-out),overlay var(--t-slow) allow-discrete,display var(--t-slow) allow-discrete}
 .cfm[open]{opacity:1;transform:none}
 @starting-style{.cfm[open]{opacity:0;transform:translateY(var(--s-3)) scale(.98)}}
-.cfm::backdrop{background:color-mix(in srgb,var(--scrim) 62%,transparent)}
+.cfm::backdrop{background:var(--smoke)}
 .cfm-b{padding:var(--s-5)}
 .cfm-i{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:var(--r-m);color:var(--accent);margin-bottom:var(--s-3)}
 .cfm-i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}

@@ -52,8 +52,8 @@ def stage():
         ('#提醒', '醒目的提醒系统', '<p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>', rem_tabs, p1),
         ('#课表', '强大的课表系统', '<p>便捷地导入、编辑和调换课表。点击窗口上方的标签页，试试看。</p>',
          _subs([('cal', '灵活的课表启用规则', '每周、某一天或循环启用，支持多周轮换，到日期自动切换。'), ('clock', '时间与科目的自由定制', '不同课表使用不同时间表，科目可设置图标与主题色。'), ('edit', '简洁直观的编辑工具', '时间表以时间轴方式直接拖动调整。')]), p2),
-        ('#调课', '提前调整课程', '<p>支持当日与跨天换课，灵活应对调课情景。可以只换这一次，也可以勾选「永久换课」。</p>',
-         _subs([('swap', '临时启用课表', '在当日或未来某一天临时启用另一个课表，应对调休与换课。'), ('import', '从其它软件导入课表', '支持直接导入其它课表软件的课表信息，也支持从 CSES 导入。')]), p3),
+        ('#换课', '为高效而生的换课', '<p>换课窗口专为快速调课而设计：从托盘一键打开，选中要调换的课程，再选替换科目，几秒钟完成，无需进入完整的档案编辑器。</p>',
+         _subs([('swap', '当日与跨天都能换', '支持当日与跨天换课。可以只换这一次，也可以勾选「永久换课」。'), ('cal', '临时启用课表', '在当日或未来某一天临时启用另一个课表，应对调休与大调整。')]), p3),
         ('#自动化', '智能的自动行为', '<p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>', flow, p4),
     ]
     n = len(S)
@@ -82,7 +82,7 @@ def chips(items):
 
 def mix(panel_wall):
     inner = ('<div class="n5-mixin"><div class="n5-misl" data-wx-island aria-live="polite"></div>'
-             '<div class="n5-mwin"><div class="app" data-app="settings" data-start="widgets" data-h="600" data-seed="课程表,天气简报"></div></div></div>')
+             '<div class="n5-mwin"><div class="app" data-app="settings" data-start="widgets" data-h="600" data-seed="文本=Hello World!" data-script="1"></div></div></div>')
     tpl = ('<template data-wx-tpl><span data-k="天气简报" class="wx">' + ic('sun') + '9℃</span>'
            '<span data-k="课程表" class="wsch"><span class="s p">语</span><span class="s p">数</span><span class="s p">英</span>'
            '<span class="cur">' + ic('clock') + '<span>课间休息</span><small>10:20-10:30</small></span><span class="sep"></span>'
@@ -135,22 +135,39 @@ def custom(bigmq, panel_wall):
 
 
 def grow():
-    smask, tray_menu, GH, GHSVG = E['smask'], E['tray_menu'], E['GH'], E['GHSVG']
-    wx = ('<div class="n5-t w5 rv d1"><h4>更多天气源</h4><p>除 ClassIsland 内置的小米天气外，新增 OpenWeather 与和风天气（QWeather），可自行选择天气来源。</p>'
-          '<div class="n5-tv"><div class="chips-row"><span class="chip on">小米天气 · 内置</span><span class="chip">OpenWeather</span><span class="chip">和风天气</span></div></div></div>')
-    ln = ('<div class="n5-t w7 rv"><h4>多语言 <small class="n5-exp">实验中</small></h4><p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English，翻译通过 Crowdin 协作。仍有不少文字与界面需要适配，欢迎参与。</p>'
-          '<div class="n5-tv"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div><div class="bar40" id="bar40"><i></i></div><div class="n5-cap">适配进度 约 40%</div></div></div>')
-    pv = ('<div class="n5-t rv"><h4>更好的插件预览</h4><p>插件市场的详情页可以预览更多内容，安装之前就能看清插件的样子。</p><div class="n5-tv"><div class="pvw">'
-          '<div class="pvh"><span class="pva"><img src="https://cdn.jsdelivr.net/gh/HelloWRC/GrantUiAccess@master/GrantUiAccess/icon.png" alt="" width="46" height="46"></span><div><b>UIAccess 提权</b><small>2.0.0.0 · HelloWRC, Doubx690i</small></div><span class="pvb">安装</span></div>'
-          '<div class="pvt"><span class="on">详情</span><span>版本</span><span>依赖</span></div>'
-          '<div class="pvmd"><h5>UIAccess 提权</h5><p>为 ClassIsland 提升 UIAccess 令牌，使其可以置顶到全屏 UWP 应用和系统界面上。</p>'
-          '<div class="pvimg"><div class="isl-stack">' + smask('上课', 'atom') + '</div></div></div></div></div></div>')
-    tray = ('<div class="n5-t rv d1"><h4>一切，都在托盘里</h4><p>右键托盘图标，即可编辑档案、换课、加载临时课表，或打开应用设置。</p><div class="n5-tv"><div class="n5-tray"><div class="tzoom">' + tray_menu() + '</div></div></div></div>')
-    jn = ('<div class="n5-t rv d2"><h4>欢迎参与共建</h4><p>欢迎在 GitHub 提交 Issue 与 PR；有价值的改动，我们也会考虑定期提交回上游，一起建设 ClassIsland 生态。</p>'
-          '<div class="n5-tv"><div class="n5-repo"><div class="rh">' + GHSVG.replace(' class="ghi"', '') + '<b>Ansoukin/ClassFabric</b></div><p>ClassIsland 的个人修改版班级大屏课表</p><div class="rc"><span>GPL-3.0</span><span>Windows</span><span>欢迎 PR</span></div></div>'
-          '<div class="n5-btns"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div></div>')
+    GH, GHSVG = E['GH'], E['GHSVG']
+    CR = 'https://zh.crowdin.com/project/classfabric'
+    ST = 'https://github.com/Programmer-MrWang/SystemTools'
+    IS = 'https://github.com/ClassIsland/ClassIsland/issues/'
+    arr = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>'
+    ln = ('<article class="n5-t w5 rv"><span class="n5-eb">#多语言 · 实验中</span><h4>让界面说你的语言</h4>'
+          '<p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English。翻译由 Crowdin 协作完成。</p>'
+          '<div class="n5-tv"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div>'
+          '<a class="n5-ln" href="' + CR + '" rel="noopener">在 Crowdin 参与翻译' + arr + '</a></div></article>')
+    wx = ('<article class="n5-t w7 rv d1"><span class="n5-eb">#天气</span><h4>三个天气源，自己选</h4>'
+          '<p>除内置的小米天气外，新增 OpenWeather 与和风天气（QWeather）。所选来源不可用时，可自动回退到小米天气，并可限制 API 用量。</p>'
+          '<div class="n5-tv"><div class="n5-shot"><img src="/assets/img/grow-weather.webp" alt="设置页中的天气数据源：选择和风天气后出现 API Key 等选项" width="1020" height="235" loading="lazy"></div></div></article>')
+    pv = ('<article class="n5-t w7 rv"><span class="n5-eb">#插件</span><h4>插件说明，清爽统一</h4>'
+          '<p>用 Markdig 清洗各插件各不相同的 README，以统一、美观的方式展示，并单独处理图片与 SVG。左右拖动，对比原版。</p>'
+          '<div class="n5-tv"><div class="n5-cmp" style="--p:50%"><img src="/assets/img/grow-cmp-ours.webp" alt="ClassFabric 中的 SystemTools 插件详情" width="808" height="374" loading="lazy">'
+          '<img class="o" src="/assets/img/grow-cmp-orig.webp" alt="原版中的同一插件详情" width="808" height="374" loading="lazy">'
+          '<span class="n5-cmpl a">原版</span><span class="n5-cmpl b">ClassFabric</span><i class="n5-cmph" aria-hidden="true"></i>'
+          '<input type="range" min="0" max="100" value="50" aria-label="对比原版与 ClassFabric 的插件详情"></div></div></article>')
+    ac = ('<article class="n5-t w5 rv d1"><span class="n5-eb">#自动化</span><h4>更多行动与触发器</h4>'
+          '<p>自动化里有更丰富的行动与触发器，实现参考了 SystemTools 插件的能力。</p>'
+          '<div class="n5-tv"><div class="n5-big">更多<em>行动</em></div><div class="n5-cap">参考 SystemTools 的行动 · 触发器 · 规则</div>'
+          '<a class="n5-ln" href="' + ST + '" rel="noopener">查看 SystemTools' + arr + '</a></div></article>')
+    ch = ('<article class="n5-t w6 rv"><span class="n5-eb">#更新</span><h4>多通道下载与更新</h4>'
+          '<p>除官方 PDCC 外，可从 GitHub 与 Gitee 下载更新。保留 PDCC 是为方便恢复原版，之后将提供自建 PDCC。</p>'
+          '<div class="n5-tv"><div class="n5-src"><span>' + ic('cloud') + 'PDCC<small>官方 · 恢复原版</small></span><span>' + GHSVG.replace(' class="ghi"', '') + 'GitHub</span><span>' + ic('cloud') + 'Gitee</span></div></div></article>')
+    fx = ('<article class="n5-t w6 rv d1"><span class="n5-eb">#修复</span><h4>大量修复与优化</h4>'
+          '<p>听从社区意见，修复并优化了许多问题，部分来自社区 Issue。</p>'
+          '<div class="n5-tv"><ul class="n5-iss"><li><a href="' + IS + '2032" rel="noopener"><code>#2032</code><span>系统切换为深色模式后，天气简报的温度置空</span>' + ic('check') + '</a></li>'
+          '<li><a href="' + IS + '2039" rel="noopener"><code>#2039</code><span>更改时间偏移后，以 cron 为触发器的自动化会执行两次</span>' + ic('check') + '</a></li></ul></div></article>')
+    jn = ('<div class="n5-join rv"><div><b>欢迎参与共建</b><span>在 GitHub 提交 Issue 与 PR；有价值的改动，也会考虑定期提交回上游。</span></div>'
+          '<div class="n5-btns"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div>')
     return ('<section class="sec n5-grow" id="grow"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2>'
-            '<div class="n5-bento">' + ln + wx + pv + tray + jn + '</div></div></section>\n')
+            '<div class="n5-bento">' + ln + wx + pv + ac + ch + fx + '</div>' + jn + '</div></section>\n')
 
 
 def final(btns_dl, btns_more):
