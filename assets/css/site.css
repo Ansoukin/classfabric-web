@@ -2208,7 +2208,11 @@ html.tt *,html.tt *::before,html.tt *::after{transition:background-color .4s,col
 .hz .eyebrow{color:#d5e0f5}
 .hz h1{font-size:clamp(44px,8.4vw,100px);line-height:1.06;letter-spacing:-.03em;margin:0 0 18px;font-weight:800;text-shadow:0 2px 24px rgba(0,0,0,.45)}
 .hz .sub{color:#dbe6fa;margin:0 auto 30px;max-width:30em}
-.hz .note{margin:22px 0 0;font-size:14px;color:#bccbe8}
+.hz .note{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 0;margin:22px 0 0;font-size:14px;color:#bccbe8}
+.hz .note>span{white-space:nowrap}
+.hz .note>span+span::before{content:"·";margin:0 .7em;opacity:.7}
+.hz h1 .nw{white-space:nowrap}
+@media(max-width:560px){.hz .note{column-gap:1.2em}.hz .note>span+span::before{display:none}}
 .hz .note b{font-weight:700;color:#fff}
 .hz .note b.sk{display:inline-block;width:4.4em;height:1em;vertical-align:-2px;border-radius:4px}
 .hz .btn.glass{background:#161d2e;border-color:rgba(160,190,255,.26);color:#f5f7fb}

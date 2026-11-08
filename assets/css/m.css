@@ -5,7 +5,8 @@
 .shotf .sk-i:not(.ok){animation:none;background:none}
 .shotf.win{box-shadow:0 24px 50px -28px rgba(0,0,0,.7)}
 .shotf.wide{border-color:rgba(98,179,242,.28)}
-.zi{position:absolute;right:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 10px 0 8px;border-radius:99px;font:600 11.5px/1 var(--ui);color:#fff;background:rgba(10,12,18,.8);border:1px solid rgba(255,255,255,.2)}
+.shotf:has(.zi){display:flex;flex-direction:column}
+.zi{align-self:flex-end;display:inline-flex;align-items:center;gap:5px;margin:0 var(--s-3);height:30px;font:500 12px/1 var(--ui);color:var(--muted)}
 .zi svg{width:13px;height:13px}
 .mrem{display:grid;margin-top:20px}
 .mrf{grid-area:1/1;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .4s,transform .4s,visibility 0s .4s}
