@@ -51,10 +51,10 @@ def fit(inner, dw, style='', dwm=None, cls='', extra=''):
 
 def vtask(running=False):
     def W(n, w):
-        return '<img src="/assets/img/win/%s.png" alt="" style="width:%dpx" draggable="false">' % (n, w)
+        return '<img src="/assets/img/win/%s.png" alt="" style="width:%dpx" draggable="false" loading="lazy" decoding="async">' % (n, w)
     tb = ''.join('<span class="tb%s">%s</span>' % (' on0' if n == 'start' else '', W(n, w)) for n, w in
                  [('start', 24), ('search', 22), ('taskview', 24), ('widgets', 24), ('chat', 24), ('explorer', 24), ('edge', 24), ('store', 23)])
-    cf = '<img src="/assets/img/icon-180.png" alt="" style="width:24px" draggable="false">'
+    cf = '<img src="/assets/img/icon-64.png" alt="" style="width:24px" draggable="false" loading="lazy" decoding="async">'
     return ('<div class="vtask"><div class="vtb">' + tb + '<span class="tb cfapp' + (' on' if running else ' run') + '">' + cf + '</span></div>'
             '<div class="vtray"><span class="tg2 hide">' + W('chev', 12) + '</span><span class="tg2 ime">英</span>'
             '<span class="tg2 ctray" id="%s" title="ClassFabric"><img src="/assets/img/icon-64.png" alt=""></span>'
