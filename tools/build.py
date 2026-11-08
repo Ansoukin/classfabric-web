@@ -394,7 +394,7 @@ def about():
         ('plug', '更好的插件预览', '插件市场的详情页可以预览更多内容。')])
     road = ''.join('<li><span class="axd"></span><div><b>%s</b><p>%s</p></div><em>规划中</em></li>' % x for x in [
         ('云功能 · 远程提醒', '从远端向大屏发送提醒。'),
-        ('云功能 · 集中管理', '统一管理多台设备。上游暂未提供，社区项目 <a href="https://github.com/1sIancl/ClassislandControlHub" rel="noopener">ClassislandControlHub</a> 正在积极开发。'),
+        ('云功能 · 集中管理', '统一管理多台设备。上游暂未提供，我们计划原生支持 <a href="https://miniclassisland.com/" rel="noopener">MINI ClassIsland</a> 及其它第三方集控；社区项目 <a href="https://github.com/1sIancl/ClassislandControlHub" rel="noopener">ClassislandControlHub</a> 也在积极开发。'),
         ('云功能 · 云端备份', '通过 SFTP、WebDAV、OpenList 等方式备份档案与配置。'),
         ('更好的自动化', '主要借助社区知名插件 SystemTools 实现。'),
         ('更好的性能表现', '持续优化。')])
