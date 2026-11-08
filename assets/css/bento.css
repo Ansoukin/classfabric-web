@@ -14,6 +14,7 @@
 .n5-ln{display:inline-flex;align-items:center;gap:var(--s-1);margin-top:var(--s-3);font-size:var(--fs-1);font-weight:600;color:var(--accent)}
 .n5-ln svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--t-base) var(--ease-out)}
 .n5-ln:hover svg{transform:translate(2px,-2px)}
+@media(pointer:coarse){.n5-ln{padding:10px 0;margin-top:6px}}
 .n5-shot{max-height:96px;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-m)}
 .n5-shot img{display:block;width:100%;height:auto}
 .n5-big{font-size:var(--fs-4);font-weight:800;line-height:1.1;letter-spacing:-.04em}
