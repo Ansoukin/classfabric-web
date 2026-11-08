@@ -140,6 +140,10 @@ def build_id():
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
 BD, BH, BT = build_id()
+
+def vers(h):
+    """给 CSS/JS 引用加 ?v=内容哈希：文件一变 URL 就变，Cloudflare 与浏览器缓存不会再返回旧版本"""
+    return re.sub(r'((?:href|src)="/assets/(?:css|js)/[\w.-]+\.(?:css|js))"', r'\1?v=' + BH + '"', h)
 BUILD = ('<div class="bld" title="V%s 发布于 %s"><span class="dot"></span><span>站点版本 v%s</span><i></i><span>Build %s</span><i></i><code>%s</code></div>' % (SITE_VER, BT, SITE_VER, BD, BH))
 
 FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class="brand" href="/"><img src="/assets/img/icon-64.png" width="26" height="26" alt="">ClassFabric</a>'
@@ -412,9 +416,9 @@ def about():
     return h + FOOT
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about)):
-    open(os.path.join(OUT, name), 'w', encoding='utf-8').write(fn())
+    open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(fn()))
 open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n' % SITE)
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n' % (SITE, p, datetime.date.today().isoformat()) for p in ('/', '/download.html', '/about.html')) + '</urlset>\n')
 os.makedirs(os.path.join(OUT, 'm'), exist_ok=True)
-open(os.path.join(OUT, 'm', 'index.html'), 'w', encoding='utf-8').write(home(True))
+open(os.path.join(OUT, 'm', 'index.html'), 'w', encoding='utf-8').write(vers(home(True)))
 print('ok')

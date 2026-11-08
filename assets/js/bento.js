@@ -28,7 +28,7 @@
   /* 打字机：「当 ___」循环改写为各类触发器（取自自动化页的触发器列表）。仅在可见时运行，单个定时器，只改一个文本节点 */
   var TRIG = ['规则集更新时', '收到信号时', '调用 Uri 时', '从托盘菜单运行时', 'cron', '应用启动时', '应用退出时', '上课时', '课间休息时', '放学时', '当前时间状态变化时', '特定时间点前'];
   $$('[data-tw]').forEach(function (el) {
-    if (!hasIO || reduce) return;
+    if (!hasIO) return;
     var ch = el.closest('.n5-ch'), txt = document.createTextNode(el.textContent), s = txt.nodeValue, i = -1, mode = 'hold', vis = false, timer = 0, rz = 0;
     el.textContent = ''; el.appendChild(txt);
     /* 预留最宽文案的宽度，避免逐字打出时反复换行抖动；窗口尺寸变化后重新测量 */
@@ -43,6 +43,8 @@
       timer = 0; if (!vis || document.hidden) return;
       if (ch && !ch.classList.contains('on')) { timer = setTimeout(step, 500); return; }
       var d;
+      /* 系统开启「减少动画」时不逐字打出，改为每隔一会儿直接换成下一个触发器 */
+      if (reduce) { i = (i + 1) % TRIG.length; s = TRIG[i]; txt.nodeValue = s; timer = setTimeout(step, 2400); return; }
       if (mode === 'hold') { mode = 'del'; d = 40; }
       else if (mode === 'del') {
         if (s.length) { s = s.slice(0, -1); d = 34; } else { i = (i + 1) % TRIG.length; mode = 'type'; d = 240; }
@@ -52,7 +54,7 @@
       }
       txt.nodeValue = s; timer = setTimeout(step, d);
     }
-    function run(on) { vis = on; el.classList.toggle('tw-on', on); clearTimeout(timer); timer = 0; if (on) { mode = 'hold'; if (i >= 0) { mode = 'type'; } timer = setTimeout(step, 600); } }
+    function run(on) { vis = on; el.classList.toggle('tw-on', on && !reduce); clearTimeout(timer); timer = 0; if (on) { mode = 'hold'; if (i >= 0) { mode = 'type'; } timer = setTimeout(step, 600); } }
     measure();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(measure, 200); });
