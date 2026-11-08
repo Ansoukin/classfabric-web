@@ -32,11 +32,11 @@ def rem_panel():
 
 
 def editor_section():
-    return shot('/assets/img/m/editor.webp', '档案编辑窗口：一周课表与科目面板', 760, 3, 'win') + '<p class="vcap mcap">课表、时间表、科目、调课——分页编辑，科目一键点选。</p>'
+    return shot('/assets/img/m/editor.webp', '档案编辑窗口：一周课表与科目面板', 760, 3, 'win')
 
 
 def swap_section():
-    return shot('/assets/img/m/swap.webp', '换课窗口：选择要调换的课程与替换科目', 760, 3, 'win') + '<p class="vcap mcap">选一节课，选择替换或交换，确认即可。</p>'
+    return shot('/assets/img/m/swap.webp', '换课窗口：选择要调换的课程与替换科目', 760, 3, 'win')
 
 
 def auto_shot():

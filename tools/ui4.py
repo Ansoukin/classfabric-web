@@ -37,7 +37,6 @@ def stage():
     p2 = bare('<div class="vwin">' + ui2.editor_app(seed='real') + '</div>', 'vdk-bare', 'tr2').replace('<div class="vtask">', '<div class="vtask" hidden>', 1)
 
     p3 = vdesk('<div class="vwin" data-vwin="swap"><div class="sw2 w" data-app="swap" data-modal="1"></div></div><div class="vtray-menu" data-vmenu>' + tray_menu() + '</div>', 'vdk-swap', 800, 500, 720, 520, ' data-vtray="swap"', 'swTray')
-    p3 += '<p class="vcap">点击右下角的托盘图标，选择「换课…」，即可从托盘打开独立的换课窗口。</p>'
 
     p4 = bare('<div class="vwin n5-win" style="left:60px;top:26px;width:1160px"><div class="app" data-app="settings" data-start="auto" data-h="590"></div></div>', 'vdk-set', 'tr4')
 
@@ -50,7 +49,7 @@ def stage():
     S = [
         ('#主界面', '直观的信息显示', '<p>自动直观地显示今日的课程安排与当前进行的课程，并支持通过「组件」自定义主界面上显示的内容。</p>', '', p0),
         ('#提醒', '醒目的提醒系统', '<p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>', rem_tabs, p1),
-        ('#课表', '强大的课表系统', '<p>便捷地导入、编辑和调换课表。点击窗口上方的标签页，试试看。</p>',
+        ('#课表', '强大的课表系统', '<p>便捷地导入、编辑和调换课表。</p>',
          _subs([('cal', '灵活的课表启用规则', '每周、某一天或循环启用，支持多周轮换，到日期自动切换。'), ('clock', '时间与科目的自由定制', '不同课表使用不同时间表，科目可设置图标与主题色。'), ('edit', '简洁直观的编辑工具', '时间表以时间轴方式直接拖动调整。')]), p2),
         ('#换课', '为高效而生的换课', '<p>换课窗口专为快速调课而设计：从托盘一键打开，选中要调换的课程，再选替换科目，几秒钟完成，无需进入完整的档案编辑器。</p>',
          _subs([('swap', '当日与跨天都能换', '支持当日与跨天换课。可以只换这一次，也可以勾选「永久换课」。'), ('cal', '临时启用课表', '在当日或未来某一天临时启用另一个课表，应对调休与大调整。')]), p3),
@@ -87,7 +86,7 @@ def mix(panel_wall):
            '<span data-k="课程表" class="wsch" data-sched><span class="s p">语</span><span class="s p">数</span><span class="s p">英</span>'
            '<span class="cur">' + ic('clock') + '<span>课间休息</span><small>10:20-10:30</small></span><span class="sep"></span>'
            + ''.join('<span class="s">%s</span>' % c for c in '物化生历政地') + '</span></template>')
-    out = split('#组件', '让主界面更多样', '主界面由「组件」搭配而成：文本、日期、时钟、天气、课表、倒计时，以及轮播、滚动、分组与堆叠容器。下方就是真实的组件页，点击或拖动组件库里的项目，上方的主界面会随之伸缩。')
+    out = split('#组件', '让主界面更多样', '主界面由「组件」搭配而成。点击或拖动下方组件库里的项目，上方的主界面会随之变化。')
     out += '<div class="n5-wide rv n5-mix">' + panel_wall(inner + tpl, '8%', '44%', '230%', '') + '</div>'
     return out
 
@@ -104,8 +103,8 @@ def themes():
     ctl = [('s', 'sliders', '界面缩放', '主界面的缩放大小', 'min="70" max="150" value="100"'),
            ('o', 'sliders', '背景不透明度', '主界面背景的不透明度', 'min="0" max="100" value="80"'),
            ('r', 'roundsq', '圆角半径', '调至最大时，左右边缘为半圆', 'min="0" max="100" value="37"')]
-    cs = ''.join('<div class="n5-ctl"><span class="n5-ci">%s</span><div><b>%s</b><small>%s</small></div><input class="n5-rg" type="range" data-k="%s" %s aria-label="%s"></div>' % (ic(i), t, d, k, a, t) for k, i, t, d, a in ctl)
-    cs += ('<div class="n5-ctl"><span class="n5-ci">Aa</span><div><b>字体</b><small>更换主界面使用的字体</small></div>'
+    cs = ''.join('<div class="n5-ctl"><span class="n5-ci">%s</span><div><b>%s</b></div><input class="n5-rg" type="range" data-k="%s" %s aria-label="%s"></div>' % (ic(i), t, k, a, t) for k, i, t, d, a in ctl)
+    cs += ('<div class="n5-ctl"><span class="n5-ci">Aa</span><div><b>字体</b></div>'
            '<div class="n5-seg" role="group" aria-label="字体"><button type="button" class="on" data-ff="sans">默认</button><button type="button" data-ff="serif">衬线</button><button type="button" data-ff="mono">等宽</button></div></div>')
     live = ('<div class="n5-live"><div class="n5-tisl"><div class="isl-stack">' + _isl_idle() + '</div></div></div>')
     return ('<div class="wrap n5-thm">' + split('#主题', '自由的主题系统', '内置经典、Fluent 与 Rectangles 三套主题，并支持调整界面缩放、背景透明度、圆角与字体，高度个性化你的界面。')
@@ -148,28 +147,28 @@ def grow():
           '<p>除内置的小米天气外，新增 OpenWeather 与和风天气（QWeather）。所选来源不可用时，可自动回退到小米天气，并可限制 API 用量。</p>'
           '<div class="n5-tv"><div class="n5-shot"><img src="/assets/img/grow-weather.webp" alt="设置页中的天气数据源：选择和风天气后出现 API Key 等选项" width="1020" height="235" loading="lazy"></div></div></article>')
     pv = ('<article class="n5-t w7 rv"><span class="n5-eb">#插件</span><h4>插件说明，清爽统一</h4>'
-          '<p>用 Markdig 清洗各插件各不相同的 README，以统一、美观的方式展示，并单独处理图片与 SVG。左右拖动，对比原版。</p>'
+          '<p>用 Markdig 清洗各插件各不相同的 README，以统一、美观的方式展示，并单独处理图片与 SVG。</p>'
           '<div class="n5-tv"><div class="n5-cmp" style="--p:50%"><img src="/assets/img/grow-cmp-ours.webp" alt="ClassFabric 中的 SystemTools 插件详情" width="808" height="374" loading="lazy">'
           '<img class="o" src="/assets/img/grow-cmp-orig.webp" alt="原版中的同一插件详情" width="808" height="374" loading="lazy">'
           '<span class="n5-cmpl a">原版</span><span class="n5-cmpl b">ClassFabric</span><i class="n5-cmph" aria-hidden="true"></i>'
           '<input type="range" min="0" max="100" value="50" aria-label="对比原版与 ClassFabric 的插件详情"></div></div></article>')
     ac = ('<article class="n5-t w5 rv d1"><span class="n5-eb">#自动化</span><h4>更多行动与触发器</h4>'
-          '<p>自动化新增了大量触发器、规则集与动作，实现参考了 SystemTools 插件的能力。</p>'
+          '<p>实现参考了 SystemTools 插件的能力。</p>'
           '<div class="n5-tv"><div class="n5-big">75<em>+</em></div><div class="n5-cap">触发器 + 规则集 + 动作，合计 75+ 项</div>'
           '<a class="n5-ln" href="' + ST + '" rel="noopener">查看 SystemTools' + arr + '</a></div></article>')
     GITEE = ('<svg viewBox="0 0 1024 1024" aria-hidden="true"><path fill="#C71D23" d="M512 1024C229.222 1024 0 794.778 0 512S229.222 0 512 0s512 229.222 512 512-229.222 512-512 512zm259.149-568.883h-290.74a25.293 25.293 0 0 0-25.292 25.293l-.026 63.206c0 13.952 11.315 25.293 25.267 25.293h177.024c13.978 0 25.293 11.315 25.293 25.267v12.646a75.853 75.853 0 0 1-75.853 75.853h-240.23a25.293 25.293 0 0 1-25.267-25.293V417.203a75.853 75.853 0 0 1 75.827-75.853h353.946a25.293 25.293 0 0 0 25.267-25.292l.077-63.207a25.293 25.293 0 0 0-25.268-25.293H417.152a189.62 189.62 0 0 0-189.62 189.645V771.15c0 13.977 11.316 25.293 25.294 25.293h372.94a170.65 170.65 0 0 0 170.65-170.65V480.384a25.293 25.293 0 0 0-25.293-25.267z"/></svg>')
     ch = ('<article class="n5-t w5 rv"><span class="n5-eb">#更新</span><h4>多通道下载与更新</h4>'
           '<p>除官方 PDCC 外，可从 GitHub 与 Gitee 下载更新。保留 PDCC 是为方便恢复原版，之后将提供自建 PDCC。</p>'
-          '<div class="n5-tv"><div class="n5-src"><span>' + ic('cloud') + 'PDCC<small>官方 · 恢复原版</small></span><span>' + GHSVG.replace(' class="ghi"', '') + 'GitHub<small>Releases</small></span><span>' + GITEE + 'Gitee<small>Releases</small></span></div></div></article>')
+          '<div class="n5-tv"><div class="n5-src"><span>' + ic('cloud') + 'PDCC<small>官方 · 恢复原版</small></span><span>' + GHSVG.replace(' class="ghi"', '') + 'GitHub</span><span>' + GITEE + 'Gitee</span></div></div></article>')
     iss = ''.join('<li><a href="%s%s" rel="noopener"><code>#%s</code><span>%s</span>%s</a></li>' % (IS, n, n, s, ic('check')) for n, s in (('2032', '系统切换为深色模式后，天气简报的温度置空'), ('2039', '更改时间偏移后，以 cron 为触发器的自动化会执行两次')))
-    steps = [('info', '社区反馈', '问题与建议来自社区的 Issue，每一条都公开可查。', '<ul class="n5-iss">' + iss + '</ul>'),
-             ('bolt', '修复与优化', '在 ClassFabric 中逐个修复，并顺手优化相关体验。', ''),
-             ('sync', '随更新送达', '修复随新版本发布，也会考虑定期提交回上游。', '')]
-    flow = '<ol class="n5-fflow">' + ''.join('<li style="--i:%d"><i class="n5-fnd">%s</i><div><b>%s</b><p>%s</p>%s</div></li>' % (i, ic(ic_), h, d, x) for i, (ic_, h, d, x) in enumerate(steps)) + '</ol>'
+    steps = [('info', '社区反馈', '', '<ul class="n5-iss">' + iss + '</ul>'),
+             ('bolt', '修复与优化', '', ''),
+             ('sync', '随更新送达', '', '')]
+    flow = '<ol class="n5-fflow">' + ''.join('<li style="--i:%d"><i class="n5-fnd">%s</i><div><b>%s</b>%s%s</div></li>' % (i, ic(ic_), h, ('<p>%s</p>' % d) if d else '', x) for i, (ic_, h, d, x) in enumerate(steps)) + '</ol>'
     fx = ('<article class="n5-t w7 rv d1 n5-fix"><span class="n5-eb">#修复</span><h4>大量修复与优化</h4>'
-          '<p>听从社区意见，修复并优化了许多问题。从反馈到修复再到发布，每一步都看得见。</p>' + flow +
+          '<p>听从社区意见，修复并优化了许多问题。</p>' + flow +
           '<a class="n5-ln" href="' + GH + '/releases" rel="noopener">查看全部更新日志' + arr + '</a></article>')
-    jn = ('<div class="n5-join rv"><div><b>欢迎参与共建</b><span>在 GitHub 提交 Issue 与 PR；有价值的改动，也会考虑定期提交回上游。</span></div>'
+    jn = ('<div class="n5-join rv"><div><b>欢迎参与共建</b></div>'
           '<div class="n5-btns"><a class="btn glass" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="btn glass" href="' + GH + '/pulls" rel="noopener">提交 PR</a></div></div>')
     return ('<section class="sec n5-grow" id="grow"><div class="wrap"><h2 class="claim rv">一款<span class="g">不断增强</span>的大屏课表软件</h2>'
             '<div class="n5-bento">' + ln + wx + pv + ac + ch + fx + '</div>' + jn + '</div></section>\n')
@@ -181,7 +180,7 @@ def final(btns_dl, btns_more):
     return ('<section class="n5-fin"><div class="wrap"><div class="n5-fc rv"><div class="n5-fl">'
             '<img src="/assets/img/icon-180.png" alt="" width="72" height="72"><h2>立即体验 ClassFabric</h2><p>更多功能留给您自行探索！</p>'
             '<div class="cta">' + btns_dl + btns_more + '</div></div>'
-            '<div class="n5-fr"><h3>开始之前</h3><ul>' + li + '</ul><p>原有的课表、自动化、插件与主题可直接沿用。</p></div></div></div></section>\n')
+            '<div class="n5-fr"><h3>开始之前</h3><ul>' + li + '</ul></div></div></div></section>\n')
 
 
 def sync(c_sync, c_mig, c_enh, panel_wall):

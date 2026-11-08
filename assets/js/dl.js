@@ -124,7 +124,6 @@
     }
     if (sub) {
       if (mobile) sub.textContent = '检测到 ' + OSN[P.os] + ' 设备，ClassFabric 目前仅支持 Windows 电脑';
-      else if (best) sub.textContent = '已为你选择：' + (P.os === 'windows' ? 'Windows · ' : '') + ARCHN[best.arch] + ' · ' + best.t + ' · ' + fmt(best.a.size);
     }
 
     if (P.os === 'android' || P.os === 'ios') note(IC_I + '<div><b>暂不支持 ' + OSN[P.os] + '</b><p>ClassFabric 是为 Windows 电脑上的班级大屏设计的，目前没有手机或平板版本，也暂无相关计划。请在要使用的 Windows 电脑上打开本页下载。</p>' + SHARE_BTN + '</div>', 'warn');
