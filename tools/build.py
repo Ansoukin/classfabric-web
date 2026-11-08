@@ -25,8 +25,9 @@ def idle(kind, p0, p1, ms, g=None):
     else:
         cur = '<span class="cur">%s<span>物理</span><span class="pill">-39m</span></span>' % ic('atom')
         fut = ''.join('<span class="s">%s</span>' % c for c in '化生政历地自自')
-    return '<div class="isl"%s data-ms="%d" style="--dur:%.1fs;--p0:%s;--p1:%s">%s%s%s<span class="sep"></span>%s</div>' % (
-        (' data-g="%d"' % g) if g is not None else '', ms, ms / 1000, p0, p1, wx, past, cur, fut)
+    r0 = float(str(p0).rstrip('%')) / float(str(p1).rstrip('%'))
+    return '<div class="isl"%s data-ms="%d" style="--dur:%.1fs;--p0:%s;--p1:%s;--r0:%.4f">%s%s%s<span class="sep"></span>%s</div>' % (
+        (' data-g="%d"' % g) if g is not None else '', ms, ms / 1000, p0, p1, r0, wx, past, cur, fut)
 
 def mask(label, icon, ms=2300, g=None):
     return '<div class="isl mask"%s data-ms="%d">%s<span>%s</span>%s</div>' % ((' data-g="%d"' % g) if g is not None else '', ms, ic('info'), label, ic(icon))

@@ -32,12 +32,14 @@
     var ch = el.closest('.n5-ch'), txt = document.createTextNode(el.textContent), s = txt.nodeValue, i = -1, mode = 'hold', vis = false, timer = 0, rz = 0;
     el.textContent = ''; el.appendChild(txt);
     /* 预留最宽文案的宽度，避免逐字打出时反复换行抖动；窗口尺寸变化后重新测量 */
+    var cv = null, mdone = false;
     function measure() {
-      var m = document.createElement('span'), w = 0;
-      m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
-      el.appendChild(m);
-      TRIG.concat([txt.nodeValue]).forEach(function (x) { m.textContent = x; w = Math.max(w, m.offsetWidth); });
-      el.removeChild(m); el.style.minWidth = Math.ceil(w + 4) + 'px';
+      /* 用 canvas 量字宽：不插入节点、不触发布局 */
+      var cs = getComputedStyle(el), w = 0, ls = parseFloat(cs.letterSpacing) || 0;
+      cv = cv || document.createElement('canvas').getContext('2d');
+      cv.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+      TRIG.concat([txt.nodeValue]).forEach(function (x) { w = Math.max(w, cv.measureText(x).width + ls * x.length); });
+      el.style.minWidth = Math.ceil(w + 4) + 'px'; mdone = true;
     }
     function step() {
       timer = 0; if (!vis || document.hidden) return;
@@ -54,10 +56,9 @@
       }
       txt.nodeValue = s; timer = setTimeout(step, d);
     }
-    function run(on) { vis = on; el.classList.toggle('tw-on', on && !reduce); clearTimeout(timer); timer = 0; if (on) { mode = 'hold'; if (i >= 0) { mode = 'type'; } timer = setTimeout(step, 600); } }
-    measure();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-    window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(measure, 200); });
+    function run(on) { if (on && !mdone) measure(); vis = on; el.classList.toggle('tw-on', on && !reduce); clearTimeout(timer); timer = 0; if (on) { mode = 'hold'; if (i >= 0) { mode = 'type'; } timer = setTimeout(step, 600); } }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (mdone) measure(); });
+    window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { if (mdone) measure(); }, 200); });
     document.addEventListener('visibilitychange', function () { if (vis && !document.hidden && !timer) timer = setTimeout(step, 300); });
     new IntersectionObserver(function (es) { run(es[0].isIntersecting); }, { threshold: .2 }).observe(el);
   });

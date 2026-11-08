@@ -16,6 +16,12 @@
     if (u.origin === location.origin && u.pathname !== location.pathname) run();
   });
 
+  /* 屏幕外的循环动画（骨架屏流光、渐变流动、设置控件示意）暂停，省去无谓的绘制 */
+  if ('IntersectionObserver' in window) {
+    var av = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('av0', !e.isIntersecting); }); }, { rootMargin: '80px' });
+    $$('.sk,.sk-i,.g,.tv,.tv-f,.skr,.hist li.skl,.shotf,.thx-reel,.bigmq,.pmq,.mqw').forEach(function (n) { av.observe(n); });
+  }
+
   var root = document.documentElement, tick = false;
   function onScroll() {
     var h = root.scrollHeight - innerHeight, y = window.pageYOffset;
