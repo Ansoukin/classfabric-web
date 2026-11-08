@@ -283,7 +283,7 @@
       if (!drag || drag.on) return;
       drag.on = true; drag.li.classList.add('wxsrc');
       var g = drag.li.cloneNode(true); g.className = 'li wxghost'; g.style.width = drag.li.offsetWidth + 'px';
-      g.style.left = (x - 30) + 'px'; g.style.top = (y - 20) + 'px'; document.body.appendChild(g); drag.ghost = g;
+      g.style.left = '0'; g.style.top = '0'; g.style.transform = 'translate(' + (x - 30) + 'px,' + (y - 20) + 'px)'; document.body.appendChild(g); drag.ghost = g;
     }
     /* 触摸长按进入拖拽后，阻止该次手势滚动页面 */
     document.addEventListener('touchmove', function (e) { if (drag && drag.on && e.cancelable) e.preventDefault(); }, { passive: false });
@@ -304,7 +304,7 @@
         if (mv < 6) return;
         begin(e.clientX, e.clientY);
       }
-      drag.ghost.style.left = (e.clientX - 30) + 'px'; drag.ghost.style.top = (e.clientY - 20) + 'px';
+      drag.ghost.style.transform = 'translate(' + (e.clientX - 30) + 'px,' + (e.clientY - 20) + 'px)';
       var d = dropTarget(e.clientX, e.clientY);
       rowsEl.querySelectorAll('.wxrow').forEach(function (r) { r.classList.toggle('drop', !!d && r === d.el); });
     });
@@ -344,16 +344,25 @@
     async function click(el, fx, fy) { var t = await go(el, fx, fy); cur.classList.add('dn'); await sleep(120); el.click(); cur.classList.remove('dn'); await sleep(280); return t; }
     function q(s) { return pg.querySelector(s); }
     function ptr(type, target, x, y) { target.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: x, clientY: y, button: 0, pointerId: 91, isPrimary: true })); }
+    function frame() { return new Promise(function (res) { requestAnimationFrame(res); }); }
+    /* 按帧连续插值（easeInOutCubic），保证光标与被拖动的幽灵元素同步、顺滑 */
+    async function glide(ms, onf) {
+      var t0 = performance.now(), k, e;
+      do {
+        if (abort) throw 'stop';
+        k = Math.min(1, (performance.now() - t0) / ms); e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+        onf(e); if (k < 1) await frame();
+      } while (k < 1);
+    }
     async function drag(li, row, fx) {
       var a = await go(li); cur.classList.add('dn'); ptr('pointerdown', li, a.cx, a.cy); await sleep(140);
-      var b = pos(row, fx, .5), n = 14;
+      var b = pos(row, fx, .5);
       cur.style.transition = 'none';
-      for (var i = 1; i <= n; i++) {
-        var k = i / n, e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-        var x = a.x + (b.x - a.x) * e, y = a.y + (b.y - a.y) * e; cur.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-        ptr('pointermove', document, a.cx + (b.cx - a.cx) * e, a.cy + (b.cy - a.cy) * e); await sleep(38);
-      }
-      cur.style.transition = ''; await sleep(220); ptr('pointerup', document, b.cx, b.cy); cur.classList.remove('dn'); await sleep(420);
+      await glide(900, function (e) {
+        cur.style.transform = 'translate(' + (a.x + (b.x - a.x) * e) + 'px,' + (a.y + (b.y - a.y) * e) + 'px)';
+        ptr('pointermove', document, a.cx + (b.cx - a.cx) * e, a.cy + (b.cy - a.cy) * e);
+      });
+      cur.style.transition = ''; await sleep(160); ptr('pointerup', document, b.cx, b.cy); cur.classList.remove('dn'); await sleep(420);
     }
     async function typeIn(f, text) {
       f.focus(); var r = document.createRange(); r.selectNodeContents(f); var s = getSelection(); s.removeAllRanges(); s.addRange(r); await sleep(520);
@@ -374,7 +383,10 @@
         await typeIn(f, '你好世界！');
         await sleep(1700);
         await click(q('.wxc'));
-        await click(q('[data-wx="del"]'));
+        /* 删除按钮默认收起，鼠标移到卡片上才展开：先悬停，再移动到第一个删除按钮并点击 */
+        var chip = q('.wxc'); chip.classList.add('hv'); await sleep(360);
+        var del = q('[data-wx="del"]'); await go(del, .5, .5, 780); del.classList.add('hv');
+        cur.classList.add('dn'); await sleep(140); del.click(); cur.classList.remove('dn'); await sleep(320);
         for (var w of ['日期', '课程表']) {
           if (!q('.li[data-w="' + w + '"]')) await click(q('[data-wx="tab-lib"]'));
           await drag(q('.li[data-w="' + w + '"]'), q('.wxrow'), w === '日期' ? .15 : .9);

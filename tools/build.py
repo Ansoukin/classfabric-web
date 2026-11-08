@@ -130,8 +130,8 @@ def navbar(cur, secs=None):
 
 import hashlib, datetime
 
-SITE_VER = '1.0.6'
-RELEASE_DATE = '2026-11-06'
+SITE_VER = '1.0.7'
+RELEASE_DATE = '2026-11-08'
 
 def build_id():
     h = hashlib.sha1()
