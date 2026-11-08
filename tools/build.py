@@ -260,7 +260,7 @@ def home(mob=False):
               '<div class="sub-i">' + ic('cal') + '<div><h4>临时启用课表</h4><p>在当日或未来某一天临时启用另一个课表，应对调休。</p></div></div></div></div>' + swap_vis + '</div>')
         auto_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="auto" data-h="640"></div></div>', '84%', '60%', '230%', '')
         if mob: auto_vis = M.auto_shot()
-        h += '<div class="flow rv"><span>当 <b class="f1">时间到了</b></span><i>→</i><span>若 <b class="f2">满足规则</b></span><i>→</i><span>就 <b class="f3">自动执行</b></span></div>\n'
+        h += '<div class="flow rv"><span>当 <b class="f1" data-tw>时间到了</b></span><i>→</i><span>若 <b class="f2">满足规则</b></span><i>→</i><span>就 <b class="f3">自动执行</b></span></div>\n'
         h += ('<div class="blk full rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
               '</div>' + auto_vis + '</div>')
         h += '</div></section>\n'

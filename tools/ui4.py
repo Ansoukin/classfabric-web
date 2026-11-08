@@ -44,7 +44,7 @@ def stage():
                 '<button class="sub-i on" data-g="0">' + ic('bell') + '<div><h4>准备上课</h4><p>在上课前一段时间发出提醒。室内课程默认提前 60 秒，室外课程默认提前 600 秒。</p></div></button>'
                 '<button class="sub-i" data-g="1">' + ic('school') + '<div><h4>上课</h4><p>在上课时发出提醒，并在主界面标出当前课程与剩余时间。</p></div></button>'
                 '<button class="sub-i" data-g="2">' + ic('clock') + '<div><h4>课间休息</h4><p>在下课时发出提醒，显示本节课间的时长与下一节课。</p></div></button></div>')
-    flow = '<div class="n5-fflow"><span>当 <b>时间到了</b></span><i></i><span>若 <b>满足规则</b></span><i></i><span>就 <b>自动执行</b></span></div>'
+    flow = '<div class="n5-flow"><span>当 <b data-tw>时间到了</b><i></i></span><span>若 <b>满足规则</b><i></i></span><span>就 <b>自动执行</b></span></div>'
 
     S = [
         ('#主界面', '直观的信息显示', '<p>自动直观地显示今日的课程安排与当前进行的课程，并支持通过「组件」自定义主界面上显示的内容。</p>', '', p0),

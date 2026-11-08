@@ -36,6 +36,7 @@
 .n5-tx .sub-i svg{width:22px;height:22px}
 .n5-tx button.sub-i{text-align:left;cursor:pointer;color:inherit;font:inherit;width:100%}
 .n5-flow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3);margin-top:var(--s-4);font-size:var(--fs-3);font-weight:750;letter-spacing:-.02em}
+.n5-flow>span{display:inline-flex;align-items:center;gap:var(--s-2)}
 .n5-flow b{color:var(--accent)}
 .n5-flow i{width:22px;height:1px;background:currentColor;opacity:.35;position:relative}
 .n5-flow i::after{content:"";position:absolute;right:0;top:-3px;width:6px;height:6px;border:solid currentColor;border-width:1px 1px 0 0;transform:rotate(45deg)}

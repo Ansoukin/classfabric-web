@@ -658,7 +658,9 @@ h1 .g{white-space:nowrap}
 .rt b small svg{width:13px;height:13px}
 .rt span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.35;color:#e3e3e3;margin-top:1px}
 .dlb{width:26px;height:26px;border-radius:50%;border:1.5px solid #62b3f2;display:grid;place-items:center;color:#62b3f2;flex:none}.dlb svg{width:14px;height:14px}
-.plr{flex:1;min-width:0;border-left:1px solid #343434;padding-left:12px;overflow:hidden}
+.plr{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;border-left:1px solid #343434;padding-left:12px;overflow:hidden}
+.plr>.ph,.plr>.ptabs{flex:none}
+.plr>.md,.plr>.deps:not([hidden]){flex:1 1 0;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:8px;scrollbar-width:thin;scrollbar-color:#6a6a6a transparent;overscroll-behavior:auto;-webkit-overflow-scrolling:touch}
 .ph{display:flex;gap:14px;align-items:flex-start}
 .ph h3{margin:0;font-size:24px;font-weight:600}
 .pm{font-size:14px;margin:6px 0 8px;display:flex;gap:7px;align-items:center;flex-wrap:wrap}.pm u{text-decoration:none;opacity:.7}.pm a{color:#62b3f2;text-decoration:underline}.pm svg{width:14px;height:14px}

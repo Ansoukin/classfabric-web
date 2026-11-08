@@ -60,3 +60,9 @@
 .n5-fix.arm.on .n5-fflow>li{opacity:1;transform:none;transition:opacity var(--t-slow) var(--ease-out),transform var(--t-slow) var(--ease-out);transition-delay:calc(var(--i) * 300ms)}
 .n5-fix.arm.on .n5-fflow>li::after{transform:scaleY(1);transition:transform var(--t-slow) var(--ease-out);transition-delay:calc(var(--i) * 300ms + 160ms)}
 @media(prefers-reduced-motion:reduce){.n5-fix.arm .n5-fflow>li,.n5-fix.arm .n5-fflow>li::after{opacity:1;transform:none;transition:none}}
+
+/* ===== 打字机：自动化「当 ___」循环改写为各类触发器 ===== */
+[data-tw]{display:inline-block;white-space:nowrap;max-width:100%;text-align:left}
+[data-tw].tw-on::after{content:"";display:inline-block;width:2px;height:1em;margin-left:2px;vertical-align:-.12em;background:currentColor;animation:n5-caret 1s steps(1) infinite}
+@keyframes n5-caret{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){[data-tw].tw-on::after{animation:none}}
