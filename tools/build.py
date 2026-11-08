@@ -155,6 +155,7 @@ FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class=
         '<div class="legal">© 2026 ClassFabric　基于 HelloWRC 的 ClassIsland（© 2023–2026 HelloWRC）二次开发，以 GPL-3.0 协议开源。<br>ClassFabric 是个人修改版，并非 ClassIsland 官方项目；ClassIsland 的名称与原有功能归其原作者所有。</div>' + BUILD + '</div></footer>\n'
         '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n<script src="/assets/js/widgets.js" defer></script>\n<script src="/assets/js/dl.js" defer></script>\n<script src="/assets/js/fx.js" defer></script>\n</body>\n</html>\n')
 
+FOOT_LITE = FOOT.replace('<script src="/assets/js/apps.js" defer></script>\n', '').replace('<script src="/assets/js/widgets.js" defer></script>\n', '')  # 下载/关于页没有演示控件，不加载其脚本
 FOOT_M = (FOOT.replace('<script src="/assets/js/apps.js" defer></script>\n', '').replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/bento.js" defer></script>').replace('<script src="/assets/js/widgets.js" defer></script>\n', '<script src="/assets/js/m.js" defer></script>\n')
           .replace('<div class="bld"', '<p class="pcl"><a href="/?view=pc">查看电脑版网页</a></p><div class="bld"', 1))
 
@@ -357,7 +358,7 @@ def download():
           '<div class="dlx-info"><div class="infob"><b>预览版说明</b><span>预览版包含尚未稳定的新功能，仅在 GitHub 发布了预览版时才可选择；遇到问题欢迎反馈。</span></div>'
           '<div class="infob"><b>更新与反馈</b><div class="btnrow"><a class="fb" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="fb" href="/about.html">了解 ClassFabric</a></div></div></div></div>'
           '<div style="height:clamp(50px,8vw,100px)"></div></main>\n')
-    return h + FOOT
+    return h + FOOT_LITE
 
 FAQ = [
     ('原来的课表、插件和主题还能用吗？', '可以。ClassFabric 的底层代码与上游保持一致，安装后原有的课表、自动化、插件与主题可直接沿用。'),
@@ -414,7 +415,7 @@ def about():
           '<div class="axjoin"><a href="' + GH + '" rel="noopener"><span>' + GHSVG.replace(' class="ghi"', '') + '</span><b>GitHub 仓库</b></a><a href="' + GH + '/issues" rel="noopener"><span>' + ic('info') + '</span><b>反馈问题</b></a><a href="' + GH + '/pulls" rel="noopener"><span>' + ic('sync') + '</span><b>提交 PR</b></a></div></section>'
           '<section id="faq" class="faq"><h2>常见问题</h2>' + faq_html() + '</section>'
           '</div></div></div></main>\n')
-    return h + FOOT
+    return h + FOOT_LITE
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about)):
     open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(fn()))
