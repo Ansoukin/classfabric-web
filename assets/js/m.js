@@ -36,4 +36,20 @@
     if (e.key === 'Escape') close();
     else if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.shotf[data-zoom]')) { e.preventDefault(); open(e.target); }
   });
+  /* 横向滑动的卡片组：在下方给出位置圆点，让用户知道还有几张 */
+  Array.prototype.forEach.call(document.querySelectorAll('.subs,.steps3,.themes3'), function (sc) {
+    var n = sc.children.length;
+    if (n < 2 || sc.scrollWidth <= sc.clientWidth + 4) return;
+    var d = document.createElement('div'), t = 0, i;
+    d.className = 'dots'; d.setAttribute('aria-hidden', 'true');
+    for (i = 0; i < n; i++) d.appendChild(document.createElement('i'));
+    sc.parentNode.insertBefore(d, sc.nextSibling);
+    function sync() {
+      t = 0;
+      var max = sc.scrollWidth - sc.clientWidth, k = max > 0 ? Math.round(sc.scrollLeft / max * (n - 1)) : 0;
+      Array.prototype.forEach.call(d.children, function (c, j) { c.classList.toggle('on', j === k); });
+    }
+    sc.addEventListener('scroll', function () { if (!t) t = requestAnimationFrame(sync); }, { passive: true });
+    sync();
+  });
 })();

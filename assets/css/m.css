@@ -21,3 +21,6 @@
 .lbx svg{width:20px;height:20px}
 .lbh{position:absolute;left:0;right:0;bottom:16px;margin:0;text-align:center;font-size:var(--fs-1);color:var(--on-wall-soft);pointer-events:none}
 html.lbo{overflow:hidden}
+.dots{display:flex;justify-content:center;gap:var(--s-2);margin-top:var(--s-1)}
+.dots i{width:6px;height:6px;border-radius:var(--r-s);background:var(--faint);opacity:.5;transition:width var(--t-base,.25s) var(--ease-out,ease),opacity var(--t-base,.25s),background var(--t-base,.25s)}
+.dots i.on{width:18px;opacity:1;background:var(--accent)}

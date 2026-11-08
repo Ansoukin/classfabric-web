@@ -1612,12 +1612,12 @@ html,body{overflow-x:clip}
 .assets2 .ac:hover .dlb svg{stroke:#06233b}
 .assets2 .none{padding:22px;color:var(--muted);font-size:14.5px;border:1px dashed var(--line);border-radius:12px;text-align:center}
 .assets2 .none a{display:inline;border:0;padding:0;background:none;color:var(--blue);text-decoration:underline;text-underline-offset:3px}
-.dlx-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative;counter-reset:s}
+.dlx-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;position:relative;counter-reset:s}
 .dlx-steps li{display:flex;gap:14px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--bg2)}
 .dlx-steps i{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#06233b;font-style:normal;font-weight:800;font-size:14px}
 .dlx-steps b{display:block;font-size:16px;margin-bottom:4px}
 .dlx-steps p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
-.dlx-info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+.dlx-info{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:44px}
 .dlx-info .infob{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:8px;align-content:start}
 .dlx-info .infob b{font-size:15.5px}.dlx-info .infob span{color:var(--muted);font-size:14px;line-height:1.7}
 .dlx-info .btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
@@ -1895,7 +1895,7 @@ html,body{overflow-x:clip}
 .axroad li>div{flex:1;min-width:0}
 .axroad b{display:block;font-size:16px;color:var(--fg)}
 .ab .axroad p{margin:2px 0 0;font-size:14.5px;line-height:1.8;color:var(--muted)}
-.axroad em{flex:none;font-style:normal;font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--faint);margin-top:3px}
+.axroad em{flex:none;font-style:normal;font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--faint);background:var(--card-2);color:var(--muted);margin-top:3px}
 .axname{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;margin-top:18px;padding:26px;border:1px solid var(--line);border-radius:20px;background:var(--bg2)}
 .axname .eq{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .axname .eq b{font-size:clamp(22px,3.2vw,32px);font-weight:800;letter-spacing:-.03em;color:var(--fg)}
