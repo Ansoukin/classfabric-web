@@ -121,7 +121,6 @@ h1{font-size:clamp(42px,8vw,96px);line-height:1.06;letter-spacing:-.035em;margin
 @keyframes drop{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:none}}
 
 .sec{padding:var(--s-8) 0 0}
-.claim{text-align:center;font-size:clamp(30px,5vw,56px);line-height:1.15;letter-spacing:-.03em;font-weight:800;margin:0 0 clamp(36px,5vw,64px)}
 
 .blk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:clamp(28px,4vw,64px);align-items:center;margin-bottom:clamp(70px,9vw,130px)}
 .blk.rev{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
@@ -500,7 +499,6 @@ h1{font-size:clamp(46px,9.4vw,118px);letter-spacing:-.045em;line-height:1.02;fon
 .panel .wp::after{background:rgba(2,8,24,.12)}
 .panel{border-color:rgba(150,190,255,.18);box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
 .sec{padding-top:var(--s-8)}
-.claim{font-size:clamp(34px,6.2vw,76px);letter-spacing:-.04em;line-height:1.08;margin-bottom:var(--s-6)}
 
 .copy h3{font-size:clamp(28px,3.6vw,48px);letter-spacing:-.035em;line-height:1.12}
 .copy p{color:#b4c0d8;font-size:clamp(16px,1.5vw,18.5px)}
@@ -624,7 +622,7 @@ h1 .g{white-space:nowrap}
 
 
 .final3{margin-top:clamp(90px,12vw,170px);padding:clamp(100px,14vw,200px) 0;text-align:center;border-top:1px solid var(--line)}
-.final3 h2{margin:0 0 18px;font-size:clamp(42px,8.6vw,112px);letter-spacing:-.045em;line-height:1.04;font-weight:800}
+.final3 h2{margin:0 0 18px}
 .final3 p{margin:0 0 40px;font-size:clamp(17px,2vw,22px);color:var(--muted)}
 .final3 .btn{padding:14px 28px;font-size:16px}
 .final3{padding-bottom:clamp(80px,10vw,130px)}
@@ -1205,7 +1203,6 @@ html,body{overflow-x:clip}
  .copy .tag,.tag{font-size:13.5px}
  .sub-i p,.cd p{font-size:15px;line-height:1.7}
  .fcard b{font-size:16px}.fcard .tx span{font-size:13.5px}
- .claim{font-size:clamp(30px,8.4vw,44px)}
  
  .blk .subs:not(.ctr .subs){display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:-24px;padding:4px 24px 12px;scrollbar-width:none}
  .blk .subs:not(.ctr .subs)::-webkit-scrollbar{display:none}
@@ -2268,7 +2265,7 @@ p,li{text-wrap:pretty}
 .nav.past .slinks{display:flex}
 .nav.past .links{display:none}
 @media(max-width:900px){.nav .slinks{display:none!important}}
-@media(max-width:640px){.sec{padding-top:var(--s-7)}.claim{margin-bottom:var(--s-5)}}
+@media(max-width:640px){.sec{padding-top:var(--s-7)}}
 
 /* 任务栏：图标组居中，空间不足时让位给托盘（与 Win11 行为一致） */
 .vtask{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(max-content,1fr);justify-content:normal;gap:0}

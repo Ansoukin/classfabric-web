@@ -1,0 +1,6 @@
+/* 大字排版系统：章节主张句（.claim）与章节节奏。数值全部来自 tokens.css。
+   主张句里的关键词放大、加重并带渐变，其余字退为中等字重与次级明度，形成字号与字重的对比张力。 */
+.n4-sw,.n5-show,.n5-stg,.n5-cus,.n5-grow{padding-top:var(--sec-y)}
+.claim{margin:0 0 var(--claim-gap);text-align:center;font-size:var(--fs-claim);font-weight:var(--fw-display-soft);line-height:var(--lh-display);letter-spacing:var(--tr-display);color:color-mix(in srgb,var(--fg) 78%,transparent)}
+.final3 h2{font-size:var(--fs-final);font-weight:var(--fw-display-soft);line-height:var(--lh-display);letter-spacing:var(--tr-display)}
+.claim .g,.n5-fl h2 .g,.final3 h2 .g{font-size:var(--fs-claim-key);font-weight:var(--fw-display);letter-spacing:var(--tr-display-key);padding-inline:.03em}

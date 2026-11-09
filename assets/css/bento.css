@@ -1,7 +1,7 @@
 /* 「不断增强」区块：桌面页与手机页共用。只使用 tokens.css 中的 token，见 AGENTS.md */
 .n5-bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--s-3);margin-top:var(--s-6)}
-.n5-t{grid-column:span 4;display:flex;flex-direction:column;min-height:0;padding:var(--s-4) var(--s-5);border:1px solid var(--line);border-radius:var(--r-m);background:var(--card);overflow:hidden;transition:border-color var(--t-base) var(--ease-out)}
-.n5-t:hover{border-color:var(--faint)}
+.n5-t{grid-column:span 4;display:flex;flex-direction:column;min-height:0;padding:var(--s-4) var(--s-5);border:1px solid var(--line);border-radius:var(--r-m);background:var(--card);box-shadow:var(--sh-edge);overflow:hidden;transition:border-color var(--t-base) var(--ease-out),box-shadow var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out)}
+.n5-t:hover{border-color:var(--faint);box-shadow:var(--sh-edge),var(--sh-lift);transform:translateY(calc(var(--s-1) * -.5))}
 .n5-t.w7{grid-column:span 7}
 .n5-t.w5{grid-column:span 5}
 .n5-t.w6{grid-column:span 6}

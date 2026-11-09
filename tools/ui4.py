@@ -178,7 +178,7 @@ def final(btns_dl, btns_more):
     rows = [('monitor', '系统', 'Windows 10 / 11'), ('plug', '运行时', '部分版本需要 .NET 10 桌面运行时'), ('doc', '开源协议', 'GPL-3.0'), ('sync', '最新版本', '<b data-ver class="sk"></b>')]
     li = ''.join('<li>%s<span>%s</span><b>%s</b></li>' % (ic(i), k, v) for i, k, v in rows)
     return ('<section class="n5-fin"><div class="wrap"><div class="n5-fc rv"><div class="n5-fl">'
-            '<img src="/assets/img/icon-180.png" alt="" width="72" height="72"><h2>立即体验 ClassFabric</h2><p>更多功能留给您自行探索！</p>'
+            '<img src="/assets/img/icon-180.png" alt="" width="72" height="72"><h2>立即体验<br><span class="g">ClassFabric</span></h2><p>更多功能留给您自行探索！</p>'
             '<div class="cta">' + btns_dl + btns_more + '</div></div>'
             '<div class="n5-fr"><h3>开始之前</h3><ul>' + li + '</ul></div></div></div></section>\n')
 

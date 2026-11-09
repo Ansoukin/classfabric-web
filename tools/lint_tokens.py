@@ -1,7 +1,7 @@
 import re, sys, os
 
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FILES = ['assets/css/home2.css', 'assets/css/bento.css', 'assets/css/modal.css', 'assets/css/materials.css', 'assets/css/m.css']
+FILES = ['assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/css/modal.css', 'assets/css/materials.css', 'assets/css/m.css']
 bad = []
 for f in FILES:
     p = os.path.join(R, f)

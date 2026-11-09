@@ -136,7 +136,7 @@ RELEASE_DATE = '2026-11-08'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css'):
+    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
@@ -182,7 +182,7 @@ def home(mob=False):
     import mobile as M
     M.init(globals())
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
-             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="stylesheet" href="/assets/css/bento.css">\n' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
+             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
     h += navbar('home', [('features','功能'),('custom','定制'),('grow','增强'),('start','开始使用'),('faqs','常见问题')])
     h += '<main>\n'
     U3.init(globals())
@@ -324,7 +324,7 @@ def home(mob=False):
 
     h += '<section class="sec" id="faqs"><div class="wrap"><h2 class="claim rv">常见问题</h2><div class="faq faqhome rv">' + faq_html() + '</div></div></section>\n'
     if mob:
-        h += ('<section class="final3"><div class="wrap"><h2 class="rv">立即体验 ClassFabric</h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
+        h += ('<section class="final3"><div class="wrap"><h2 class="rv">立即体验<br><span class="g">ClassFabric</span></h2><p class="rv d1">更多功能留给您自行探索！</p><div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/about.html">了解更多</a></div></div></section>\n')
     else:
         h += U4.final('<a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a>', '<a class="btn glass" href="/about.html">了解更多</a>')
     h += '</main>\n'

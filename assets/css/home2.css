@@ -154,9 +154,9 @@
 
 /* ===== 结尾 ===== */
 .n5-fin{padding:var(--s-8) 0 var(--s-7)}
-.n5-fc{position:relative;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:var(--s-7);padding:var(--s-7);border:1px solid var(--line);border-radius:var(--r-l);background:var(--card);overflow:hidden}
+.n5-fc{position:relative;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:var(--s-7);padding:var(--s-7);border:1px solid var(--line);border-radius:var(--r-l);background:var(--card);box-shadow:var(--sh-edge);overflow:hidden}
 .n5-fl img{display:block;border-radius:var(--r-m);margin-bottom:var(--s-4)}
-.n5-fl h2{margin:0 0 var(--s-3);font-size:var(--fs-4);line-height:1.15;letter-spacing:-.02em;font-weight:700;text-wrap:balance}
+.n5-fl h2{margin:0 0 var(--s-3);font-size:var(--fs-final);line-height:var(--lh-display);letter-spacing:var(--tr-display);font-weight:var(--fw-display-soft);text-wrap:balance}
 .n5-fl p{margin:0 0 var(--s-5);font-size:var(--fs-3);color:var(--muted)}
 .n5-fl .cta{justify-content:flex-start}
 .n5-fr{align-self:center}
