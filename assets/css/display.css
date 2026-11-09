@@ -3,4 +3,5 @@
 .n4-sw,.n5-show,.n5-stg,.n5-cus,.n5-grow{padding-top:var(--sec-y)}
 .claim{margin:0 0 var(--claim-gap);text-align:center;font-size:var(--fs-claim);font-weight:var(--fw-display-soft);line-height:var(--lh-display);letter-spacing:var(--tr-display);color:color-mix(in srgb,var(--fg) 78%,transparent)}
 .final3 h2{font-size:var(--fs-final);font-weight:var(--fw-display-soft);line-height:var(--lh-display);letter-spacing:var(--tr-display)}
-.claim .g,.n5-fl h2 .g,.final3 h2 .g{font-size:var(--fs-claim-key);font-weight:var(--fw-display);letter-spacing:var(--tr-display-key);padding-inline:.03em}
+/* 关键词：保持正文色，仅加粗并垫一道荧光笔式底纹——不用渐变文字 */
+.claim .g,.n5-fl h2 .g,.final3 h2 .g{color:var(--fg);font-weight:var(--fw-display);letter-spacing:var(--tr-display-key);padding-inline:.08em;margin-inline:-.08em;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--accent) var(--marker-mix),transparent) 60% 90%,transparent 90%);-webkit-box-decoration-break:clone;box-decoration-break:clone}

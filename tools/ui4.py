@@ -13,7 +13,7 @@ def _isl_idle():
 
 
 def _step(i, n, tag, title, body, extra=''):
-    return ('<div class="n5-tx" style="--r:%d"><div class="n5-no"><b>%02d</b><i></i><span>%02d</span></div><span class="tag">%s</span><h3>%s</h3>%s%s</div>' % (i + 1, i + 1, n, tag, title, body, extra))
+    return ('<div class="n5-tx" style="--r:%d"><div class="n5-no"><b>%02d</b><i></i><span>%02d</span></div><h3>%s</h3>%s%s</div>' % (i + 1, i + 1, n, title, body, extra))
 
 
 def _subs(items):
@@ -72,7 +72,7 @@ def show(ST):
 
 
 def split(tag, title, desc, extra=''):
-    return ('<div class="wrap n5-sh"><div class="rv"><span class="tag">%s</span><h3>%s</h3></div><div class="rv d1"><p>%s</p>%s</div></div>' % (tag, title, desc, extra))
+    return ('<div class="wrap n5-sh"><div class="rv"><h3>%s</h3></div><div class="rv d1"><p>%s</p>%s</div></div>' % (title, desc, extra))
 
 
 def chips(items):
@@ -139,25 +139,25 @@ def grow():
     ST = 'https://github.com/Programmer-MrWang/SystemTools'
     IS = 'https://github.com/ClassIsland/ClassIsland/issues/'
     arr = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>'
-    ln = ('<article class="n5-t w5 rv"><span class="n5-eb">#多语言 · 实验中</span><h4>让界面说你的语言</h4>'
+    ln = ('<article class="n5-t w5 rv"><h4>让界面说你的语言</h4>'
           '<p>界面文字正在由写死改为可翻译的形式，目前支持简体中文、繁體中文与 English。翻译由 Crowdin 协作完成。</p>'
           '<div class="n5-tv"><div class="chips-row"><span class="chip on">简体中文</span><span class="chip">繁體中文</span><span class="chip">English</span></div>'
           '<a class="n5-ln" href="' + CR + '" rel="noopener">在 Crowdin 参与翻译' + arr + '</a></div></article>')
-    wx = ('<article class="n5-t w7 rv d1"><span class="n5-eb">#天气</span><h4>三个天气源，自己选</h4>'
+    wx = ('<article class="n5-t w7 rv d1"><h4>三个天气源，自己选</h4>'
           '<p>除内置的小米天气外，新增 OpenWeather 与和风天气（QWeather）。所选来源不可用时，可自动回退到小米天气，并可限制 API 用量。</p>'
           '<div class="n5-tv"><div class="n5-shot"><img src="/assets/img/grow-weather.webp" alt="设置页中的天气数据源：选择和风天气后出现 API Key 等选项" width="1020" height="235" loading="lazy"></div></div></article>')
-    pv = ('<article class="n5-t w7 rv"><span class="n5-eb">#插件</span><h4>插件说明，清爽统一</h4>'
+    pv = ('<article class="n5-t w7 rv"><h4>插件说明，清爽统一</h4>'
           '<p>用 Markdig 清洗各插件各不相同的 README，以统一、美观的方式展示，并单独处理图片与 SVG。</p>'
           '<div class="n5-tv"><div class="n5-cmp" style="--p:50%"><img src="/assets/img/grow-cmp-ours.webp" alt="ClassFabric 中的 SystemTools 插件详情" width="808" height="374" loading="lazy">'
           '<img class="o" src="/assets/img/grow-cmp-orig.webp" alt="原版中的同一插件详情" width="808" height="374" loading="lazy">'
           '<span class="n5-cmpl a">原版</span><span class="n5-cmpl b">ClassFabric</span><i class="n5-cmph" aria-hidden="true"></i>'
           '<input type="range" min="0" max="100" value="50" aria-label="对比原版与 ClassFabric 的插件详情"></div></div></article>')
-    ac = ('<article class="n5-t w5 rv d1"><span class="n5-eb">#自动化</span><h4>更多行动与触发器</h4>'
+    ac = ('<article class="n5-t n5-stmt w5 rv d1"><h4>更多行动与触发器</h4>'
           '<p>实现参考了 SystemTools 插件的能力。</p>'
           '<div class="n5-tv"><div class="n5-big">75<em>+</em></div><div class="n5-cap">触发器 + 规则集 + 动作，合计 75+ 项</div>'
           '<a class="n5-ln" href="' + ST + '" rel="noopener">查看 SystemTools' + arr + '</a></div></article>')
     GITEE = ('<svg viewBox="0 0 1024 1024" aria-hidden="true"><path fill="#C71D23" d="M512 1024C229.222 1024 0 794.778 0 512S229.222 0 512 0s512 229.222 512 512-229.222 512-512 512zm259.149-568.883h-290.74a25.293 25.293 0 0 0-25.292 25.293l-.026 63.206c0 13.952 11.315 25.293 25.267 25.293h177.024c13.978 0 25.293 11.315 25.293 25.267v12.646a75.853 75.853 0 0 1-75.853 75.853h-240.23a25.293 25.293 0 0 1-25.267-25.293V417.203a75.853 75.853 0 0 1 75.827-75.853h353.946a25.293 25.293 0 0 0 25.267-25.292l.077-63.207a25.293 25.293 0 0 0-25.268-25.293H417.152a189.62 189.62 0 0 0-189.62 189.645V771.15c0 13.977 11.316 25.293 25.294 25.293h372.94a170.65 170.65 0 0 0 170.65-170.65V480.384a25.293 25.293 0 0 0-25.293-25.267z"/></svg>')
-    ch = ('<article class="n5-t w5 rv"><span class="n5-eb">#更新</span><h4>多通道下载与更新</h4>'
+    ch = ('<article class="n5-t w5 rv"><h4>多通道下载与更新</h4>'
           '<p>除官方 PDCC 外，可从 GitHub 与 Gitee 下载更新。保留 PDCC 是为方便恢复原版，之后将提供自建 PDCC。</p>'
           '<div class="n5-tv"><div class="n5-src"><span>' + ic('cloud') + 'PDCC<small>官方 · 恢复原版</small></span><span>' + GHSVG.replace(' class="ghi"', '') + 'GitHub</span><span>' + GITEE + 'Gitee</span></div></div></article>')
     iss = ''.join('<li><a href="%s%s" rel="noopener"><code>#%s</code><span>%s</span>%s</a></li>' % (IS, n, n, s, ic('check')) for n, s in (('2032', '系统切换为深色模式后，天气简报的温度置空'), ('2039', '更改时间偏移后，以 cron 为触发器的自动化会执行两次')))
@@ -165,7 +165,7 @@ def grow():
              ('bolt', '修复与优化', '', ''),
              ('sync', '随更新送达', '', '')]
     flow = '<ol class="n5-fflow">' + ''.join('<li style="--i:%d"><i class="n5-fnd">%s</i><div><b>%s</b>%s%s</div></li>' % (i, ic(ic_), h, ('<p>%s</p>' % d) if d else '', x) for i, (ic_, h, d, x) in enumerate(steps)) + '</ol>'
-    fx = ('<article class="n5-t w7 rv d1 n5-fix"><span class="n5-eb">#修复</span><h4>大量修复与优化</h4>'
+    fx = ('<article class="n5-t w7 rv d1 n5-fix"><h4>大量修复与优化</h4>'
           '<p>听从社区意见，修复并优化了许多问题。</p>' + flow +
           '<a class="n5-ln" href="' + GH + '/releases" rel="noopener">查看全部更新日志' + arr + '</a></article>')
     jn = ('<div class="n5-join rv"><div><b>欢迎参与共建</b></div>'
@@ -187,8 +187,8 @@ def sync(c_sync, c_mig, c_enh, panel_wall):
     T = [('#同步', '积极同步上游特性', 'ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。', c_sync, '30%', '36%'),
          ('#迁移', '无感切换，沿用现有配置', '底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。', c_mig, '62%', '30%'),
          ('#增强', '来自社区与我们的增强', '在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。', c_enh, '78%', '58%')]
-    tabs = ''.join('<button type="button" class="n4-swt%s" role="tab" aria-selected="%s" data-i="%d"><span class="tag">%s</span><h3>%s</h3><div class="n4-swd"><p>%s</p></div><i class="n4-bar"><b></b></i></button>'
-                   % (' on' if i == 0 else '', 'true' if i == 0 else 'false', i, t[0], t[1], t[2]) for i, t in enumerate(T))
+    tabs = ''.join('<button type="button" class="n4-swt%s" role="tab" aria-selected="%s" data-i="%d"><h3>%s</h3><div class="n4-swd"><p>%s</p></div><i class="n4-bar"><b></b></i></button>'
+                   % (' on' if i == 0 else '', 'true' if i == 0 else 'false', i, t[1], t[2]) for i, t in enumerate(T))
     panes = ''.join('<div class="n4-swp%s" role="tabpanel" data-i="%d">%s</div>' % (' on' if i == 0 else '', i, panel_wall('<div class="fstack">' + t[3] + '</div>', t[4], t[5], '190%', 'pad')) for i, t in enumerate(T))
     return ('<section class="sec n4-sw" id="sync"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2>'
             '<div class="n4-swc rv" data-sw><div class="n4-swl" role="tablist" aria-label="紧跟上游">' + tabs + '</div><div class="n4-swv">' + panes + '</div></div></div></section>\n')

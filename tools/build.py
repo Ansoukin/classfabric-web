@@ -205,9 +205,9 @@ def home(mob=False):
     c_enh = fc('cloud', '更多天气源', '小米天气 · OpenWeather · 和风天气', on) + fc('text', '多语言', '实验中', on) + fc('plug', '更好的插件预览', '', on) + fc('sync', '持续同步上游', '', on)
     if mob:
         h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
-              '<div class="copy rv"><span class="tag">#同步</span><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p><div class="fstack">' + c_sync + '</div></div>'
-              '<div class="copy rv d1"><span class="tag p">#迁移</span><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p><div class="fstack">' + c_mig + '</div></div>'
-              '<div class="copy rv d2"><span class="tag o">#增强</span><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p><div class="fstack">' + c_enh + '</div></div>'
+              '<div class="copy rv"><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p><div class="fstack">' + c_sync + '</div></div>'
+              '<div class="copy rv d1"><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p><div class="fstack">' + c_mig + '</div></div>'
+              '<div class="copy rv d2"><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p><div class="fstack">' + c_enh + '</div></div>'
               '</div></div></section>\n')
 
     else:
@@ -243,7 +243,7 @@ def home(mob=False):
         row2 = '<div style="display:flex;gap:10px;justify-content:center;margin-top:14px;font-size:17px;font-family:var(--font)">' + ''.join('<div class="isl static" style="padding:0 1em">%s</div>' % t for t in ['12:30:44', ic('sun') + '&nbsp;9℃', ic('timer') + '&nbsp;元旦 62 天']) + '</div>'
         main_vis = panel_wall(fit('<div style="width:1000px;padding:14px 0 18px"><div style="display:flex;justify-content:center;font-size:19px"><div class="isl-stack">' + static_isl(idle('break', '56%', '78%', 3000)).replace('<div class="isl static"', '<div class="isl static on"') + '</div></div>' + row2.replace('17px', '19px') + '</div>', 1000, 'position:relative;width:100%', 520), '50%', '2%', '190%', 'pad')
         if mob: main_vis = M.main_panel()
-        h += ('<div class="blk scene-over rv"><div class="copy"><span class="tag">#主界面</span><h3>直观的信息显示</h3><p>自动直观地显示今日的课程安排与当前进行的课程，并支持通过「组件」自定义主界面上显示的内容。</p></div>' + main_vis + '</div>')
+        h += ('<div class="blk scene-over rv"><div class="copy"><h3>直观的信息显示</h3><p>自动直观地显示今日的课程安排与当前进行的课程，并支持通过「组件」自定义主界面上显示的内容。</p></div>' + main_vis + '</div>')
         tabs = ('<div class="subs" id="remTabs">'
                 '<button class="sub-i on" data-g="0" style="text-align:left;cursor:pointer;color:inherit">' + ic('bell') + '<div><h4>准备上课</h4><p>在上课前一段时间发出提醒，提示做好上课准备。室内课程默认提前 60 秒，室外课程默认提前 600 秒。</p></div></button>'
                 '<button class="sub-i" data-g="1" style="text-align:left;cursor:pointer;color:inherit">' + ic('school') + '<div><h4>上课</h4><p>在上课时发出提醒，提示已经上课，并在主界面标出当前课程与剩余时间。</p></div></button>'
@@ -252,22 +252,22 @@ def home(mob=False):
                    + fit('<div style="display:flex;justify-content:center;width:100%"><div class="isl-stack" data-demo="rem" id="remIsl" style="font-size:20px">' + REM_STATES + '</div></div>', 1000, 'position:relative;width:100%', 720)
                    + '<div style="padding:18px 4% 0;position:relative;margin-bottom:-24px"><div class="app" data-app="settings" data-start="remind" data-h="600"></div></div></div></div>')
         if mob: rem_vis = M.rem_panel()
-        h += ('<div class="blk full ctr rv"><div class="copy"><span class="tag o">#提醒</span><h3>醒目的提醒系统</h3><p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>' + tabs + '</div>' + rem_vis + '</div>')
+        h += ('<div class="blk full ctr rv"><div class="copy"><h3>醒目的提醒系统</h3><p>在上课、下课等重要时间点发出醒目的提醒，提示语可以自行修改，并支持语音播报；放学提醒、天气预警和自动化行动同样可以通过它显示。</p>' + tabs + '</div>' + rem_vis + '</div>')
         subs = ('<div class="subs"><div class="sub-i">' + ic('cal') + '<div><h4>灵活的课表启用规则</h4><p>可为课表设置每周、某一天或循环启用的规则，支持多周轮换，到日期自动切换。</p></div></div>'
                 '<div class="sub-i">' + ic('clock') + '<div><h4>时间与科目的自由定制</h4><p>不同课表可使用不同的时间表，并支持自定义科目，设置科目图标与主题色。</p></div></div>'
                 '<div class="sub-i">' + ic('edit') + '<div><h4>简洁直观的编辑工具</h4><p>课表、时间表、科目分页编辑，时间表以时间轴方式直接拖动调整。</p></div></div></div>')
         ed_vis = '<div class="edpanel">' + vdesk('<div class="vwin">' + ui2.editor_app(seed='real') + '</div>', 'vdk-bare', 1280, 720, 680, 780).replace('<div class="vtask">', '<div class="vtask" hidden>', 1) + '</div>'
         if mob: ed_vis = M.editor_section()
-        h += ('<div class="blk full rv"><div class="copy"><span class="tag p">#课表</span><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击窗口上方的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
+        h += ('<div class="blk full rv"><div class="copy"><h3>强大的课表系统</h3><p>便捷地导入、编辑和调换课表。点击窗口上方的标签页，试试看。</p>' + subs + '</div>' + ed_vis + '</div>')
         swap_vis = '<div class="edpanel">' + vdesk('<div class="vwin" data-vwin="swap"><div class="sw2 w" data-app="swap" data-modal="1"></div></div><div class="vtray-menu" data-vmenu>' + tray_menu() + '</div>', 'vdk-swap', 800, 500, 720, 520, ' data-vtray="swap"', 'swTray') + '<p class="vcap">点击右下角的托盘图标，选择「换课…」，即可从托盘打开独立的换课窗口。</p></div>'
         if mob: swap_vis = M.swap_section()
-        h += ('<div class="blk rev zoomed rv"><div class="copy" style="order:2"><span class="tag gr">#换课</span><h3>为高效而生的换课</h3><p>换课窗口专为快速调课而设计：从托盘一键打开，选中要调换的课程，再选替换科目，几秒钟完成。</p>'
+        h += ('<div class="blk rev zoomed rv"><div class="copy" style="order:2"><h3>为高效而生的换课</h3><p>换课窗口专为快速调课而设计：从托盘一键打开，选中要调换的课程，再选替换科目，几秒钟完成。</p>'
               '<div class="subs"><div class="sub-i">' + ic('swap') + '<div><h4>当日与跨天都能换</h4><p>可以只换这一次，也可以勾选「永久换课」。</p></div></div>'
               '<div class="sub-i">' + ic('cal') + '<div><h4>临时启用课表</h4><p>在当日或未来某一天临时启用另一个课表，应对调休。</p></div></div></div></div>' + swap_vis + '</div>')
         auto_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="auto" data-h="640"></div></div>', '84%', '60%', '230%', '')
         if mob: auto_vis = M.auto_shot()
         h += '<div class="flow rv"><span>当 <b class="f1" data-tw>时间到了</b></span><i>→</i><span>若 <b class="f2">满足规则</b></span><i>→</i><span>就 <b class="f3">自动执行</b></span></div>\n'
-        h += ('<div class="blk full rv"><div class="copy"><span class="tag">#自动化</span><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
+        h += ('<div class="blk full rv"><div class="copy"><h3>智能的自动行为</h3><p>让 ClassFabric 在特定的时间节点执行特定的操作，比如切换组件配置、运行程序、显示提醒。简单来说，就是「当 XX 发生」，并且「满足 XX 规则」时「做什么」。</p>'
               '</div>' + auto_vis + '</div>')
         h += '</div></section>\n'
 
@@ -275,14 +275,14 @@ def home(mob=False):
         h += '<section class="sec" id="custom"><div class="wrap"><h2 class="claim rv">一款<span class="g">可定制</span>的大屏课表软件</h2>'
         wid_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="widgets" data-h="600"></div></div>', '8%', '44%', '230%', '')
         if mob: wid_vis = M.wid_shot()
-        h += ('<div class="blk full crop rv"><div class="copy"><span class="tag p">#组件</span><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
+        h += ('<div class="blk full crop rv"><div class="copy"><h3>使用组件搭配你的主界面</h3><p>通过「组件」自由定制主界面上显示的内容，并支持轮播、滚动、分组与堆叠容器。除了课表，还可以显示日期、时钟、天气与倒计时。</p>'
               '<p>进入「编辑模式」，可以直接在主界面上拖动调整组件。</p></div>' + wid_vis + '</div>')
         thm_vis = panel_wall('<div style="padding:5% 4% 3%"><div class="app" data-app="settings" data-start="appearance" data-h="620"></div></div>', '50%', '90%', '230%', '')
         h += U3.themes(mob, '' if mob else thm_vis)
         plg_vis = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="plugins" data-h="640"></div></div>', '20%', '20%', '230%', '')
         if mob: plg_vis = M.plg_shot()
         h += '<div class="pmq rv" aria-label="社区插件"><div class="t">' + (''.join('<a class="pc" href="https://github.com/%s" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/%s" alt="" loading="lazy" width="48" height="48"><div><b>%s</b><small>%s</small></div></a>' % (repo, icon, name, desc) for name, repo, icon, desc in PLUGINS) * 2) + '</div></div>\n'
-        h += ('<div class="blk full crop rv"><div class="copy"><span class="tag gr">#插件</span><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
+        h += ('<div class="blk full crop rv"><div class="copy"><h3>丰富的插件生态</h3><p>支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。</p></div>' + plg_vis + '</div>')
         h += '</div></section>\n'
 
         G = [('tl', '时间表', '以时间轴的方式直接拖动调整每一节课的时间。'), ('sj', '科目', '自定义科目的名称、图标与主题色。'), ('grid', '课表', '按周查看并填写课表，科目一键点选。'), ('sw', '调课', '周视图与日历视图，可预定临时启用的课表。')]
@@ -303,7 +303,7 @@ def home(mob=False):
     if mob:
         rec_vis = panel_wall('<div style="padding:22px 14px 0">' + fit(recovery(), 420, 'position:relative;width:100%;margin-bottom:-4px') + '</div>', '70%', '70%', '240%', '')
         h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">除了这些…</h2>'
-              '<div class="blk rv"><div class="copy"><span class="tag gr">#可靠</span><h3>出现问题，也能恢复</h3><p>' + rec_txt + '</p></div>' + rec_vis + '</div></div></section>\n')
+              '<div class="blk rv"><div class="copy"><h3>出现问题，也能恢复</h3><p>' + rec_txt + '</p></div>' + rec_vis + '</div></div></section>\n')
     else:
         rec_vis = panel_wall('<div style="display:flex;justify-content:center;padding:5% 0 0">' + fit(recovery(), 420, 'position:relative;width:min(400px,38%);margin-bottom:-4px') + '</div>', '70%', '70%', '240%', '')
         h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">除了这些…</h2></div>' + U4.split('#可靠', '出现问题，也能恢复', rec_txt)
@@ -382,7 +382,7 @@ def about():
     h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html')
     h += navbar('about')
     def card(i, t, d, extra=''):
-        return '<div class="axc"><span class="axi">%s</span><div><b>%s</b><p>%s</p>%s</div></div>' % (ic(i), t, d, extra)
+        return '<div class="axc"><div><b>%s</b><p>%s</p>%s</div></div>' % (t, d, extra)
     facts = ''.join(card(*x) for x in [('sync', '同步上游', '积极跟进 ClassIsland 的新功能与修复'), ('check', '无缝沿用', '课表、自动化、插件与主题直接继续使用'), ('plug', '来自社区的增强', '更多天气源、多语言（实验中）等'), ('doc', '开源免费', '沿用上游的 GPL-3.0 协议')])
     amap = ('<div class="axmap"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div>'
             '<div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div>'

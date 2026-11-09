@@ -1,6 +1,5 @@
 /* 首页桌面版。只使用 tokens.css 中的 token，见 AGENTS.md */
 .wrapw{width:min(1360px,100% - 48px);margin-inline:auto}
-.n5-sh .tag,.n5-tx .tag,.n4-swt .tag{color:var(--accent);filter:none}
 
 /* ===== 章节标题 ===== */
 .n5-sh{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--s-7);align-items:end;margin-top:var(--s-8);margin-bottom:var(--s-5)}
@@ -225,7 +224,6 @@
 .n4-swt{position:relative;display:block;text-align:left;width:100%;padding:var(--s-4) 0;border:0;border-top:1px solid var(--line);background:none;color:var(--fg);font:inherit;cursor:pointer;opacity:.42;transition:opacity var(--t-slow) var(--ease-out)}
 .n4-swt:last-child{border-bottom:1px solid var(--line)}
 .n4-swt:hover,.n4-swt.on{opacity:1}
-.n4-swt .tag{margin:0}
 .n4-swt h3{margin:var(--s-1) 0 0;font-size:var(--fs-4);line-height:1.2;letter-spacing:-.03em;font-weight:760}
 .n4-swd{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--t-slow) var(--ease-out)}
 .n4-swd>p{overflow:hidden;margin:0;color:var(--muted);font-size:var(--fs-2);line-height:1.85;min-height:0}
