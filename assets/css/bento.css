@@ -20,7 +20,7 @@
 /* 声明卡：强调色淡染的表面 + 超大数字，在整齐的网格里留一处不同，但不抢眼 */
 .n5-stmt{background:color-mix(in srgb,var(--accent) 11%,var(--card));border-color:color-mix(in srgb,var(--accent) 26%,var(--line))}
 .n5-stmt:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
-.n5-stmt .n5-big{font-size:var(--fs-stat);font-weight:900;letter-spacing:-.06em;line-height:.92}
+.n5-stmt .n5-big{margin:0 0 var(--s-2) -.1em;font-size:var(--fs-stat);font-weight:900;letter-spacing:-.06em;line-height:.82}
 .n5-big em{font-style:normal;color:var(--accent);display:inline-block;transform-origin:50% 70%}
 /* 计数：数字右对齐并按最终位数预留宽度、等宽数字，计数过程中“+”不位移、整块不抖动 */
 .n5-n{display:inline-block;min-width:2ch;text-align:right;font-variant-numeric:tabular-nums}
