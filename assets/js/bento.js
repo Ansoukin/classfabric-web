@@ -7,14 +7,15 @@
 
   /* 对比滑块 */
   $$('.n5-cmp').forEach(function (b) {
-    var r = $('input', b), set = function (v) { b.style.setProperty('--p', v + '%'); };
+    var r = $('input', b), la = $('.n5-cmpl.a', b), lb = $('.n5-cmpl.b', b), set = function (v) { b.style.setProperty('--p', v + '%'); la.classList.toggle('gone', v < 24); lb.classList.toggle('gone', v > 76); };
     r.addEventListener('input', function () { set(r.value); });
     if (hasIO) new IntersectionObserver(function (es, io) {
       if (!es[0].isIntersecting) return; io.disconnect();
       var t0 = performance.now();
       (function f(t) { var k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3); if (!r._touched) { r.value = 100 - 50 * e; set(r.value); if (k < 1) requestAnimationFrame(f); } })(t0);
     }, { threshold: .6 }).observe(b);
-    r.addEventListener('pointerdown', function () { r._touched = 1; });
+    r.addEventListener('pointerdown', function () { r._touched = 1; b.classList.add('drag'); });
+    ['pointerup', 'pointercancel', 'blur'].forEach(function (e) { r.addEventListener(e, function () { b.classList.remove('drag'); }); });
   });
 
   /* 修复流程：进入视口时依次点亮 */

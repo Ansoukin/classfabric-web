@@ -17,25 +17,27 @@
 .n5-shot{max-height:96px;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-m)}
 .n5-shot img{display:block;width:100%;height:auto}
 .n5-big{font-size:var(--fs-4);font-weight:800;line-height:1.1;letter-spacing:-.04em}
-/* 声明卡：反色表面 + 超大数字，让整齐的卡片网格里有一处刻意不同 */
-.n5-stmt{background:var(--surface-inv);color:var(--on-inv);border-color:transparent;box-shadow:none}
-.n5-stmt:hover{border-color:transparent;box-shadow:var(--sh-lift)}
-.n5-stmt>p,.n5-stmt .n5-cap{color:var(--on-inv-soft)}
-.n5-stmt .n5-ln{color:var(--on-inv)}
+/* 声明卡：强调色淡染的表面 + 超大数字，在整齐的网格里留一处不同，但不抢眼 */
+.n5-stmt{background:color-mix(in srgb,var(--accent) 11%,var(--card));border-color:color-mix(in srgb,var(--accent) 26%,var(--line))}
+.n5-stmt:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
 .n5-stmt .n5-big{font-size:var(--fs-stat);font-weight:900;letter-spacing:-.06em;line-height:.92}
-.n5-stmt .n5-big em{color:var(--accent-inv)}
 .n5-big em{font-style:normal;color:var(--accent);display:inline-block;transform-origin:50% 70%}
 /* 计数：数字右对齐并按最终位数预留宽度、等宽数字，计数过程中“+”不位移、整块不抖动 */
 .n5-n{display:inline-block;min-width:2ch;text-align:right;font-variant-numeric:tabular-nums}
 .n5-big.counting em{opacity:.35}
 .n5-big.counted em{animation:n5-pop var(--t-slow) var(--ease-out)}
 @keyframes n5-pop{from{opacity:.35;transform:scale(.7)}60%{transform:scale(1.18)}to{opacity:1;transform:none}}
-.n5-cmp{position:relative;height:168px;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg3);touch-action:pan-y;user-select:none}
+.n5-cmp{position:relative;height:220px;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg3);touch-action:pan-y;user-select:none}
 .n5-cmp img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:left top;pointer-events:none}
 .n5-cmp img.o{clip-path:inset(0 calc(100% - var(--p)) 0 0)}
-.n5-cmph{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:var(--on-wall);pointer-events:none}
-.n5-cmph::after{content:"";position:absolute;left:50%;top:50%;width:var(--s-4);height:var(--s-4);margin:calc(var(--s-3) * -.5) 0 0 calc(var(--s-3) * -.5);border-radius:50%;background:var(--on-wall);box-shadow:var(--ring-wall)}
-.n5-cmpl{position:absolute;top:var(--s-2);padding:var(--s-1) var(--s-2);border:1px solid var(--on-wall-line);border-radius:var(--r-s);background:var(--acrylic-solid);color:var(--fg);font-size:var(--fs-1);font-weight:600;pointer-events:none}
+.n5-cmph{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:var(--on-wall);box-shadow:var(--sh-1);pointer-events:none}
+.n5-cmph::after,.n5-cmph::before{content:"";position:absolute;left:50%;top:50%;width:var(--s-5);height:var(--s-5);margin:calc(var(--s-5) * -.5) 0 0 calc(var(--s-5) * -.5);border-radius:50%}
+.n5-cmph::after{background:var(--on-wall);box-shadow:var(--ring-wall),var(--sh-win);transition:transform var(--t-base) var(--ease-out)}
+.n5-cmph::before{z-index:1;background:var(--scrim);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M13 11l-5 5 5 5M19 11l5 5-5 5' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M13 11l-5 5 5 5M19 11l5 5-5 5' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
+.n5-cmp.drag .n5-cmph::after{transform:scale(1.12)}
+.n5-cmp:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.n5-cmpl{position:absolute;top:var(--s-2);padding:var(--s-1) var(--s-2);border:1px solid var(--on-wall-line);border-radius:var(--r-s);background:var(--acrylic-solid);color:var(--fg);font-size:var(--fs-1);font-weight:600;pointer-events:none;transition:opacity var(--t-base) var(--ease-out)}
+.n5-cmpl.gone{opacity:0}
 .n5-cmpl.a{left:var(--s-2)}
 .n5-cmpl.b{right:var(--s-2)}
 .n5-cmp input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}

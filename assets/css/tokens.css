@@ -34,11 +34,6 @@
   --sec-y:clamp(72px,11vw,152px);
   --claim-gap:clamp(32px,4.6vw,64px);
 
-  /* 反色表面：用于整页里刻意“不一样”的一两处，深浅主题下与页面底色互换 */
-  --surface-inv:#eef1f6;
-  --on-inv:#10141b;
-  --on-inv-soft:#4a5368;
-  --accent-inv:#0a63c9;
   --ok:#34c759;                        /* 成功/最新：深色底用亮绿，浅色底换深绿以保证对比度 */
   --fs-stat:clamp(88px,11vw,152px);
   --sh-1:0 1px 2px rgba(0,0,0,.18);
@@ -75,6 +70,6 @@
   --rep-isl:#2e2220;
   --tick:2s;
 }
-:root[data-theme=light]{--accent:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--surface-inv:#10141b;--on-inv:#f4f6fb;--on-inv-soft:#aab4c8;--accent-inv:#62b3f2;--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#f9f9f9}
-@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--accent:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--surface-inv:#10141b;--on-inv:#f4f6fb;--on-inv-soft:#aab4c8;--accent-inv:#62b3f2;--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#f9f9f9}}
+:root[data-theme=light]{--accent:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#f9f9f9}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--accent:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#f9f9f9}}
 @media(max-width:640px){:root{--fs-claim:clamp(30px,9.4vw,46px);--sec-y:var(--s-7);--claim-gap:var(--s-5)}}
