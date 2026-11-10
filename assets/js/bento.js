@@ -25,6 +25,23 @@
       if (!es[0].isIntersecting) return; io.disconnect(); c.classList.add('on');
     }, { threshold: .35 }).observe(c);
   });
+  /* 数字计数：[data-count] 进入视口后从 0 数到目标值（一次）；减少动画偏好、无 IO 时直接保留最终值 */
+  $$('.n5-n[data-count]').forEach(function (n) {
+    if (!hasIO || reduce) return;
+    var to = +n.getAttribute('data-count'), box = n.parentNode, ease = function (t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); };
+    n.textContent = '0'; box.classList.add('counting');
+    new IntersectionObserver(function (es, io) {
+      if (!es[0].isIntersecting) return; io.disconnect();
+      setTimeout(function () {
+        var t0 = performance.now(), dur = 1500;
+        (function f(now) {
+          var p = Math.max(0, Math.min(1, (now - t0) / dur));
+          n.textContent = Math.round(to * ease(p));
+          if (p < 1) requestAnimationFrame(f); else { box.classList.remove('counting'); box.classList.add('counted'); }
+        })(t0);
+      }, 280);
+    }, { threshold: .6 }).observe(box);
+  });
   /* 打字机：「当 ___」循环改写为各类触发器（取自自动化页的触发器列表）。仅在可见时运行，单个定时器，只改一个文本节点 */
   var TRIG = ['规则集更新时', '收到信号时', '调用 Uri 时', '从托盘菜单运行时', 'cron', '应用启动时', '应用退出时', '上课时', '课间休息时', '放学时', '当前时间状态变化时', '特定时间点前'];
   $$('[data-tw]').forEach(function (el) {

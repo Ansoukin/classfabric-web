@@ -24,7 +24,12 @@
 .n5-stmt .n5-ln{color:var(--on-inv)}
 .n5-stmt .n5-big{font-size:var(--fs-stat);font-weight:900;letter-spacing:-.06em;line-height:.92}
 .n5-stmt .n5-big em{color:var(--accent-inv)}
-.n5-big em{font-style:normal;color:var(--accent)}
+.n5-big em{font-style:normal;color:var(--accent);display:inline-block;transform-origin:50% 70%}
+/* 计数：数字右对齐并按最终位数预留宽度、等宽数字，计数过程中“+”不位移、整块不抖动 */
+.n5-n{display:inline-block;min-width:2ch;text-align:right;font-variant-numeric:tabular-nums}
+.n5-big.counting em{opacity:.35}
+.n5-big.counted em{animation:n5-pop var(--t-slow) var(--ease-out)}
+@keyframes n5-pop{from{opacity:.35;transform:scale(.7)}60%{transform:scale(1.18)}to{opacity:1;transform:none}}
 .n5-cmp{position:relative;height:168px;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-m);background:var(--bg3);touch-action:pan-y;user-select:none}
 .n5-cmp img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:left top;pointer-events:none}
 .n5-cmp img.o{clip-path:inset(0 calc(100% - var(--p)) 0 0)}

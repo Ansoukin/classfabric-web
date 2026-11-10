@@ -154,7 +154,7 @@ def grow():
           '<input type="range" min="0" max="100" value="50" aria-label="对比原版与 ClassFabric 的插件详情"></div></div></article>')
     ac = ('<article class="n5-t n5-stmt w5 rv d1"><h4>更多行动与触发器</h4>'
           '<p>实现参考了 SystemTools 插件的能力。</p>'
-          '<div class="n5-tv"><div class="n5-big">75<em>+</em></div><div class="n5-cap">触发器 + 规则集 + 动作，合计 75+ 项</div>'
+          '<div class="n5-tv"><div class="n5-big" role="img" aria-label="75+"><span class="n5-n" data-count="75" aria-hidden="true">75</span><em aria-hidden="true">+</em></div><div class="n5-cap">触发器 + 规则集 + 动作，合计 75+ 项</div>'
           '<a class="n5-ln" href="' + ST + '" rel="noopener">查看 SystemTools' + arr + '</a></div></article>')
     GITEE = ('<svg viewBox="0 0 1024 1024" aria-hidden="true"><path fill="#C71D23" d="M512 1024C229.222 1024 0 794.778 0 512S229.222 0 512 0s512 229.222 512 512-229.222 512-512 512zm259.149-568.883h-290.74a25.293 25.293 0 0 0-25.292 25.293l-.026 63.206c0 13.952 11.315 25.293 25.267 25.293h177.024c13.978 0 25.293 11.315 25.293 25.267v12.646a75.853 75.853 0 0 1-75.853 75.853h-240.23a25.293 25.293 0 0 1-25.267-25.293V417.203a75.853 75.853 0 0 1 75.827-75.853h353.946a25.293 25.293 0 0 0 25.267-25.292l.077-63.207a25.293 25.293 0 0 0-25.268-25.293H417.152a189.62 189.62 0 0 0-189.62 189.645V771.15c0 13.977 11.316 25.293 25.294 25.293h372.94a170.65 170.65 0 0 0 170.65-170.65V480.384a25.293 25.293 0 0 0-25.293-25.267z"/></svg>')
     ch = ('<article class="n5-t w5 rv"><h4>多通道下载与更新</h4>'
