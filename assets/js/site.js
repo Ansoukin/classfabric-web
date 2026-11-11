@@ -155,21 +155,51 @@
   var mig = $('#mig');
   if (mig) inView(mig, function () { $$('div', mig).forEach(function (d, i) { setTimeout(function () { d.classList.add('ok'); }, 300 + i * 350); }); });
 
-  var nav = $('#nav');
+  /* 顶部导航：滚动后变实、手机菜单、主题切换 */
+  var nav = $('#nav'), menu = $('#menu'), links = $('#links'), tb = $('#theme'), root = document.documentElement;
   function sc() { nav && nav.classList.toggle('solid', window.scrollY > 20); }
   window.addEventListener('scroll', sc, { passive: true }); sc();
-  var menu = $('#menu'), links = $('#links');
-  if (menu) menu.addEventListener('click', function () {
-    var o = links.classList.toggle('open'); menu.setAttribute('aria-expanded', o);
-  });
 
-  var tb = $('#theme');
-  if (tb) tb.addEventListener('click', function () {
-    var cur = document.documentElement.dataset.theme;
-    if (!cur) cur = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-    var nx = cur === 'light' ? 'dark' : 'light';
-    document.documentElement.dataset.theme = nx;
-    try { localStorage.setItem('cf_theme', nx); } catch (e) { }
+  function setMenu(o, refocus) {
+    if (!menu || !nav) return;
+    nav.classList.toggle('open', o);
+    menu.setAttribute('aria-expanded', o ? 'true' : 'false');
+    menu.setAttribute('aria-label', o ? '关闭菜单' : '打开菜单');
+    if (!o && refocus) menu.focus();
+  }
+  if (menu && links) {
+    menu.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
+    links.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && nav.classList.contains('open')) setMenu(false, true); });
+    document.addEventListener('pointerdown', function (e) { if (nav.classList.contains('open') && !nav.contains(e.target)) setMenu(false); });
+    if (window.matchMedia) matchMedia('(min-width: 901px)').addEventListener('change', function (e) { if (e.matches) setMenu(false); });
+  }
+
+  /* 主题：html[data-theme] 由页头脚本在首帧写入；这里负责切换、记忆、按钮文案与 theme-color */
+  function paintTheme(t) {
+    if (tb) {
+      var to = t === 'light' ? '深色' : '浅色';
+      tb.setAttribute('aria-label', '切换到' + to + '主题'); tb.title = '切换到' + to + '主题';
+    }
+    var metas = $$('meta[name="theme-color"]');
+    if (metas.length) {
+      var bg = getComputedStyle(root).getPropertyValue('--bg').trim();
+      metas[0].removeAttribute('media'); if (bg) metas[0].setAttribute('content', bg);
+      for (var i = 1; i < metas.length; i++) metas[i].parentNode.removeChild(metas[i]);
+    }
+  }
+  function applyTheme(t, save) {
+    root.dataset.theme = t;
+    if (save) { try { localStorage.setItem('cf_theme', t); } catch (e) { } }
+    paintTheme(t);
+  }
+  if (!root.dataset.theme) root.dataset.theme = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  paintTheme(root.dataset.theme);
+  if (tb) tb.addEventListener('click', function () { applyTheme(root.dataset.theme === 'light' ? 'dark' : 'light', true); });
+  /* 没有手动选择过时，跟随系统的明暗变化 */
+  if (window.matchMedia) matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+    var saved = null; try { saved = localStorage.getItem('cf_theme'); } catch (x) { }
+    if (saved !== 'light' && saved !== 'dark') applyTheme(e.matches ? 'light' : 'dark', false);
   });
 
   var toc = $$('.toc a');

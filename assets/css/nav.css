@@ -1,0 +1,56 @@
+/* 顶部导航：单一组件。颜色只来自 tokens.css，状态只有三种——
+   默认（透明，叠在壁纸 hero 上，用 on-wall 色）→ .solid（滚动后，Acrylic）→ .open（手机端展开，纯色面板）。
+   明暗主题由 html[data-theme] 决定（页面头部脚本保证它一定被设置），这里不再为主题写第二套规则。 */
+.nav{--nav-fg:var(--muted);--nav-fg-hi:var(--fg);--nav-hover:var(--card);--nav-mark:var(--accent);
+  position:fixed;inset:0 0 auto 0;z-index:60;border-bottom:1px solid transparent;
+  transition:background var(--t-base) var(--ease-out),border-color var(--t-base) var(--ease-out)}
+body:has(.dlh,.phead,.hz) .nav:not(.solid):not(.open){--nav-fg:var(--on-wall-soft);--nav-fg-hi:var(--on-wall);--nav-hover:color-mix(in srgb,var(--on-wall) 14%,transparent);--nav-mark:var(--on-wall)}
+.nav.open{background:var(--acrylic-solid);border-bottom-color:var(--stroke-flyout)}
+.nav::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,var(--hx1),var(--hx2));transform-origin:0 50%;transform:scaleX(var(--sp,0));pointer-events:none}
+.nav .wrap{display:flex;align-items:center;height:58px;gap:var(--s-1)}
+
+.brand{display:flex;align-items:center;gap:10px;margin-right:var(--s-4);font-size:var(--fs-brand);font-weight:700;letter-spacing:-.01em;color:var(--nav-fg-hi)}
+.brand img{width:26px;height:26px}
+:root[data-theme=light] .nav.solid .brand img,:root[data-theme=light] .nav.open .brand img{filter:drop-shadow(0 0 .6px color-mix(in srgb,var(--scrim) 75%,transparent)) drop-shadow(0 1px 1.5px color-mix(in srgb,var(--scrim) 28%,transparent))}
+
+/* 链接（桌面横排） */
+.links{display:flex;gap:2px;flex:1}
+.links a{position:relative;display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:var(--r-m);font-size:var(--fs-2);color:var(--nav-fg);transition:color var(--t-base) var(--ease-out),background var(--t-base) var(--ease-out)}
+.links a:hover{color:var(--nav-fg-hi);background:var(--nav-hover)}
+.links a[aria-current="page"]{color:var(--nav-fg-hi)}
+.links a[aria-current="page"]::after{content:"";position:absolute;left:13px;right:13px;bottom:-2px;height:2px;border-radius:var(--r-s);background:var(--nav-mark)}
+.links .ghi{width:15px;height:15px;flex:none;fill:currentColor;stroke:none}
+.links .nav-cta{display:none}
+
+/* 首页：滚过首屏后，页内章节导航替换站点链接 */
+.nav .slinks{display:none;flex:1;gap:var(--s-1);align-items:center}
+.nav .slinks a{position:relative;padding:6px 12px;border-radius:var(--r-s);font-size:var(--fs-1);color:var(--nav-fg);transition:color var(--t-base) var(--ease-out)}
+.nav .slinks a:hover,.nav .slinks a.on{color:var(--nav-fg-hi)}
+.nav .slinks a.on::after{content:"";position:absolute;left:12px;right:12px;bottom:-2px;height:2px;border-radius:999px;background:var(--accent)}
+
+/* 右侧工具：主题、下载、菜单 */
+.tools{display:flex;align-items:center;gap:var(--s-1)}
+.ibtn{width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:var(--r-m);background:transparent;color:var(--nav-fg);cursor:pointer;transition:color var(--t-base) var(--ease-out),background var(--t-base) var(--ease-out)}
+.ibtn:hover{color:var(--nav-fg-hi);background:var(--nav-hover)}
+.ibtn svg{width:19px;height:19px}
+:root[data-theme=dark] .i-moon,:root[data-theme=light] .i-sun,.menu-btn[aria-expanded=true] .i-open,.menu-btn[aria-expanded=false] .i-close{display:none}
+.menu-btn{display:none}
+
+@media(min-width:901px){.nav.past .links{display:none}.nav.past .slinks{display:flex}}
+
+/* 手机/窄屏：链接收进下拉面板，面板与导航条同为纯色（Acrylic 不能嵌套），含下载按钮 */
+@media(max-width:900px){
+  .menu-btn{display:grid;width:40px;height:40px}
+  .tools{margin-left:auto}
+  .tools>.btn{display:none}
+  .links{position:absolute;top:100%;left:0;right:0;flex:none;flex-direction:column;gap:0;padding:var(--s-1) var(--s-4) var(--s-4);background:var(--acrylic-solid);border-bottom:1px solid var(--stroke-flyout);
+    visibility:hidden;opacity:0;transform:translateY(calc(var(--s-2) * -1));pointer-events:none;transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out),visibility 0s var(--t-base)}
+  .nav.open .links{visibility:visible;opacity:1;transform:none;pointer-events:auto;transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out)}
+  .links a{min-height:48px;padding:0 var(--s-1);border-radius:0;border-bottom:1px solid var(--divider);font-size:var(--fs-3);color:var(--fg)}
+  .links a:hover{background:none}
+  .links a[aria-current="page"]{color:var(--accent)}
+  .links a[aria-current="page"]::after{display:none}
+  .links .nav-cta{display:flex;justify-content:center;margin-top:var(--s-3);border:0;color:var(--on-wall)}
+  .nav .slinks{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){.links{transition:none!important}}

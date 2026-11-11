@@ -6,14 +6,14 @@ html::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 /* Acrylic（应用内）：叠在滚动内容之上的导航。仅在已滚动、真正与内容重叠时启用。 */
 .nav.solid{background:var(--noise),var(--acrylic);-webkit-backdrop-filter:var(--acrylic-blur);backdrop-filter:var(--acrylic-blur);border-bottom:1px solid var(--stroke-flyout)}
 
-/* Acrylic（瞬时浮层）：语言菜单、手机端展开的菜单、标注提示。 */
-.langmenu,.links.open{background:var(--noise),var(--acrylic);-webkit-backdrop-filter:var(--acrylic-blur);backdrop-filter:var(--acrylic-blur);border:1px solid var(--stroke-flyout)}
+/* Acrylic（瞬时浮层）：语言菜单、标注提示。手机端展开的菜单是纯色面板（见 nav.css）。 */
+.langmenu{background:var(--noise),var(--acrylic);-webkit-backdrop-filter:var(--acrylic-blur);backdrop-filter:var(--acrylic-blur);border:1px solid var(--stroke-flyout)}
 
 /* 与系统一致：关闭透明效果 / 不支持模糊时，Acrylic 退回纯色，Mica 退回基底色 */
 @media(prefers-reduced-transparency:reduce){
   html::before{background:var(--mica-base)}
-  .nav.solid,.langmenu,.links.open{background:var(--acrylic-solid);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .nav.solid,.langmenu{background:var(--acrylic-solid);-webkit-backdrop-filter:none;backdrop-filter:none}
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .nav.solid,.langmenu,.links.open{background:var(--acrylic-solid)}
+  .nav.solid,.langmenu{background:var(--acrylic-solid)}
 }

@@ -112,7 +112,7 @@ def head(title, desc, path, extra='', alt=None, m=False):
             '<meta property="og:type" content="website">\n<meta property="og:locale" content="zh_CN">\n<meta property="og:site_name" content="ClassFabric">\n<meta property="og:title" content="%s">\n<meta property="og:description" content="%s">\n'
             '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="ClassFabric 班级大屏课表">\n'
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
-            '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n%s%s</head>\n') % (
+            '<meta name="color-scheme" content="dark light">\n<script>try{var t=localStorage.getItem("cf_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n<link rel="stylesheet" href="/assets/css/nav.css">\n%s%s</head>\n') % (
         title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, jsonld(path, title, desc), extra)
     spec = {'/': ['/download.html', '/about.html'], '/download.html': ['/', '/about.html'], '/about.html': ['/', '/download.html']}.get(path)
     if spec and not m:
@@ -122,12 +122,15 @@ def head(title, desc, path, extra='', alt=None, m=False):
 def navbar(cur, secs=None):
     def a(href, label, key):
         return '<a href="%s"%s>%s</a>' % (href, ' aria-current="page"' if cur == key else '', label)
+    moon = '<svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 019.5 4 8.5 8.5 0 1020 14.5z"/></svg>'
+    sun = '<svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
     return ('<body>\n<header class="nav" id="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/img/icon-64.png" width="26" height="26" alt="">ClassFabric</a>'
-            '<nav class="links" id="links" aria-label="主导航">' + a('/', '首页', 'home') + a('/download.html', '下载', 'dl') + a('/about.html', '关于', 'about') + '<a class="ghl" href="' + GH + '" rel="noopener">'+GHSVG+'GitHub 仓库</a></nav>'
+            '<nav class="links" id="links" aria-label="主导航">' + a('/', '首页', 'home') + a('/download.html', '下载', 'dl') + a('/about.html', '关于', 'about') + '<a class="ghl" href="' + GH + '" rel="noopener">' + GHSVG + 'GitHub 仓库</a>'
+            '<a class="btn blue nav-cta" href="/download.html">' + ic('dl') + '立即下载</a></nav>'
             + ('<nav class="slinks" aria-label="页面章节">' + ''.join('<a href="#%s">%s</a>' % (i, l) for i, l in secs) + '</nav>' if secs else '')
-            + '<div class="tools"><button class="ibtn" id="theme" aria-label="切换明暗主题"><svg class="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 019.5 4 8.5 8.5 0 1020 14.5z"/></svg><svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>'
+            + '<div class="tools"><button type="button" class="ibtn" id="theme" aria-label="切换主题">' + moon + sun + '</button>'
             '<a class="btn blue sm" href="/download.html">' + ic('dl') + '立即下载</a>'
-            '<button class="ibtn menu-btn" id="menu" aria-label="菜单" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></div></header>\n')
+            '<button type="button" class="ibtn menu-btn" id="menu" aria-label="打开菜单" aria-expanded="false" aria-controls="links"><svg class="i-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="i-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div></header>\n')
 
 import hashlib, datetime
 
@@ -136,7 +139,7 @@ RELEASE_DATE = '2026-11-08'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css'):
+    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
