@@ -24,3 +24,9 @@ html.lbo{overflow:hidden}
 .dots{display:flex;justify-content:center;gap:var(--s-2);margin-top:var(--s-1)}
 .dots i{width:6px;height:6px;border-radius:var(--r-s);background:var(--faint);opacity:.5;transition:width var(--t-base,.25s) var(--ease-out,ease),opacity var(--t-base,.25s),background var(--t-base,.25s)}
 .dots i.on{width:18px;opacity:1;background:var(--accent)}
+.axstrip .axgrid.four{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 var(--s-5)}
+/* 页脚：品牌占满一行，三组链接并排，省掉约 350px 的纵向空滚 */
+.foot .cols{grid-template-columns:repeat(3,auto);justify-content:space-between;gap:var(--s-5) var(--s-3)}
+.foot .cols>div:first-child{grid-column:1/-1}
+.foot ul{gap:0}
+.foot li a{display:block;padding:var(--s-3) 0;line-height:1.4}

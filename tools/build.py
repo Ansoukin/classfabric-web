@@ -192,7 +192,7 @@ def home(mob=False):
     h += U3.hero(mob)
 
     if mob:
-        h += ('<section class="axstrip"><div class="wrap"><div class="axgrid four">' + ''.join('<div class="axc rv d%d"><span class="axi">%s</span><div><b>%s</b></div></div>' % (k, ic(i), t) for k, (i, t) in enumerate([('sync', '紧跟上游'), ('check', '无缝沿用'), ('plug', '社区增强'), ('doc', '开源免费')])) + '</div></div></section>\n')
+        h += ('<section class="axstrip"><div class="wrap"><div class="axgrid four">' + ''.join('<div class="axc rv d%d"><div><b>%s</b></div></div>' % (k, t) for k, t in enumerate(['紧跟上游', '无缝沿用', '社区增强', '开源免费'])) + '</div></div></section>\n')
     h += '<section class="mani"><div class="wrap"><p class="mtxt" id="mtxt">' + ''.join('<span class="mw">%s</span>' % c for c in "积极同步上游。无缝沿用配置。再多一点点，属于我们自己的增强。") + '</p></div></section>\n'
     def bigmq(a, b):
         r1 = ''.join('<span>%s</span><i>·</i>' % t for t in a) * 3
