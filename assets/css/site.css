@@ -1722,8 +1722,8 @@ html,body{overflow-x:clip}
 .stp4::before{content:"";position:absolute;left:calc(16.66% + 6px);right:calc(16.66% + 6px);top:38px;height:0;border-top:2px dashed var(--line);z-index:0}
 .stp4 li{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:26px 26px 26px;background:var(--bg2);border:1px solid var(--line);border-radius:18px}
 .stp4 .top{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:22px}
-.stp4 .nd{width:48px;height:48px;border-radius:14px;background:var(--blue);color:#06233b;display:grid;place-items:center;box-shadow:0 0 0 6px rgba(98,179,242,.16)}
-.stp4 .nd svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+
 .stp4 .no{font:800 44px/1 var(--font);letter-spacing:-.04em;color:rgba(127,127,127,.22)}
 .stp4 h4{margin:0 0 8px;font-size:23px;letter-spacing:-.02em}
 .stp4 p{margin:0 0 18px;color:var(--muted);font-size:15.5px;line-height:1.8;flex:1}
@@ -1933,7 +1933,7 @@ html,body{overflow-x:clip}
 .stp4::before{display:none}
 .stp4 li,:root[data-theme=light] .stp4 li,:root:not([data-theme=dark]) .stp4 li{background:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:24px 0 0;position:relative}
 .stp4 li::before{content:"";position:absolute;left:0;top:-1px;width:34px;height:1px;background:var(--grad)}
-.stp4 .nd{width:44px;height:44px;border-radius:50%;background:none;border:1px solid var(--line);color:var(--blue);box-shadow:none}
+
 .stp4 .no{color:var(--accent);opacity:.55;font-weight:700}
 .stp4 .ch{background:none}
 .fit2{gap:22px}

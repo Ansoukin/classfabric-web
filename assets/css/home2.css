@@ -265,3 +265,8 @@
 @media(max-width:860px){.n4-swc{grid-template-columns:1fr}.n4-swd{grid-template-rows:1fr}.n4-swt{opacity:1}.n4-bar{display:none}.n4-swv{display:none}}
 @media(prefers-reduced-motion:reduce){.n4-swp .fcard{opacity:1;transform:none;animation:none!important}.n4-swp .fcard .ok,.n4-swp .fcard .tg{animation:none!important}.n4-bar b{animation:none!important}}
 .cd .chips-row .chip{transition:background .35s,color .35s,border-color .35s}
+
+/* ===== 三步：去掉图标圆，序号放大成为这一块的视觉主角 ===== */
+.stp4 .top{margin-bottom:var(--s-4)}
+.stp4 .no{font-size:var(--fs-step);font-weight:var(--fw-display);letter-spacing:var(--tr-display);line-height:1;color:var(--accent);opacity:1;font-variant-numeric:tabular-nums}
+.stp4 h4{margin-bottom:var(--s-2)}
