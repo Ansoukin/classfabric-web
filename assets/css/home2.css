@@ -76,7 +76,8 @@
 .n5-ln-i{flex:none}
 .n5-ln-i .isl-stack{font-size:var(--fs-3)}
 .n5-band .isl .cur::after{animation:none;width:var(--p1,55%)}
-.n5-vid{width:min(980px,100%);margin-inline:auto;border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line)}
+.n5-vid{width:min(980px,100%);margin-inline:auto;border-radius:var(--r-l);overflow:hidden;border:1px solid var(--line);aspect-ratio:16/9;background:var(--bg2)}
+.n5-vid video{height:100%;min-height:0;object-fit:cover}
 @keyframes n5mq{to{transform:translateX(-50%)}}
 .pz .trk,.pz .t{animation-play-state:paused!important}
 .n5-lane .isl b{display:inline-block;min-width:1.2em;text-align:center;font-variant-numeric:tabular-nums}
@@ -171,8 +172,21 @@
 @media(max-width:900px){.n5-fc{grid-template-columns:1fr;gap:var(--s-5);padding:var(--s-5)}}
 
 /* ===== 性能 ===== */
-.n5-wide,.n5-ths{content-visibility:auto;contain-intrinsic-size:auto 600px}
-.sec:has(.faq),.sec:has(.stp4),.sec:has(.axmap){content-visibility:auto;contain-intrinsic-size:auto 700px}
+/* 预估高度取自实测（1440 宽）：首次渲染前后整页高度不再跳动 */
+.n5-wide,.n5-ths{content-visibility:auto;contain-intrinsic-size:auto 620px}
+.n5-mix{contain-intrinsic-size:auto 800px}
+.n5-ths{contain-intrinsic-size:auto 470px}
+.sec:has(.faq),.sec:has(.stp4),.sec:has(.axmap){content-visibility:auto}
+.sec:has(.stp4){contain-intrinsic-size:auto 400px}
+.sec:has(.axmap){contain-intrinsic-size:auto 730px}
+.sec:has(.faq){contain-intrinsic-size:auto 640px}
+@media(max-width:1100px){
+.n5-wide{contain-intrinsic-size:auto 520px}
+.n5-mix{contain-intrinsic-size:auto 770px}
+.n5-ths{contain-intrinsic-size:auto 400px}
+.sec:has(.stp4){contain-intrinsic-size:auto 360px}
+.sec:has(.axmap){contain-intrinsic-size:auto 680px}
+.sec:has(.faq){contain-intrinsic-size:auto 600px}}
 
 @supports (animation-timeline:view()){
   .n5-wide .panel .wp{animation:n5wp linear both;animation-timeline:view();animation-range:cover}

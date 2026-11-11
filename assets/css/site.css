@@ -506,7 +506,7 @@ h1{font-size:clamp(46px,9.4vw,118px);letter-spacing:-.045em;line-height:1.02;fon
 .marq:hover .trk{animation-play-state:paused}
 .marq img{height:68px;width:auto;border-radius:14px;box-shadow:0 14px 34px -10px rgba(0,0,0,.7);flex:none}
 @keyframes mq{to{transform:translateX(-50%)}}
-.vid{margin:clamp(44px,6vw,80px) auto 0;max-width:980px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#0a0f1c;box-shadow:0 50px 100px -30px rgba(40,100,255,.45)}
+.vid{margin:clamp(44px,6vw,80px) auto 0;max-width:980px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#0a0f1c}
 .vid video{display:block;width:100%;height:auto;background:#050a14;min-height:200px}
 .vid figcaption{padding:14px 20px;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
 .vid figcaption b{color:var(--g1)}
@@ -1792,7 +1792,7 @@ html,body{overflow-x:clip}
 .axn small{display:block;font-size:12px;letter-spacing:.14em;color:var(--faint);margin-bottom:6px}
 .axn b{display:block;font-size:clamp(20px,3.4vw,30px);font-weight:800;letter-spacing:-.02em;color:var(--fg)}
 .axn span{display:block;margin-top:6px;font-size:14px;color:var(--muted)}
-.axn.me{border-color:transparent;background:linear-gradient(var(--bg2),var(--bg2)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
+.axn.me{border-color:color-mix(in srgb,var(--accent) 72%,transparent)}
 .axl{display:grid;gap:18px}
 .axa{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:13px;color:var(--muted);text-align:center}
 .axa i{display:block;position:relative;width:100%;height:2px;background:linear-gradient(90deg,var(--g1),var(--g3));border-radius:2px}
@@ -1893,8 +1893,8 @@ html,body{overflow-x:clip}
 .axc b{font-size:16px;letter-spacing:.01em}
 .axbar{height:3px;background:var(--line2)}
 .axstrip .axc{padding-top:22px}
-.axn{background:transparent;border-radius:22px}
-.axn.me{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;box-shadow:0 20px 60px -30px rgba(120,100,255,.5)}
+.axn{background:transparent;border-radius:var(--r-l)}
+.axn.me{background:var(--card);box-shadow:var(--sh-edge),var(--sh-lift)}
 .axkeep{border-style:solid;border-color:var(--line2);background:transparent}
 .axkeep b{background:transparent;border:1px solid var(--line);font-weight:500}
 .axsteps i{background:transparent;border:1px solid var(--line);color:var(--fg);font-weight:600}
