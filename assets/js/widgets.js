@@ -334,7 +334,9 @@
     var host = pg.closest('.n5-mix'); if (!host || !('IntersectionObserver' in window)) return;
     var cur = null, abort = false, running = false;
     var ARROW = '<svg viewBox="0 0 20 24" width="20" height="24"><path d="M2 1l15 12h-7l4 8-3 1.5-4-8-5 5z"/></svg>';
-    function sleep(ms) { return new Promise(function (res, rej) { setTimeout(function () { abort ? rej('stop') : res(); }, ms); }); }
+    /* 演示只在可见时推进：滚出视口就暂停，回来继续，避免后台继续点击把页面状态弄乱 */
+    var vis = true, waiters = [];
+    function sleep(ms) { return new Promise(function (res, rej) { setTimeout(function wake() { if (abort) rej('stop'); else if (!vis) waiters.push(wake); else res(); }, ms); }); }
     function pos(el, fx, fy) {
       var r = el.getBoundingClientRect(), h = host.getBoundingClientRect();
       return { x: r.left - h.left + r.width * (fx == null ? .5 : fx), y: r.top - h.top + r.height * (fy == null ? .5 : fy), cx: r.left + r.width * (fx == null ? .5 : fx), cy: r.top + r.height * (fy == null ? .5 : fy) };
@@ -365,7 +367,7 @@
       cur.style.transition = ''; await sleep(160); ptr('pointerup', document, b.cx, b.cy); cur.classList.remove('dn'); await sleep(420);
     }
     async function typeIn(f, text) {
-      f.focus(); var r = document.createRange(); r.selectNodeContents(f); var s = getSelection(); s.removeAllRanges(); s.addRange(r); await sleep(520);
+      f.focus({ preventScroll: true }); var r = document.createRange(); r.selectNodeContents(f); var s = getSelection(); s.removeAllRanges(); s.addRange(r); await sleep(520);
       for (var n = f.textContent.length; n > 0; n--) { f.textContent = f.textContent.slice(0, n - 1); f.dispatchEvent(new Event('input', { bubbles: true })); await sleep(55); }
       await sleep(260);
       for (var i = 1; i <= text.length; i++) {
@@ -399,9 +401,11 @@
     function stop(e) { if (e.isTrusted && running) { abort = true; } }
     ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (t) { host.addEventListener(t, stop, { capture: true, passive: true }); });
     var done = false;
-    new IntersectionObserver(function (es, io) {
-      if (es[0].isIntersecting && !done) { done = true; io.disconnect(); script(); }
-    }, { threshold: 0.55 }).observe(host);
+    new IntersectionObserver(function (es) {
+      var e = es[es.length - 1]; vis = e.isIntersecting;
+      if (vis) waiters.splice(0).forEach(function (w) { w(); });
+      if (e.intersectionRatio >= .55 && !done) { done = true; script(); }
+    }, { threshold: [0, .55] }).observe(host);
   }
 
   function boot() { document.querySelectorAll('.sapp .wxpg').forEach(initPage); }
