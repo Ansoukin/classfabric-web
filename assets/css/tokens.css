@@ -1,6 +1,7 @@
 /* ClassFabric 站点设计 token：唯一来源，规则见仓库根目录 AGENTS.md */
 :root{
   --accent:var(--blue);
+  --cta-bg:#165aa8;--cta-fg:#fff;          /* 终章 CTA 色块：深一档的强调蓝 + 白字（暗色下不刺眼） */
 
   --r-s:4px;
   --r-m:8px;
@@ -72,6 +73,6 @@
   --rep-isl:#2e2220;
   --tick:2s;
 }
-:root[data-theme=light]{--accent:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#fcfcfc;--acrylic-solid:#f9f9f9}
-@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--accent:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#fcfcfc;--acrylic-solid:#f9f9f9}}
+:root[data-theme=light]{--accent:#0a63c9;--cta-bg:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#fcfcfc;--acrylic-solid:#f9f9f9}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--accent:#0a63c9;--cta-bg:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#fcfcfc;--acrylic-solid:#f9f9f9}}
 @media(max-width:640px){:root{--fs-claim:clamp(30px,9.4vw,46px);--sec-y:var(--s-7);--claim-gap:var(--s-5)}}
