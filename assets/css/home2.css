@@ -177,16 +177,16 @@
 .n5-mix{contain-intrinsic-size:auto 800px}
 .n5-ths{contain-intrinsic-size:auto 470px}
 .sec:has(.faq),.sec:has(.stp4),.sec:has(.axmap){content-visibility:auto}
-.sec:has(.stp4){contain-intrinsic-size:auto 400px}
+.sec:has(.stp4){contain-intrinsic-size:auto 440px}
 .sec:has(.axmap){contain-intrinsic-size:auto 730px}
-.sec:has(.faq){contain-intrinsic-size:auto 640px}
+.sec:has(.faq){contain-intrinsic-size:auto 510px}
 @media(max-width:1100px){
 .n5-wide{contain-intrinsic-size:auto 520px}
 .n5-mix{contain-intrinsic-size:auto 770px}
 .n5-ths{contain-intrinsic-size:auto 400px}
-.sec:has(.stp4){contain-intrinsic-size:auto 360px}
+.sec:has(.stp4){contain-intrinsic-size:auto 400px}
 .sec:has(.axmap){contain-intrinsic-size:auto 680px}
-.sec:has(.faq){contain-intrinsic-size:auto 600px}}
+.sec:has(.faq){contain-intrinsic-size:auto 500px}}
 
 @supports (animation-timeline:view()){
   .n5-wide .panel .wp{animation:n5wp linear both;animation-timeline:view();animation-range:cover}
@@ -286,3 +286,12 @@
 .n5-fc .n5-fr li svg,.n5-fc .n5-fr li b{color:var(--cta-fg)}
 .n5-fc .n5-fr li span{color:color-mix(in srgb,var(--cta-fg) 84%,transparent)}
 .n5-fc .n5-fr>p{color:color-mix(in srgb,var(--cta-fg) 82%,transparent)}
+
+/* ===== 版式节奏：不再所有章节标题都居中 =====
+   常见问题：标题粘在左栏，问答在右栏；三步：标题左对齐，与下方序号同一条左边线。 */
+.sec:has(.stp4) .claim{text-align:left}
+@media(min-width:901px){
+  .sec:has(.faqhome) .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--s-7);align-items:start}
+  .sec:has(.faqhome) .claim{position:sticky;top:calc(58px + var(--s-6));margin:0;text-align:left}
+  .sec:has(.faqhome) .faqhome{max-width:none;margin:0}
+}

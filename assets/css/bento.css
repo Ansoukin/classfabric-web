@@ -65,8 +65,8 @@
 @media(max-width:1000px){.n5-bento{grid-template-columns:repeat(2,minmax(0,1fr))}.n5-t,.n5-t.w7,.n5-t.w5,.n5-t.w6{grid-column:auto}.n5-join{flex-direction:column;align-items:flex-start}}
 @media(max-width:640px){.n5-bento{grid-template-columns:1fr}}
 .n5-t .chips-row .chip{transition:background .35s,color .35s,border-color .35s}
-.n5-bento{content-visibility:auto;contain-intrinsic-size:auto 1120px}
-@media(max-width:640px){.n5-bento{contain-intrinsic-size:auto 2200px}}
+.n5-bento{content-visibility:auto;contain-intrinsic-size:auto 1065px}
+@media(max-width:640px){.n5-bento{contain-intrinsic-size:auto 2157px}}
 
 /* ===== 大量修复与优化：反馈 → 修复 → 送达 ===== */
 .n5-fflow{list-style:none;margin:var(--s-4) 0 0;padding:0;display:grid;gap:var(--s-4)}
