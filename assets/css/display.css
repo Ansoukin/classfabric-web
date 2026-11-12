@@ -5,3 +5,20 @@
 .final3 h2{font-size:var(--fs-final);font-weight:var(--fw-display-soft);line-height:var(--lh-display);letter-spacing:var(--tr-display)}
 /* 关键词：保持正文色，仅加粗并垫一道荧光笔式底纹——不用渐变文字 */
 .claim .g,.n5-fl h2 .g,.final3 h2 .g{color:var(--fg);font-weight:var(--fw-display);letter-spacing:var(--tr-display-key);padding-inline:.08em;margin-inline:-.08em;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--accent) var(--marker-mix),transparent) 60% 90%,transparent 90%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+/* ===== 逐字入场（fx.js 拆字后生效）=====
+   .cx 是裁切窗口（clip-path 不改变基线，上/左/右放宽以免裁到字形），内层 span 从窗口下沿升起。
+   整句不再整体淡入，运动只发生在字上。 */
+.js .cxd.rv{opacity:1;transform:none;transition:none}
+.js .cx{display:inline-block;clip-path:inset(-.2em -.1em 0 -.1em)}
+.js .cx>span{display:inline-block;transform:translateY(108%);transition:transform .95s var(--ease-out) calc(min(var(--i),24) * 32ms)}
+.js .in .cx>span{transform:none}
+/* 首屏入场用纯 CSS 关键帧：不等 JS、不影响 LCP，首帧即开始（不再走 IO 触发的 .rv）。
+   顺序：眉标 → 标题 → 副标 → 按钮 → 元信息 */
+@keyframes hzin{from{opacity:0;transform:translateY(.4em)}}
+.js .hz .rv{opacity:1;transform:none;transition:none;animation:hzin .9s var(--ease-out) both}
+.js .hz h1.rv{animation-duration:1.1s}.js .hz .rv.d1{animation-delay:.04s}.js .hz .rv.d2{animation-delay:.3s}.js .hz .rv.d3{animation-delay:.42s}.js .hz .rv.d4{animation-delay:.54s}
+@media(prefers-reduced-motion:reduce){.js .hz .rv{animation:none}}
+/* 关键词底纹：文字升起之后再从左向右划出 */
+.js .cxd .g{background-repeat:no-repeat;background-position:left center;background-size:0 100%;transition:background-size .9s var(--ease-out) .4s}
+.js .in .cxd .g,.js .cxd.in .g{background-size:100% 100%}

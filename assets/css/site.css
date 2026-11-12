@@ -2222,3 +2222,7 @@ p,li{text-wrap:pretty}
 .deps .dh span+span{border-left:1px solid #343434}
 
 .av0,.av0 *,.av0::before,.av0::after,.av0 *::before,.av0 *::after{animation-play-state:paused!important}
+
+/* ===== 页脚字标：超大 ClassFabric，底部被裁切，仅作收尾的版式元素 ===== */
+.foot{position:relative;overflow:hidden}
+.foot-mark{margin:var(--s-6) 0 -.17em;text-align:center;white-space:nowrap;user-select:none;pointer-events:none;font-weight:var(--fw-display);font-size:clamp(56px,15.7vw,260px);line-height:.8;letter-spacing:var(--tr-display-key);color:color-mix(in srgb,var(--fg) 7%,transparent)}

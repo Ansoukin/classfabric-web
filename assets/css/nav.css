@@ -54,3 +54,11 @@ body:has(.dlh,.phead,.hz) .nav:not(.solid):not(.open){--nav-fg:var(--on-wall-sof
   .nav .slinks{display:none!important}
 }
 @media(prefers-reduced-motion:reduce){.links{transition:none!important}}
+
+/* ===== 页面切换：原生 View Transitions（跨文档）=====
+   导航栏单独成层且不做形变，内容区交叉淡入；与 speculationrules 预取配合几乎无等待。 */
+@view-transition{navigation:auto}
+.nav{view-transition-name:cf-nav}
+::view-transition-group(cf-nav){animation:none}
+::view-transition-old(root),::view-transition-new(root){animation-duration:var(--t-slow);animation-timing-function:var(--ease-out)}
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}

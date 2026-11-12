@@ -17,3 +17,6 @@ html::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .nav.solid,.langmenu{background:var(--acrylic-solid)}
 }
+
+/* ===== 页面质感：细滚动条 ===== */
+html{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--fg) 30%,transparent) transparent}

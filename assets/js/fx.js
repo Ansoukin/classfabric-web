@@ -4,6 +4,39 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hover = window.matchMedia && matchMedia('(hover: hover)').matches;
 
+  /* 主张句逐字入场：CJK 逐字、拉丁单词整体；闭合标点并入前一字，避免行首标点。
+     减少动态效果时不拆分，保持原有淡入。 */
+  (function () {
+    var hs = $$('.claim,.n5-fl h2');
+    if (!hs.length || reduce) return;
+    var RE = /[A-Za-z0-9][A-Za-z0-9.+\-_]*|\s+|[\s\S]/g, PU = /[，。、；：？！）》」』”’…,.;:?!)\]]/, n;
+    function wrap(txt) {
+      var units = [], frag = document.createDocumentFragment();
+      (txt.match(RE) || []).forEach(function (t) {
+        if (/^\s+$/.test(t)) units.push({ sp: t });
+        else if (PU.test(t) && units.length && !units[units.length - 1].sp) units[units.length - 1].t += t;
+        else units.push({ t: t });
+      });
+      units.forEach(function (u) {
+        if (u.sp) { frag.appendChild(document.createTextNode(u.sp)); return; }
+        var o = document.createElement('span'), i = document.createElement('span');
+        o.className = 'cx'; o.setAttribute('aria-hidden', 'true'); o.style.setProperty('--i', n++);
+        i.textContent = u.t; o.appendChild(i); frag.appendChild(o);
+      });
+      return frag;
+    }
+    function walk(el) {
+      Array.prototype.slice.call(el.childNodes).forEach(function (c) {
+        if (c.nodeType === 3) { if (c.nodeValue.length) c.parentNode.replaceChild(wrap(c.nodeValue), c); }
+        else if (c.nodeType === 1 && c.tagName !== 'BR' && !c.classList.contains('seo-only')) walk(c);
+      });
+    }
+    hs.forEach(function (h) {
+      n = 0; h.setAttribute('aria-label', h.textContent.replace(/\s+/g, ' ').trim());
+      walk(h); h.classList.add('cxd');
+    });
+  })();
+
   var bar = document.createElement('div'); bar.id = 'topbar'; bar.setAttribute('aria-hidden', 'true'); document.body.appendChild(bar);
   function run() { bar.className = 'run'; }
   function done() { bar.className = 'done'; setTimeout(function () { bar.className = ''; }, 800); }

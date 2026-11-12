@@ -30,3 +30,4 @@ html.lbo{overflow:hidden}
 .foot .cols>div:first-child{grid-column:1/-1}
 .foot ul{gap:0}
 .foot li a{display:block;padding:var(--s-3) 0;line-height:1.4}
+.foot-mark{font-size:16.8vw}
