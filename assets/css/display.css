@@ -22,3 +22,12 @@
 /* 关键词底纹：文字升起之后再从左向右划出 */
 .js .cxd .g{background-repeat:no-repeat;background-position:left center;background-size:0 100%;transition:background-size .9s var(--ease-out) .4s}
 .js .in .cxd .g,.js .cxd.in .g{background-size:100% 100%}
+
+/* 终章色块（手机首页、关于页）：整幅强调蓝，与桌面终章卡片同一组 --cta-* 令牌；去掉旧的紫色光晕 */
+section.final3{margin-top:var(--sec-y);padding:var(--s-8) 0;border-top:0;background:var(--cta-bg);color:var(--cta-fg)}
+section.final3::before{content:none}
+section.final3 h2,section.final3 h2 .g{color:var(--cta-fg)}
+section.final3 h2 .g{background-image:linear-gradient(transparent 62%,color-mix(in srgb,var(--cta-fg) 22%,transparent) 62%,color-mix(in srgb,var(--cta-fg) 22%,transparent) 92%,transparent 92%)}
+section.final3 p{color:color-mix(in srgb,var(--cta-fg) 88%,transparent)}
+:root section.final3 .btn.blue{background:var(--cta-fg);color:var(--cta-bg);border-color:transparent}
+:root section.final3 .btn.glass{background:transparent;color:var(--cta-fg);border-color:color-mix(in srgb,var(--cta-fg) 45%,transparent)}

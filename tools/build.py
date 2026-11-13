@@ -382,7 +382,7 @@ def faq_html():
 
 
 def about():
-    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html')
+    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html', '<link rel="stylesheet" href="/assets/css/display.css">\n')
     h += navbar('about')
     def card(i, t, d, extra=''):
         return '<div class="axc"><div><b>%s</b><p>%s</p>%s</div></div>' % (t, d, extra)
@@ -417,7 +417,8 @@ def about():
           '<section id="join"><h2>参与贡献</h2><p>欢迎任何有价值的贡献：在 GitHub 提交 Issue 或 PR 即可。我们也会考虑定期将有意义的改动提交给上游，一起建设 ClassIsland 生态。</p>'
           '<div class="axjoin"><a href="' + GH + '" rel="noopener"><span>' + GHSVG.replace(' class="ghi"', '') + '</span><b>GitHub 仓库</b></a><a href="' + GH + '/issues" rel="noopener"><span>' + ic('info') + '</span><b>反馈问题</b></a><a href="' + GH + '/pulls" rel="noopener"><span>' + ic('sync') + '</span><b>提交 PR</b></a></div></section>'
           '<section id="faq" class="faq"><h2>常见问题</h2>' + faq_html() + '</section>'
-          '</div></div></div></main>\n')
+          '</div></div></div><section class="final3"><div class="wrap"><h2 class="rv">立即体验<br><span class="g">ClassFabric</span></h2><p class="rv d1">更多功能留给您自行探索！</p>'
+          '<div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/">返回首页</a></div></div></section></main>\n')
     return h + FOOT_LITE
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about)):
