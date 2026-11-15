@@ -60,4 +60,4 @@ def themes(mob=False, app=''):
 
 
 def skel_rows(n):
-    return ''.join('<div class="skr"><i></i><span><b></b><u></u></span><em></em></div>' for _ in range(n))
+    return ''.join('<div class="dl-skr" aria-hidden="true"><span><b></b><u></u></span><em></em></div>' for _ in range(n))

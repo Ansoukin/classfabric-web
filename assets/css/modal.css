@@ -1,19 +1,26 @@
-/* 下载页弹窗。只使用 tokens.css 中的 token，见 AGENTS.md */
-.cfm{width:min(520px,100% - 32px);margin:auto;padding:0;border:1px solid var(--stroke-flyout);border-radius:var(--r-m);background:var(--bg2);color:var(--fg);box-shadow:var(--sh-win);opacity:0;transform:translateY(var(--s-3)) scale(.98);transition:opacity var(--t-base) var(--ease-out),transform var(--t-slow) var(--ease-out),overlay var(--t-slow) allow-discrete,display var(--t-slow) allow-discrete}
-.cfm[open]{opacity:1;transform:none}
+/* 下载页弹窗：Win11 ContentDialog。只使用 tokens.css 中的 token，见 AGENTS.md。
+   底色 = Mica 回退色（SolidBackgroundFillColorBase），边框 = 浮层描边，阴影 = --sh-win，背景压暗 = --smoke；
+   命令区在底部，按钮等宽并排：主按钮（强调色）/ 次按钮 / 关闭。 */
+.cfm{width:min(548px,100% - var(--s-5));max-width:none;margin:auto;padding:0;max-height:calc(100dvh - var(--s-5));overflow:auto;border:1px solid var(--stroke-flyout);border-radius:var(--r-m);background:var(--mica-base);color:var(--fg);box-shadow:var(--sh-win);opacity:0;transform:translateY(var(--s-3)) scale(.98);transition:opacity var(--t-base) var(--ease-in),transform var(--t-base) var(--ease-in),overlay var(--t-base) allow-discrete,display var(--t-base) allow-discrete}
+.cfm[open]{opacity:1;transform:none;transition-timing-function:var(--ease-out)}
 @starting-style{.cfm[open]{opacity:0;transform:translateY(var(--s-3)) scale(.98)}}
-.cfm::backdrop{background:var(--smoke)}
-.cfm-b{padding:var(--s-5)}
-.cfm-i{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:var(--r-m);color:var(--accent);margin-bottom:var(--s-3)}
-.cfm-i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.cfm h3{margin:0 0 var(--s-2);font-size:var(--fs-3);letter-spacing:-.01em}
-.cfm p{margin:0;color:var(--muted);font-size:var(--fs-2);line-height:1.75}
-.cfm code{font-size:var(--fs-1);word-break:break-all}
-.cfm-f{display:grid;gap:var(--s-2);margin-top:var(--s-4)}
-.cfm-c{display:flex;align-items:center;gap:var(--s-2);margin-top:var(--s-3);padding:var(--s-2) var(--s-3);border:1px solid var(--line);border-radius:var(--r-s);background:var(--bg3)}
-.cfm-c code{flex:1;min-width:0;color:var(--fg)}
-.cfm-c button{flex:none;height:28px;padding:0 var(--s-3);border:1px solid var(--line);border-radius:var(--r-s);background:none;color:var(--fg);font:inherit;font-size:var(--fs-1);cursor:pointer}
-.cfm-c button:hover{border-color:var(--faint)}
-.cfm .fb{width:100%}
-.cfm-x{display:flex;gap:var(--s-2)}
-.cfm-x .fb{flex:1}
+.cfm::backdrop{background:transparent;transition:background var(--t-base) var(--ease-in),overlay var(--t-base) allow-discrete,display var(--t-base) allow-discrete}
+.cfm[open]::backdrop{background:var(--smoke)}
+@starting-style{.cfm[open]::backdrop{background:transparent}}
+.cfm-b{padding:var(--s-4)}
+.cfm h3{margin:0 0 var(--s-3);font-size:var(--fs-3);font-weight:600;line-height:1.3}
+.cfm p{margin:0;font-size:var(--fs-2);line-height:1.7;color:var(--fg)}
+.cfm .cfm-l{margin-top:var(--s-4);font-size:var(--fs-1);color:var(--muted)}
+.cfm .cfm-h{margin-top:var(--s-3);font-size:var(--fs-1);color:var(--muted)}
+.cfm-c{display:flex;align-items:center;gap:var(--s-2);margin-top:var(--s-2);padding:var(--s-2) var(--s-2) var(--s-2) var(--s-3);border:1px solid var(--stroke);border-radius:var(--r-s);background:var(--card)}
+.cfm-c code{flex:1;min-width:0;font:400 var(--fs-1)/1.6 var(--mono);color:var(--fg);overflow-wrap:anywhere}
+.cfm-c button{flex:none;min-height:32px;padding:0 var(--s-3);border:1px solid var(--divider);border-radius:var(--r-s);background:var(--card);color:var(--fg);font:600 var(--fs-1)/1 var(--ui);cursor:pointer;transition:background var(--t-base) var(--ease-out)}
+.cfm-c button:hover{background:color-mix(in srgb,var(--fg) 8%,transparent)}
+.cfm-f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-2);padding:var(--s-3) var(--s-4);border-top:1px solid var(--divider);background:var(--layer)}
+.cfm-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 var(--s-2);border:1px solid var(--divider);border-radius:var(--r-s);background:var(--card);color:var(--fg);font:600 var(--fs-2)/1.2 var(--ui);text-align:center;text-decoration:none;cursor:pointer;transition:background var(--t-base) var(--ease-out)}
+.cfm-btn:hover{background:color-mix(in srgb,var(--fg) 8%,transparent)}
+.cfm-btn.pri{border-color:transparent;background:var(--accent);color:var(--on-accent)}
+.cfm-btn.pri:hover{background:color-mix(in srgb,var(--accent) 90%,transparent)}
+.cfm-btn:focus-visible,.cfm-c button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:560px){.cfm-f{grid-template-columns:minmax(0,1fr)}.cfm-btn,.cfm-c button{min-height:44px}.cfm-c{flex-wrap:wrap}.cfm-c code{flex:1 0 100%;overflow-wrap:break-word}.cfm-c button{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){.cfm,.cfm::backdrop{transition:none}}

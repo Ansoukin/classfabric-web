@@ -139,7 +139,7 @@ RELEASE_DATE = '2026-11-08'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css'):
+    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css', 'assets/css/dl.css'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
@@ -339,28 +339,30 @@ def home(mob=False):
 
 def download():
     U3.init(globals())
-    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/modal.css">\n')
+    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="stylesheet" href="/assets/css/dl.css">\n<link rel="stylesheet" href="/assets/css/modal.css">\n')
     h += navbar('dl')
-    win = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l7.6-1.1v7H3zM11.6 4.3L21 3v8.4h-9.4zM3 12.6h7.6v7l-7.6-1.1zM11.6 12.6H21V21l-9.4-1.3z"/></svg>'
-    req = [('系统', 'Windows 10 及更高版本'), ('架构', '<b data-archs>x64</b>'), ('运行时', '安装程序与自包含版已内置，无需另装'), ('许可', 'GPL-3.0 开源，免费使用')]
-    h += ('<main><section class="dlh"><div class="wrap"><h1>下载 ClassFabric</h1><p>紧跟上游的 ClassIsland 个人修改版，目前提供 Windows 版本。</p>'
-          '<div class="dpills"><span>' + ic('check') + 'Windows 10 及更高版本</span><span>' + ic('check') + '<b data-archs>x64</b></span><span>' + ic('check') + '免费开源</span></div></div></section>'
-          '<div class="wrap dlx"><div class="dlx-note" id="plat" hidden></div><div class="dlx-main"><div class="dlx-l">'
-          '<div class="dlx-top"><span class="wlogo">' + win + '</span><div class="dtt"><h2>Windows</h2><span>Windows 10 及更高版本 · x64</span></div>'
-          '<div class="seg4" id="chan" role="tablist" aria-label="版本通道"><button type="button" role="tab" class="on" data-chan="stable">稳定版</button><button type="button" role="tab" data-chan="pre">预览版</button></div></div>'
-          '<div class="dlx-ver"><small id="chanTip">最新稳定版</small><div class="vn"><b data-ver class="sk"></b><em class="bdg" data-badge hidden>预览版</em></div><span class="vdt">发布于 <span data-date>—</span></span></div>'
-          '<div class="dlx-cta"><a class="fb acc lg" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '下载安装包</a><a class="fb lg" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div><p class="dlx-sub" data-dlsub></p></div>'
-          '<ul class="dlx-req">' + ''.join('<li><span>%s</span><b>%s</b></li>' % r for r in req) + '</ul></div>'
-          '<div class="dlx-h"><h3>选择文件</h3></div>'
-          '<div class="assets2" id="assets">'+U3.skel_rows(3)+'</div>'
-          '<div class="dlx-h"><h3>下载之后</h3></div>'
-          '<ol class="dlx-steps"><li><i>1</i><div><b>安装或解压</b><p>安装程序按向导完成；压缩包解压到任意目录即可，不必放在系统盘。</p></div></li>'
-          '<li><i>2</i><div><b>启动</b><p>主界面会出现在屏幕上方，右键托盘图标即可编辑档案、换课或打开设置。</p></div></li>'
-          '</ol>'
-          '<div class="dlx-h"><h3>历史版本</h3></div><ul class="hist" id="hist">'+''.join('<li class="skl"><i></i></li>' for _ in range(4))+'</ul>'
-          '<div class="dlx-info"><div class="infob"><b>预览版说明</b><span>预览版包含尚未稳定的新功能，仅在 GitHub 发布了预览版时才可选择；遇到问题欢迎反馈。</span></div>'
-          '<div class="infob"><b>更新与反馈</b><div class="btnrow"><a class="fb" href="' + GH + '/issues" rel="noopener">反馈问题</a><a class="fb" href="/about.html">了解 ClassFabric</a></div></div></div></div>'
-          '<div style="height:clamp(50px,8vw,100px)"></div></main>\n')
+    chan = ''.join('<button type="button" role="tab" class="%s" aria-selected="%s" aria-controls="assets" data-chan="%s">%s</button>' % ((('on', 'true') if k == 'stable' else ('', 'false')) + (k, t)) for k, t in (('stable', '稳定版'), ('pre', '预览版')))
+    sec = lambda i, t, body: '<section class="dl-sec rv" id="%s"><div class="dl-sh"><div><h2>%s</h2></div></div>%s</section>' % (i, t, body)
+    chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
+    isl_states = idle('break', '56%', '78%', 3200).replace('<div class="isl"', '<div class="isl on"', 1) + bar_two('距上课还剩 16 秒', 2800) + idle('class', '30%', '70%', 3200)
+    h += ('<main class="dl-wrap"><div class="dl-w"><header class="dl-top"><div class="dl-copy"><h1 class="rv">下载 ClassFabric</h1><p class="dl-lead"><span>紧跟上游的 ClassIsland 个人修改版，</span><span>目前提供 Windows 版本。</span></p>'
+          '<div class="dl-cta"><a class="btn blue" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '<span>下载安装包</span><small data-dlsize></small></a>'
+          '<a class="dl-link" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div>'
+          '<p class="dl-line"><span id="chanTip">最新稳定版</span> <b data-ver class="dl-sk"></b>，<span data-date>—</span> 发布</p>'
+          '<p class="dl-line">适用于 Windows 10 及更高版本（<span data-archs>x64</span>），免费开源，GPL-3.0。</p>'
+          '<div class="dl-info" id="plat" hidden></div></div>'
+          '<div class="dl-stage"><div class="dl-st-l dl-st-l1" aria-hidden="true"></div>'
+          '<div class="dl-st-l dl-st-l2" aria-hidden="true"><div class="isl-stack" data-demo="dl">' + isl_states + '</div><div class="isl-stack dl-ok">' + mask('下载已开始', 'dl', 3200) + '</div></div>'
+          '<div class="dl-st-l dl-st-l3" aria-hidden="true"><div class="dl-desk">' + vtask(True).replace('%s', 'dlTray', 1) + '</div></div></div></header>'
+          '<section class="dl-sec rv" id="files"><div class="dl-sh"><div><h2>选择版本</h2><p id="chanDesc">不确定选哪个？下载第一项即可。</p></div>'
+          '<div class="dl-sel" id="chan" role="tablist" aria-label="版本通道" hidden>' + chan + '</div></div>'
+          '<button type="button" class="dl-fold-t" aria-expanded="false" aria-controls="assets">查看全部文件</button>'
+          '<div class="dl-body"><div id="assets" aria-live="polite"><div class="dl-list">' + U3.skel_rows(3) + '</div></div></div></section>'
+          + sec('steps', '下载之后', '<div class="dl-prose"><p><b>安装或解压。</b>安装程序按向导完成；压缩包解压到任意目录即可，不必放在系统盘。</p><p><b>启动。</b>主界面会出现在屏幕上方，右键托盘图标即可编辑档案、换课或打开设置。</p></div>')
+          + sec('history', '历史版本', '<ul class="dl-list dl-hl" id="hist">' + ''.join('<li class="dl-sk dl-hsk" aria-hidden="true"></li>' for _ in range(6)) + '</ul>')
+          + sec('feedback', '说明与反馈', '<div class="dl-prose"><p>预览版包含尚未稳定的新功能，仅在 GitHub 发布了预览版时才可选择。遇到问题或有想法，欢迎在 GitHub 上反馈。</p></div>'
+                '<div class="dl-links"><a class="dl-link" href="' + GH + '/issues" rel="noopener">反馈问题' + chev + '</a><a class="dl-link" href="/about.html">了解 ClassFabric' + chev + '</a></div>')
+          + '</div></main>\n')
     return h + FOOT_LITE
 
 FAQ = [

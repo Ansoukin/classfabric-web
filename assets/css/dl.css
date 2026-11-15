@@ -1,0 +1,209 @@
+/* 下载页。只使用 tokens.css 中的 token，规则见 AGENTS.md。
+   版式（参照 VS Code / Tailscale / OBS / 微信 / GitHub Desktop）：整页左对齐，一条 960px 的版心。
+   题头 = 左：标题、一句话、唯一的强调色按钮、两行普通文字；右：真实软件截图舞台（≥1100px 向右出血）。
+   其余章节是安静的文字与一个分组列表：同一信息只用一种信号，没有标签胶囊、圆点串联、图标方块、文字阴影。
+   卡片 = --card + 1px --stroke（Mica 叠层）；标题字重 600（Windows 字阶：Semibold）。
+   动效（AGENTS「动效」）：只动 transform / opacity；时长只用 --t-*，进入用 --ease-out；
+   所有动画都包在 prefers-reduced-motion:no-preference 里，减少动态时直接呈现终态。 */
+
+.dl-wrap{--dl-sh:linear-gradient(100deg,color-mix(in srgb,var(--fg) 6%,transparent) 35%,color-mix(in srgb,var(--fg) 13%,transparent) 50%,color-mix(in srgb,var(--fg) 6%,transparent) 65%);--dl-done:calc(var(--t-slow) * 7);overflow-x:clip;padding-bottom:var(--s-8)}
+.dl-wrap [hidden]{display:none}
+.dl-w{width:min(960px,100% - var(--s-4) * 2);margin-inline:auto}
+
+/* —— 题头 —— */
+.dl-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:var(--s-6);align-items:center;padding:var(--s-8) 0 var(--s-7)}
+.dl-top h1{margin:0;font-size:var(--fs-4);font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.dl-lead span{display:inline-block}
+.dl-lead{margin:var(--s-3) 0 0;font-size:var(--fs-3);line-height:1.6;color:var(--muted)}
+.dl-cta{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-1) var(--s-4);margin-top:var(--s-5)}
+.dl-cta .btn{position:relative;overflow:hidden;height:48px}
+.dl-cta .btn small{font-size:var(--fs-1);font-weight:400;opacity:.85;font-variant-numeric:tabular-nums}
+.dl-cta .btn small:empty,.dl-cta .btn.done small{display:none}
+.dl-cta .btn.dis{opacity:.5;pointer-events:none}
+.dl-cta .btn::after{content:"";position:absolute;inset:auto 0 0 0;height:3px;background:currentColor;opacity:.35;transform:scaleX(0);transform-origin:0 50%}
+.dl-line{margin:var(--s-3) 0 0;font-size:var(--fs-1);line-height:1.7;color:var(--muted)}
+.dl-cta+.dl-line{margin-top:var(--s-4)}
+.dl-line+.dl-line{margin-top:var(--s-1)}
+.dl-line b{font-weight:600;color:var(--fg);font-variant-numeric:tabular-nums}
+.dl-line b.dl-sk{display:inline-block;width:4em;height:1em;vertical-align:-.15em;border-radius:var(--r-s)}
+.dl-link{display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;font-size:var(--fs-2);font-weight:600;color:var(--accent);text-decoration:none}
+.dl-link:hover{text-decoration:underline;text-underline-offset:3px}
+.dl-link svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dl-link:focus-visible,a.dl-row:focus-visible,.dl-sel button:focus-visible,.dl-oth summary:focus-visible,.dl-fold-t:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a.dl-row:focus-visible{outline-offset:-2px}
+
+/* 平台提示（Linux / macOS / 旧系统 / 手机）：Win11 InfoBar，实底卡片 */
+.dl-info{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);max-width:30em;margin-top:var(--s-4);padding:var(--s-3);border:1px solid var(--stroke);border-radius:var(--r-m);background:var(--card)}
+.dl-info>svg{width:20px;height:20px;margin-top:1px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dl-info b{display:block;font-size:var(--fs-2);font-weight:600}
+.dl-info p{margin:var(--s-1) 0 0;font-size:var(--fs-1);line-height:1.7;color:var(--muted)}
+
+/* 舞台：真实壁纸 + 真实灵动岛组件（site.js 循环）+ 真实窗口截图，三层各自有深度；不叠文字。
+   --mx / --my（-1…1）由 dl.js 按指针写入，仅 hover 设备 */
+.dl-stage{position:relative;container-type:inline-size;aspect-ratio:16/11;overflow:hidden;border:1px solid var(--stroke);border-radius:var(--r-l);background:var(--mica-base)}
+.dl-st-l{position:absolute;transition:transform var(--t-slow) var(--ease-out)}
+.dl-st-l1{inset:-5%;background:url(/assets/img/wall-sm.webp) 50% 30%/cover no-repeat;transform:translate(calc(var(--mx,0) * -4px),calc(var(--my,0) * -3px))}
+.dl-st-l2{top:6%;left:0;right:0;display:grid;justify-items:center;transform-origin:50% 0;transform:translate(calc(var(--mx,0) * 5px),calc(var(--my,0) * 4px))}
+.dl-st-l2 .isl-stack{grid-area:1/1;font-size:calc(100cqw / 62)}
+.dl-ok{pointer-events:none}
+.dl-st-l3{inset:0}
+/* 桌面前景（任务栏）：按 1000×625 的虚拟桌面绘制，再按舞台宽度整体缩放（--k 由 dl.js 写入），图标因此始终与任务栏成比例 */
+.dl-desk{position:absolute;left:0;bottom:0;width:1000px;height:625px;transform-origin:0 100%;transform:scale(var(--k,.55))}
+.dl-desk .vtask{position:absolute}
+
+/* —— 章节 —— */
+.dl-sec{margin-top:var(--s-7)}
+.dl-top+.dl-sec{margin-top:0}
+.dl-sh{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--s-2) var(--s-4);margin-bottom:var(--s-3)}
+.dl-sh>div{min-width:0}
+.dl-sh h2{margin:0;font-size:var(--fs-3);font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.dl-sh p{margin:var(--s-1) 0 0;font-size:var(--fs-1);line-height:1.7;color:var(--muted)}
+.dl-prose{max-width:40em}
+.dl-prose p{margin:0 0 var(--s-2);font-size:var(--fs-2);line-height:1.75;color:var(--muted)}
+.dl-prose b{font-weight:600;color:var(--fg)}
+.dl-links{display:flex;flex-wrap:wrap;gap:0 var(--s-4);margin-top:var(--s-2)}
+
+/* 选择器（Win11 SelectorBar）：一条强调色短横在选中项之间滑动 */
+.dl-sel{position:relative;display:inline-flex;gap:var(--s-1)}
+.dl-sel button{height:36px;padding:0 var(--s-3);border:0;border-radius:var(--r-s);background:none;color:var(--muted);font:600 var(--fs-2)/1 var(--ui);cursor:pointer;transition:color var(--t-base) var(--ease-out),background var(--t-base) var(--ease-out)}
+.dl-sel button:hover{color:var(--fg);background:color-mix(in srgb,var(--fg) 7%,transparent)}
+.dl-sel button[aria-selected=true]{color:var(--fg)}
+.dl-sel small{margin-left:var(--s-2);font-size:var(--fs-1);font-weight:400;color:var(--faint)}
+.dl-ind{position:absolute;left:0;bottom:2px;width:16px;height:3px;border-radius:999px;background:var(--accent);transform:translateX(var(--x,0));transition:transform var(--t-base) var(--ease-out);pointer-events:none}
+.dl-ind.nt{transition:none}
+#assets>.dl-sel{margin-bottom:var(--s-3)}
+
+/* —— 分组列表：一个容器，行间一条分隔线 —— */
+.dl-list{margin:0;padding:0;overflow:hidden;list-style:none;border:1px solid var(--stroke);border-radius:var(--r-m);background:var(--card)}
+.dl-list>*+*{border-top:1px solid var(--divider)}
+.dl-row{color:var(--fg);text-decoration:none;transition:background var(--t-base) var(--ease-out)}
+a.dl-row:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
+
+/* 文件行：文字 / 体积 / 下载。「推荐」只有一种信号：强调色文字 */
+.dl-file{display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"tx sz go";align-items:center;gap:var(--s-2) var(--s-4);padding:var(--s-3) var(--s-4)}
+.dl-tx{grid-area:tx;min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s-1)}
+.dl-tx b{display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--s-2);font-size:var(--fs-2);font-weight:600}
+.dl-rec{font-size:var(--fs-1);font-style:normal;font-weight:600;color:var(--accent)}
+.dl-ds{font-size:var(--fs-1);line-height:1.6;color:var(--muted)}
+.dl-fl{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 var(--s-3);min-width:0;font-size:var(--fs-1);line-height:1.6;color:var(--faint)}
+.dl-fl code{font:400 var(--fs-1)/1.6 var(--mono);overflow-wrap:anywhere}
+.dl-rt.ok{color:var(--ok)}
+.dl-rt.need{color:var(--fg)}
+.dl-sz{grid-area:sz;min-width:4.5em;font-size:var(--fs-1);color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.dl-go{grid-area:go;display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 var(--s-3);border:1px solid var(--divider);border-radius:var(--r-s);font-size:var(--fs-1);font-weight:600;color:var(--fg);transition:color var(--t-base) var(--ease-out),border-color var(--t-base) var(--ease-out),background var(--t-base) var(--ease-out)}
+a.dl-file:hover .dl-go{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+
+.dl-oth{margin-top:var(--s-3)}
+.dl-oth summary{display:flex;align-items:center;gap:var(--s-2);min-height:44px;padding:0 var(--s-2);border-radius:var(--r-s);list-style:none;cursor:pointer;font-size:var(--fs-2);font-weight:600;color:var(--muted);transition:color var(--t-base) var(--ease-out)}
+.dl-oth summary::-webkit-details-marker{display:none}
+.dl-oth summary::before{content:"";width:7px;height:7px;margin:0 var(--s-1);border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform var(--t-base) var(--ease-out)}
+.dl-oth[open] summary::before{transform:rotate(45deg)}
+.dl-oth summary:hover{color:var(--fg)}
+.dl-oth summary em{font-style:normal;font-size:var(--fs-1);font-weight:400;color:var(--faint)}
+.dl-oth .dl-list{margin-top:var(--s-2)}
+
+.dl-none{padding:var(--s-4);border:1px dashed var(--divider);border-radius:var(--r-m);font-size:var(--fs-2);line-height:1.75;color:var(--muted)}
+.dl-none a{color:var(--accent);text-underline-offset:3px}
+.dl-list>.dl-none{border:0;border-radius:0}
+
+/* 历史版本：名称 / 日期 / › */
+.dl-hl .dl-row{display:flex;align-items:center;gap:var(--s-3);min-height:52px;padding:0 var(--s-4)}
+.dl-hl b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--fs-2);font-weight:600}
+.dl-pre{flex:none;font-size:var(--fs-1);color:var(--faint)}
+.dl-hd{flex:none;margin-left:auto;white-space:nowrap;font-size:var(--fs-1);color:var(--muted);font-variant-numeric:tabular-nums}
+.dl-hl svg{flex:none;width:16px;height:16px;fill:none;stroke:var(--faint);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dl-hl .dl-more{color:var(--accent);font-size:var(--fs-2);font-weight:600}
+.dl-hl .dl-more svg{margin-left:auto;stroke:var(--accent)}
+
+/* 手机访客：文件列表折叠（行高动画），不被一屏文件淹没 */
+.dl-fold-t{display:none;min-height:44px;padding:0 var(--s-3);border:1px solid var(--divider);border-radius:var(--r-m);background:var(--card);color:var(--fg);font:600 var(--fs-2)/1 var(--ui);cursor:pointer}
+.dl-sec.fold .dl-fold-t{display:flex;align-items:center;justify-content:center;width:100%;margin-bottom:var(--s-3)}
+.dl-sec.fold .dl-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-slow) var(--ease-out)}
+.dl-sec.fold .dl-body>#assets{min-height:0;overflow:hidden}
+.dl-sec.fold:not(.open) .dl-body{grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows var(--t-slow) var(--ease-out),visibility 0s linear var(--t-slow)}
+.dl-sec.fold:not(.open) .dl-sel{display:none}
+
+/* —— 骨架 —— */
+.dl-sk,.dl-skr b,.dl-skr u,.dl-skr em{background:var(--dl-sh) 100% 0/300% 100%;animation:dl-shim calc(var(--t-slow) * 3) linear infinite}
+@keyframes dl-shim{from{background-position:100% 0}to{background-position:-100% 0}}
+.dl-skr{display:flex;align-items:center;gap:var(--s-4);min-height:calc(var(--s-7) + var(--s-5) - var(--s-1));padding:var(--s-3) var(--s-4)}
+.dl-skr span{flex:1;display:grid;gap:var(--s-2)}
+.dl-skr b{display:block;width:30%;height:14px;border-radius:var(--r-s)}
+.dl-skr u{display:block;width:60%;height:12px;border-radius:var(--r-s)}
+.dl-skr em{flex:none;width:64px;height:36px;border-radius:var(--r-s)}
+.dl-hsk{height:52px;animation:none}
+
+/* —— 响应式 —— */
+@media(min-width:1100px){
+  .dl-stage{margin-right:calc((960px - 100vw) / 2);aspect-ratio:16/10;border-right:0;border-radius:var(--r-l) 0 0 var(--r-l)}
+}
+@media(max-width:900px){
+  .dl-top{grid-template-columns:minmax(0,1fr);gap:var(--s-5);padding:calc(var(--s-7) + var(--s-2)) 0 var(--s-6)}
+  .dl-stage{aspect-ratio:4/3}
+  .dl-st-l2 .isl-stack{font-size:calc(100cqw / 50)}
+}
+@media(max-width:720px){
+  .dl-wrap{padding-bottom:var(--s-7)}
+  .dl-st-l2 .isl .wx,.dl-st-l2 .isl .idt{display:none}
+  .dl-st-l2 .isl .sep~.s:nth-last-child(-n+5){display:none}
+  .dl-st-l2 .isl-stack{font-size:calc(100cqw / 34)}
+  .dl-cta{flex-direction:column;align-items:stretch;gap:0}
+  .dl-cta .btn{justify-content:center;height:56px}
+  .dl-cta .dl-link{justify-content:flex-start}
+  .dl-sec{margin-top:var(--s-6)}
+  .dl-sh{align-items:stretch}
+  .dl-sh .dl-sel{display:flex;width:100%}
+  .dl-sh .dl-sel button{flex:1}
+  .dl-file{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"tx go" "tx sz";align-items:start;padding:var(--s-3)}
+  .dl-go{min-height:44px}
+  .dl-sz{align-self:end;min-width:0}
+  .dl-fl code{flex:1 0 100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dl-hl .dl-row{padding:0 var(--s-3)}
+}
+
+/* —— 动效：入场编排 / 滚动视差 / 控件反馈。全部只在允许动态效果时存在 —— */
+@media(prefers-reduced-motion:no-preference){
+  @keyframes dl-up{from{opacity:0;transform:translateY(.4em)}}
+  @keyframes dl-settle{from{opacity:0;transform:scale(.97)}}
+  @keyframes dl-rise{from{opacity:0;translate:0 10%}}
+  @keyframes dl-draw{to{stroke-dashoffset:0}}
+  @keyframes dl-bar{to{transform:none}}
+  @keyframes dl-dip{40%{transform:translateY(3px)}}
+  @keyframes dl-px-bg{to{translate:0 -3%}}
+  @keyframes dl-px-isl{to{scale:1.12}}
+
+  /* A. 入场：标题逐字（fx.js + display.css），其余上移淡入，舞台落定、窗口升起、灵动岛落下 */
+  .js .dl-lead{animation:dl-up calc(var(--t-slow) * 2) var(--ease-out) 120ms both}
+  .js .dl-cta{animation:dl-up calc(var(--t-slow) * 2) var(--ease-out) 200ms both}
+  .js .dl-line,.js .dl-info{animation:dl-up calc(var(--t-slow) * 2) var(--ease-out) 280ms both}
+  .js .dl-line+.dl-line{animation-delay:340ms}
+  .js .dl-stage{transform-origin:30% 50%;animation:dl-settle calc(var(--t-slow) * 1.3) var(--ease-out) both}
+  .js .dl-desk{animation:dl-rise calc(var(--t-slow) * 1.7) var(--ease-out) 120ms both}
+  .js .dl-st-l2 .isl-stack[data-demo]{animation:drop var(--t-slow) var(--ease-out) 700ms both}
+
+  /* 数据行：错峰淡入上移；区块还没进入视口时先暂停 */
+  .dl-in{animation:dl-up var(--t-slow) var(--ease-out) calc(var(--i,0) * 45ms) both}
+  .js .rv:not(.in) .dl-in{animation-play-state:paused}
+
+  /* C. 点击下载：图标变 ✓（描边绘制）+ 底部进度线扫过 */
+  .dl-cta .btn:hover svg{animation:dl-dip calc(var(--t-slow) * 1.5) var(--ease-out)}
+  .dl-cta .btn.done svg path{stroke-dasharray:24;stroke-dashoffset:24;animation:dl-draw var(--t-base) var(--ease-out) forwards}
+  .dl-cta .btn.done::after{animation:dl-bar var(--dl-done) linear forwards}
+
+  /* B. 滚动视差（支持 scroll-timeline 的浏览器；其余保持静态） */
+  @supports(animation-timeline:scroll()){
+    .dl-st-l1{animation:dl-px-bg linear both;animation-timeline:scroll(root);animation-range:0 60vh}
+    .dl-st-l2{animation:dl-px-isl linear both;animation-timeline:scroll(root);animation-range:0 60vh}
+  }
+
+  /* 「其他平台」展开 / 收起高度动画 */
+  @supports(interpolate-size:allow-keywords){
+    .dl-oth{interpolate-size:allow-keywords}
+    .dl-oth::details-content{block-size:0;overflow:hidden;transition:block-size var(--t-slow) var(--ease-out),content-visibility var(--t-slow) allow-discrete}
+    .dl-oth[open]::details-content{block-size:auto}
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .dl-sk,.dl-skr b,.dl-skr u,.dl-skr em{animation:none}
+  .dl-st-l,.dl-ind,.dl-sel button,.dl-oth summary::before,.dl-sec.fold .dl-body{transition:none}
+}

@@ -7,7 +7,7 @@
   /* 主张句逐字入场：CJK 逐字、拉丁单词整体；闭合标点并入前一字，避免行首标点。
      减少动态效果时不拆分，保持原有淡入。 */
   (function () {
-    var hs = $$('.claim,.n5-fl h2,.final3 h2');
+    var hs = $$('.claim,.n5-fl h2,.final3 h2,.dl-top h1');
     if (!hs.length || reduce) return;
     var RE = /[A-Za-z0-9][A-Za-z0-9.+\-_]*|\s+|[\s\S]/g, PU = /[，。、；：？！）》」』”’…,.;:?!)\]]/, n;
     function wrap(txt) {
@@ -52,7 +52,7 @@
   /* 屏幕外的循环动画（骨架屏流光、渐变流动、设置控件示意）暂停，省去无谓的绘制 */
   if ('IntersectionObserver' in window) {
     var av = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('av0', !e.isIntersecting); }); }, { rootMargin: '80px' });
-    $$('.sk,.sk-i,.g,.tv,.tv-f,.skr,.hist li.skl,.shotf,.thx-reel,.bigmq,.pmq,.mqw').forEach(function (n) { av.observe(n); });
+    $$('.sk,.sk-i,.g,.tv,.tv-f,.skr,.hist li.skl,.shotf,.thx-reel,.bigmq,.pmq,.mqw,.dl-stage').forEach(function (n) { av.observe(n); });
   }
 
   var root = document.documentElement, tick = false;
@@ -64,7 +64,7 @@
   window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
 
-  var SEL = '.axc,.fcard,.cd,.sub-i,.stp4 li,.fit2>div,.thx-t,.tu,.ac,.infob,.hist li a,.acc-i,.pc,.repo';
+  var SEL = '.axc,.fcard,.cd,.sub-i,.stp4 li,.fit2>div,.thx-t,.tu,.acc-i,.pc,.repo';
   if (hover && !reduce) {
     document.addEventListener('pointermove', function (e) {
       var t = e.target.closest && e.target.closest(SEL); if (!t) return;

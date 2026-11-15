@@ -15,6 +15,7 @@
   if (/arm64|aarch64/i.test(ua)) P.arch = 'arm64';
   P.oldWin = /Windows NT [1-6]\./.test(ua) && !/Windows NT 10/.test(ua);
   var mobile = P.os === 'android' || P.os === 'ios';
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var OSN = { windows: 'Windows', android: 'Android', ios: 'iPhone / iPad', macos: 'macOS', linux: 'Linux', chromeos: 'ChromeOS', other: '当前系统' };
   var ARCHN = { x64: 'x64', x86: 'x86（32 位）', arm64: 'ARM64', arm: 'ARM（32 位）' };
@@ -58,13 +59,13 @@
   }
 
   function chips(p) {
-    var h = '<em class="bdg sm">' + ARCHN[p.arch] + '</em>';
-    if (p.form === 'inst' || p.form === 'dir') h += p.rt === 'fd' ? '<em class="bdg sm amber">需 .NET 桌面运行时</em>' : '<em class="bdg sm green">自带运行时</em>';
+    var h = ARCHN[p.arch];
+    if (p.form === 'inst' || p.form === 'dir') h += ' · ' + (p.rt === 'fd' ? '<span class="dl-rt need">需 .NET 桌面运行时</span>' : '<span class="dl-rt ok">自带运行时</span>');
     return h;
   }
 
-  function card(p, rec) {
-    return '<a class="ac' + (rec ? ' rec' : '') + '"' + (p.rt === 'fd' ? ' data-rt="fd"' : '') + ' href="' + p.a.browser_download_url + '" rel="noopener"><span class="ai"><svg viewBox="0 0 24 24"><path d="' + p.ic + '"/></svg></span><span class="at"><b>' + p.t + (rec ? '<u>推荐</u>' : '') + '</b><span class="chs">' + chips(p) + '</span>' + (p.d ? '<span class="ds">' + p.d + '</span>' : '') + '<code>' + p.a.name + '</code></span><span class="am"><em>' + fmt(p.a.size) + '</em><i class="dlb"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></i></span></a>';
+  function card(p, rec, i) {
+    return '<a class="dl-row dl-file dl-in" style="--i:' + (i || 0) + '"' + (p.rt === 'fd' ? ' data-rt="fd"' : '') + ' href="' + p.a.browser_download_url + '" rel="noopener"><span class="dl-tx"><b>' + p.t + (rec ? '<em class="dl-rec">推荐</em>' : '') + '</b>' + (p.d ? '<span class="dl-ds">' + p.d + '</span>' : '') + '<span class="dl-fl"><span>' + chips(p) + '</span><code>' + p.a.name + '</code></span></span><span class="dl-sz">' + fmt(p.a.size) + '</span><span class="dl-go">下载</span></a>';
   }
   function bySc(a, b) { return a.sc - b.sc; }
 
@@ -76,31 +77,31 @@
     else prompt('复制此链接：', u);
   }
 
-  function note(html, cls) {
+  function note(html) {
     var n = $('#plat'); if (!n) return;
     if (!html) { n.hidden = true; return; }
-    n.hidden = false; n.className = 'dlx-note' + (cls ? ' ' + cls : ''); n.innerHTML = html;
-    var b = $('[data-share]', n); if (b) b.addEventListener('click', function () { shareLink(b); });
+    n.hidden = false; n.innerHTML = html;
   }
 
   var IC_I = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg>';
-  var SHARE_BTN = '<button type="button" class="fb sm" data-share>把下载链接发到电脑</button>';
 
   function render() {
-    var r = pick(), box = $('#assets'), dl = $('[data-dl]'), sub = $('[data-dlsub]');
+    var r = pick(), box = $('#assets'), dl = $('[data-dl]');
     $$('[data-badge]').forEach(function (e) { e.hidden = chan !== 'pre'; });
     var tip = $('#chanTip'); if (tip) tip.textContent = chan === 'pre' ? '最新预览版' : '最新稳定版';
+    var cd = $('#chanDesc'); if (cd) cd.textContent = chan === 'pre' ? '预览版包含尚未稳定的新功能，遇到问题欢迎反馈。' : '不确定选哪个？下载第一项即可。';
+    var ch = $('#chan'); if (ch && rels) ch.hidden = !rels.some(function (x) { return !x.draft && x.prerelease; });
     fillHist();
     if (!r) {
-      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; e.classList.remove('sk'); });
+      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; e.classList.remove('dl-sk'); });
       $$('[data-date]').forEach(function (e) { e.textContent = '—'; });
-      if (box) box.innerHTML = '<div class="none">' + (chan === 'pre' ? '目前没有发布预览版，请先使用稳定版。' : '暂无可下载的版本。') + '</div>';
+      if (box) box.innerHTML = '<div class="dl-none">' + (chan === 'pre' ? '目前没有发布预览版，请先使用稳定版。' : '暂无可下载的版本。') + '</div>';
       if (dl) dl.classList.add('dis');
-      if (sub) sub.textContent = '';
+      $$('[data-dlsize]').forEach(function (e) { e.textContent = ''; });
       return;
     }
-    $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; e.classList.remove('sk'); });
-    $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); e.classList.remove('sk'); });
+    $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; e.classList.remove('dl-sk'); });
+    $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); e.classList.remove('dl-sk'); });
     $$('[data-releaselink]').forEach(function (e) { e.href = r.html_url; });
 
     var items = (r.assets || []).map(parse).filter(Boolean);
@@ -122,11 +123,9 @@
         if (!dl.__s) { dl.__s = 1; dl.addEventListener('click', function (e) { e.preventDefault(); shareLink(dl); }); }
       } else { dl.href = best ? best.a.browser_download_url : r.html_url; if (best && best.rt === 'fd') dl.setAttribute('data-rt', 'fd'); else dl.removeAttribute('data-rt'); }
     }
-    if (sub) {
-      if (mobile) sub.textContent = '检测到 ' + OSN[P.os] + ' 设备，ClassFabric 目前仅支持 Windows 电脑';
-    }
+    $$('[data-dlsize]').forEach(function (e) { e.textContent = best && !mobile ? fmt(best.a.size) : ''; });
 
-    if (P.os === 'android' || P.os === 'ios') note(IC_I + '<div><b>暂不支持 ' + OSN[P.os] + '</b><p>ClassFabric 是为 Windows 电脑上的班级大屏设计的，目前没有手机或平板版本，也暂无相关计划。请在要使用的 Windows 电脑上打开本页下载。</p>' + SHARE_BTN + '</div>', 'warn');
+    if (P.os === 'android' || P.os === 'ios') note(IC_I + '<div><b>暂不支持 ' + OSN[P.os] + '</b><p>ClassFabric 是为 Windows 电脑上的班级大屏设计的，目前没有手机或平板版本，也暂无相关计划。请在要使用的 Windows 电脑上打开本页下载。</p>' + '</div>', 'warn');
     else if (P.oldWin) note(IC_I + '<div><b>检测到较旧的 Windows</b><p>ClassFabric 需要 Windows 10 或更高版本。</p></div>', 'warn');
     else if (P.os === 'macos' || P.os === 'linux' || P.os === 'chromeos') note(IC_I + '<div><b>检测到 ' + OSN[P.os] + '</b><p>' + (native.length ? '已为你找到适用于 ' + OSN[P.os] + ' 的文件。' : '官方构建目前只提供 Windows 版本。代码中保留了相关支持，暂无测试环境，欢迎自行从源码构建或帮助测试。') + '</p></div>', '');
     else if (P.os === 'windows' && P.arch === 'arm64' && present.indexOf('arm64') < 0) note(IC_I + '<div><b>检测到 ARM64 设备</b><p>当前版本暂无 ARM64 构建，x64 版本可通过系统自带的转译运行。</p></div>', '');
@@ -134,30 +133,56 @@
 
     if (!box) return;
     var h = '';
-    if (present.length > 1) h += '<div class="archbar seg4" role="tablist" aria-label="处理器架构">' + present.map(function (x) {
-      return '<button type="button" role="tab" data-arch="' + x + '" class="' + (x === arch ? 'on' : '') + '">' + ARCHN[x] + (x === P.arch && P.os === 'windows' ? '<small>你的设备</small>' : '') + '</button>';
+    if (present.length > 1) h += '<div class="dl-sel" role="tablist" aria-label="处理器架构">' + present.map(function (x) {
+      return '<button type="button" role="tab" data-arch="' + x + '" class="' + (x === arch ? 'on' : '') + '" aria-selected="' + (x === arch) + '">' + ARCHN[x] + (x === P.arch && P.os === 'windows' ? '<small>你的设备</small>' : '') + '</button>';
     }).join('') + '</div>';
     var list = win.filter(function (p) { return p.arch === arch; }).sort(bySc);
-    h += '<div class="alist">' + (list.length ? list.map(function (p) { return card(p, p === best); }).join('') : '<div class="none">该版本暂无 Windows 文件，请前往 GitHub 查看。</div>') + '</div>';
-    if (oth.length) h += '<details class="aoth"><summary>其他平台与文件<em class="cnt">' + oth.length + ' 个文件</em></summary><div class="alist">' + oth.sort(bySc).map(function (p) { return card(p, false); }).join('') + '</div></details>';
+    h += '<div class="dl-list">' + (list.length ? list.map(function (p, i) { return card(p, p === best, i); }).join('') : '<div class="dl-none">该版本暂无 Windows 文件，请前往 GitHub 查看。</div>') + '</div>';
+    if (oth.length) h += '<details class="dl-oth"><summary>其他平台与文件<em>' + oth.length + ' 个文件</em></summary><div class="dl-list">' + oth.sort(bySc).map(function (p, i) { return card(p, false, i); }).join('') + '</div></details>';
+    var hadFocus = box.contains(document.activeElement) && document.activeElement.hasAttribute('data-arch');
     box.innerHTML = h;
     $$('[data-arch]', box).forEach(function (b) { b.addEventListener('click', function () { arch = b.dataset.arch; render(); }); });
+    var ab = $('.dl-sel', box); if (ab) { bar(ab); if (hadFocus) { var cur = $('[aria-selected="true"]', ab); if (cur) cur.focus(); } }
   }
 
   function fillHist() {
     var box = $('#hist'); if (!box || !rels) return;
-    var list = rels.filter(function (r) { return !r.draft; }).slice(0, 12);
+    var list = rels.filter(function (r) { return !r.draft; }).slice(0, 6);
+    var chev = '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>';
     box.innerHTML = list.length ? list.map(function (r, i) {
-      var n = (r.assets || []).filter(function (a) { return parse(a); }).length;
-      return '<li><a href="' + r.html_url + '" rel="noopener"><b>' + (r.name || r.tag_name) + '</b>' + (r.prerelease ? '<em class="bdg">预览版</em>' : '') + (i === 0 ? '<em class="bdg cur">最新</em>' : '') + '<span class="hd">' + (r.published_at || '').slice(0, 10) + '</span><span class="hn">' + n + ' 个文件</span><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></a></li>';
-    }).join('') : '<li class="none">暂无历史版本。</li>';
+      return '<li class="dl-in" style="--i:' + i + '"><a class="dl-row" href="' + r.html_url + '" rel="noopener"><b>' + (r.name || r.tag_name) + '</b>' + (r.prerelease ? '<span class="dl-pre">预览版</span>' : '') + '<span class="dl-hd">' + (r.published_at || '').slice(0, 10) + '</span>' + chev + '</a></li>';
+    }).join('') + '<li class="dl-in" style="--i:' + list.length + '"><a class="dl-row dl-more" href="https://github.com/' + REPO + '/releases" rel="noopener">在 GitHub 查看全部版本' + chev + '</a></li>' : '<li class="dl-none">暂无历史版本。</li>';
+  }
+
+  /* Win11 SelectorBar：强调色短横在选中项之间滑动；方向键切换（roving tabindex） */
+  function bar(el) {
+    if (!el || el.__bar) return; el.__bar = 1;
+    var ind = document.createElement('i'), first = true;
+    ind.className = 'dl-ind nt'; ind.setAttribute('aria-hidden', 'true'); el.appendChild(ind);
+    function place() {
+      var b = $('[aria-selected="true"]', el); if (!b || !b.offsetWidth) return;
+      ind.style.setProperty('--x', (b.offsetLeft + b.offsetWidth / 2 - 8) + 'px');
+      $$('button', el).forEach(function (x) { x.tabIndex = x === b ? 0 : -1; });
+      if (first) { first = false; requestAnimationFrame(function () { ind.classList.remove('nt'); }); }
+    }
+    el.addEventListener('click', place);
+    el.addEventListener('keydown', function (e) {
+      var bs = $$('button', el), i = bs.indexOf(document.activeElement); if (i < 0) return;
+      var n = e.key === 'ArrowRight' ? (i + 1) % bs.length : e.key === 'ArrowLeft' ? (i + bs.length - 1) % bs.length : e.key === 'Home' ? 0 : e.key === 'End' ? bs.length - 1 : -1;
+      if (n < 0) return; e.preventDefault(); bs[n].focus(); bs[n].click();
+    });
+    if (window.ResizeObserver) new ResizeObserver(place).observe(el);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+    place();
   }
 
   $$('[data-chan]').forEach(function (b) {
     b.addEventListener('click', function () {
-      chan = b.dataset.chan; $$('[data-chan]').forEach(function (x) { x.classList.toggle('on', x === b); }); render();
+      chan = b.dataset.chan; $$('[data-chan]').forEach(function (x) { var on = x.dataset.chan === chan; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); }); render();
     });
   });
+
+  bar($('#chan'));
 
   function go(r) { rels = r; render(); }
   function load() {
@@ -166,9 +191,9 @@
     fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=20').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (r) { go(r); try { localStorage.setItem('cf_rels', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
       .catch(function () {
-        $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; e.classList.remove('sk'); });
-        var box = $('#assets'); if (box) box.innerHTML = '<div class="none">暂时无法读取版本信息，请前往 <a href="https://github.com/' + REPO + '/releases" rel="noopener">GitHub Releases</a> 下载。</div>';
-        var hs = $('#hist'); if (hs) hs.innerHTML = '<li class="none">暂时无法读取。</li>';
+        $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; e.classList.remove('dl-sk'); });
+        var box = $('#assets'); if (box) box.innerHTML = '<div class="dl-none">暂时无法读取版本信息，请前往 <a href="https://github.com/' + REPO + '/releases" rel="noopener">GitHub Releases</a> 下载。</div>';
+        var hs = $('#hist'); if (hs) hs.innerHTML = '<li class="dl-none">暂时无法读取。</li>';
       });
   }
 
@@ -182,22 +207,60 @@
   }
   load();
 
+  /* 点击下载：按钮图标变 ✓、底部进度线扫过；舞台里的灵动岛切到「下载已开始」，随后恢复循环 */
+  function started() {
+    var b = $('[data-dl]'), t = b && $('span', b);
+    if (!t || mobile || b.classList.contains('done')) return;
+    var o = t.textContent, sv = $('svg', b), osv = sv && sv.innerHTML, st = $('.isl-stack[data-demo]'), ok = $('.dl-ok .isl');
+    b.classList.add('done'); t.textContent = '下载已开始'; if (sv) sv.innerHTML = '<path d="M5 12.5l4.5 4.5L19 7"/>';
+    if (st && st._c && ok) { st._c.stop(); $$('.isl', st).forEach(function (n) { n.classList.remove('on'); }); ok.classList.add('on'); }
+    setTimeout(function () {
+      b.classList.remove('done'); t.textContent = o; if (sv) sv.innerHTML = osv;
+      if (st && st._c && ok) { ok.classList.remove('on'); st._c.start(); }
+    }, 3150);
+  }
+
+  /* 舞台前景是按 1000px 虚拟桌面绘制的，按舞台宽度整体缩放 */
+  var stg = $('.dl-stage');
+  if (stg) {
+    var fitK = function () { stg.style.setProperty('--k', (stg.clientWidth / 1000).toFixed(4)); };
+    fitK(); if (window.ResizeObserver) new ResizeObserver(fitK).observe(stg); else addEventListener('resize', fitK);
+  }
+
+  /* 舞台三层随指针轻微偏移（仅 hover 设备、减少动态时关闭） */
+  var stage = $('.dl-stage');
+  if (stage && !reduce && window.matchMedia && matchMedia('(hover: hover)').matches) {
+    var raf = 0;
+    document.addEventListener('pointermove', function (e) {
+      if (raf || innerWidth < 900) return;
+      var cx = e.clientX, cy = e.clientY;
+      raf = requestAnimationFrame(function () {
+        raf = 0; var r = stage.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+        stage.style.setProperty('--mx', ((cx / innerWidth - .5) * 2).toFixed(3)); stage.style.setProperty('--my', ((cy / innerHeight - .5) * 2).toFixed(3));
+      });
+    }, { passive: true });
+  }
+
+  var files = $('#files'), ft = $('.dl-fold-t');
+  if (mobile && files && ft) {
+    files.classList.add('fold');
+    ft.addEventListener('click', function () { var o = files.classList.toggle('open'); ft.setAttribute('aria-expanded', o); ft.textContent = o ? '收起文件' : '查看全部文件'; });
+  }
+
   var NET = 'https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0', WINGET = 'winget install Microsoft.DotNet.DesktopRuntime.10', dlg = null;
   function openNet(href, name) {
     if (!dlg) {
-      dlg = document.createElement('dialog'); dlg.className = 'cfm'; dlg.setAttribute('aria-labelledby', 'cfmT');
-      dlg.innerHTML = '<div class="cfm-b"><span class="cfm-i"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>'
-        + '<h3 id="cfmT">这个版本需要 .NET 10 桌面运行时</h3>'
-        + '<p>你选择的文件依赖本机已安装的 .NET 桌面运行时，没有它程序无法启动。请先安装 .NET 10 桌面运行时（Desktop Runtime），再运行 ClassFabric。</p>'
-        + '<div class="cfm-c"><code></code><button type="button" data-copy>复制</button></div>'
-        + '<div class="cfm-f"><a class="fb acc lg" href="' + NET + '" target="_blank" rel="noopener">前往 .NET 10 下载页</a>'
-        + '<div class="cfm-x"><a class="fb" data-go href="#">我已安装，继续下载</a><button type="button" class="fb" data-close>取消</button></div></div>'
-        + '<p style="margin-top:var(--s-3);font-size:var(--fs-1)">不想另装运行时？选择带「自带运行时」标记的安装程序即可。</p></div>';
+      dlg = document.createElement('dialog'); dlg.className = 'cfm'; dlg.setAttribute('aria-labelledby', 'cfmT'); dlg.setAttribute('aria-describedby', 'cfmD');
+      dlg.innerHTML = '<div class="cfm-b"><h3 id="cfmT">需要先安装 .NET 10 桌面运行时</h3>'
+        + '<p id="cfmD">你选择的这个文件依赖本机已安装的 .NET 桌面运行时（Desktop Runtime），没有它程序无法启动。</p>'
+        + '<p class="cfm-l">已有 winget？在终端运行：</p><div class="cfm-c"><code></code><button type="button" data-copy>复制</button></div>'
+        + '<p class="cfm-h">不想另装？选择带「自带运行时」标记的安装程序即可。</p></div>'
+        + '<div class="cfm-f"><a class="cfm-btn pri" href="' + NET + '" target="_blank" rel="noopener" autofocus>前往 .NET 下载页</a><a class="cfm-btn" data-go href="#">我已安装，继续下载</a><button type="button" class="cfm-btn" data-close>取消</button></div>';
       document.body.appendChild(dlg);
       $('code', dlg).textContent = WINGET;
       $('[data-close]', dlg).addEventListener('click', function () { dlg.close(); });
       dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
-      $('[data-go]', dlg).addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 200); });
+      $('[data-go]', dlg).addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 200); started(); });
       $('[data-copy]', dlg).addEventListener('click', function (e) {
         var b = e.currentTarget, done = function () { b.textContent = '已复制'; setTimeout(function () { b.textContent = '复制'; }, 1800); };
         if (navigator.clipboard) navigator.clipboard.writeText(WINGET).then(done, function () { }); else done();
@@ -207,8 +270,10 @@
     if (dlg.showModal) dlg.showModal(); else window.open(NET, '_blank');
   }
   document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a[data-rt="fd"]');
-    if (!a || a.classList.contains('share') || e.defaultPrevented || e.button) return;
-    e.preventDefault(); openNet(a.href, a.textContent);
+    if (e.defaultPrevented || e.button || !e.target.closest) return;
+    var a = e.target.closest('a[data-rt="fd"]');
+    if (a && !a.classList.contains('share')) { e.preventDefault(); openNet(a.href, a.textContent); return; }
+    var d = e.target.closest('[data-dl], #assets a.dl-row');
+    if (d && !d.classList.contains('share') && !d.classList.contains('dis')) started();
   });
 })();

@@ -17,13 +17,21 @@
 
 ## 2. 适用范围
 
-- 适用：站点自身的版式（章节、卡片、按钮、文字、动效），即 `home2.css`、`modal.css`、`tokens.css`。
+- 适用：站点自身的版式（章节、卡片、按钮、文字、动效），即 `home2.css`、`dl.css`、`modal.css`、`tokens.css`。
 - 不适用：对真实软件界面的忠实复刻（`.vwin`、`.sapp`、`.isl`、`.vtask` 内部配色与圆角）。这些数值来自真实截图，不得"优化"。
+
+### 动效规范（下载页起适用）
+
+- 只动 `transform` / `opacity`（含独立的 `translate`/`scale` 属性）；不动画 `box-shadow`、`filter`、布局属性（折叠高度用 `grid-template-rows` 或 `::details-content` + `interpolate-size`）。
+- 时长只用 `--t-fast` / `--t-base` / `--t-slow`（入场可用其倍数 `calc(var(--t-slow) * 2)`）；进入用 `--ease-out`，退出用 `--ease-in`。不新增曲线。
+- 每个动效回答一个问题：让用户知道发生了什么（入场编排、点击反馈、选中指示）。装饰性循环动效不做。
+- 全部放进 `@media(prefers-reduced-motion:no-preference)`；滚动联动放进 `@supports(animation-timeline:scroll())`；离屏/页面隐藏时暂停。
+- 禁止 3D 倾斜、光斑跟随、光晕、粒子。
 
 ## 3. 禁止
 
 - 新增颜色、圆角、阴影、字号档位。需要新值时，先改 `tokens.css` 并说明理由。
-- 在 `home2.css` / `modal.css` 里写颜色字面量、`px` 圆角、`px` 字号。
+- 在 `home2.css` / `dl.css` / `modal.css` 里写颜色字面量、`px` 圆角、`px` 字号、动画时长字面量（延迟除外）。
 - 往 `site.css` 追加覆盖旧规则的补丁。重做某个 section，就在新文件里用新类名完整重写，并删除被取代的旧规则。
 - 自绘 Windows 图标。图标只用 `assets/img/win/`（取自真实截图）与用户提供的图片。
 

@@ -4,7 +4,7 @@
 .nav{--nav-fg:var(--muted);--nav-fg-hi:var(--fg);--nav-hover:var(--card);--nav-mark:var(--accent);
   position:fixed;inset:0 0 auto 0;z-index:60;border-bottom:1px solid transparent;
   transition:background var(--t-base) var(--ease-out),border-color var(--t-base) var(--ease-out)}
-body:has(.dlh,.phead,.hz) .nav:not(.solid):not(.open){--nav-fg:var(--on-wall-soft);--nav-fg-hi:var(--on-wall);--nav-hover:color-mix(in srgb,var(--on-wall) 14%,transparent);--nav-mark:var(--on-wall)}
+body:has(.phead,.hz) .nav:not(.solid):not(.open){--nav-fg:var(--on-wall-soft);--nav-fg-hi:var(--on-wall);--nav-hover:color-mix(in srgb,var(--on-wall) 14%,transparent);--nav-mark:var(--on-wall)}
 .nav.open{background:var(--acrylic-solid);border-bottom-color:var(--stroke-flyout)}
 .nav::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,var(--hx1),var(--hx2));transform-origin:0 50%;transform:scaleX(var(--sp,0));pointer-events:none}
 .nav .wrap{display:flex;align-items:center;height:58px;gap:var(--s-1)}
