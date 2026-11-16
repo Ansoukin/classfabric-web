@@ -68,7 +68,7 @@
 
 /* ===== 上课与下课 ===== */
 .n5-show .wrapw{display:grid;gap:var(--s-5)}
-.n5-band{position:relative;display:grid;gap:var(--s-3);padding:var(--s-6) 0;border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--wall-base) url(../img/wall.webp) 50% 40%/cover no-repeat}
+.n5-band{position:relative;display:grid;gap:var(--s-3);padding:var(--s-6) 0;border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--wall-base) var(--wpl,url(../img/wall.webp)) 50% 40%/cover no-repeat}
 .n5-lane{overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
 .n5-lane .trk{display:flex;gap:var(--s-4);width:max-content;padding-right:var(--s-4);animation:n5mq 72s linear infinite}
 .n5-lane.rev .trk{animation-direction:reverse;animation-duration:88s}
@@ -133,7 +133,7 @@
 .n5-seg button{flex:1;height:32px;border:0;background:none;color:var(--muted);font:inherit;font-size:var(--fs-1);cursor:pointer;transition:background var(--t-base) var(--ease-out),color var(--t-base) var(--ease-out)}
 .n5-seg button+button{border-left:1px solid var(--line)}
 .n5-seg button.on{background:var(--accent);color:var(--bg)}
-.n5-live{display:grid;align-items:start;justify-items:center;min-height:300px;padding:var(--s-7) var(--s-4);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--wall-base) url(../img/wall.webp) 50% 30%/cover no-repeat}
+.n5-live{display:grid;align-items:start;justify-items:center;min-height:300px;padding:var(--s-7) var(--s-4);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--wall-base) var(--wpl,url(../img/wall.webp)) 50% 30%/cover no-repeat}
 .n5-tisl{--k:1;--op:.8;--rd:.37;--ff:inherit;font-family:var(--ff)}
 .n5-tisl .isl-stack{font-size:calc(var(--fs-isl) * .64 * var(--k));font-family:var(--ff)}
 .n5-tisl .isl{background:color-mix(in srgb,var(--rep-isl) calc(var(--op) * 100%),transparent);border-radius:calc(var(--rd) * 1.35em)}
@@ -212,7 +212,7 @@
   .hz-pin{position:sticky;top:0;width:auto;margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:56px}
   .hz-bg{display:block;position:absolute;inset:0;z-index:0;overflow:hidden;
     background:radial-gradient(54% 40% at 50% 56%,color-mix(in srgb,var(--scrim) 78%,transparent),color-mix(in srgb,var(--scrim) 40%,transparent) 55%,transparent 80%),
-      linear-gradient(180deg,color-mix(in srgb,var(--scrim) 28%,transparent),transparent 34%,color-mix(in srgb,var(--scrim) 34%,transparent)),var(--wall-base) url(../img/wall.webp) 50% 30%/cover no-repeat;
+      linear-gradient(180deg,color-mix(in srgb,var(--scrim) 28%,transparent),transparent 34%,color-mix(in srgb,var(--scrim) 34%,transparent)),var(--wall-base) var(--wpl,url(../img/wall.webp)) 50% 30%/cover no-repeat;
     clip-path:inset(0 round 0);animation:hzbg linear both;animation-timeline:scroll(root);animation-range:0 95vh}
   .hz-bg .vtask{position:absolute;z-index:2}
   .hz+.mani{padding-top:clamp(50px,7vw,100px)}

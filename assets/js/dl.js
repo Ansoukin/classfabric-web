@@ -1,4 +1,5 @@
 (function () {
+  var cfBar = function () { return window.cfBar.apply(null, arguments); };
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var REPO = 'Ansoukin/ClassFabric';
@@ -142,7 +143,7 @@
     var hadFocus = box.contains(document.activeElement) && document.activeElement.hasAttribute('data-arch');
     box.innerHTML = h;
     $$('[data-arch]', box).forEach(function (b) { b.addEventListener('click', function () { arch = b.dataset.arch; render(); }); });
-    var ab = $('.dl-sel', box); if (ab) { bar(ab); if (hadFocus) { var cur = $('[aria-selected="true"]', ab); if (cur) cur.focus(); } }
+    var ab = $('.dl-sel', box); if (ab) { cfBar(ab, 'dl-ind'); if (hadFocus) { var cur = $('[aria-selected="true"]', ab); if (cur) cur.focus(); } }
   }
 
   function fillHist() {
@@ -154,35 +155,13 @@
     }).join('') + '<li class="dl-in" style="--i:' + list.length + '"><a class="dl-row dl-more" href="https://github.com/' + REPO + '/releases" rel="noopener">在 GitHub 查看全部版本' + chev + '</a></li>' : '<li class="dl-none">暂无历史版本。</li>';
   }
 
-  /* Win11 SelectorBar：强调色短横在选中项之间滑动；方向键切换（roving tabindex） */
-  function bar(el) {
-    if (!el || el.__bar) return; el.__bar = 1;
-    var ind = document.createElement('i'), first = true;
-    ind.className = 'dl-ind nt'; ind.setAttribute('aria-hidden', 'true'); el.appendChild(ind);
-    function place() {
-      var b = $('[aria-selected="true"]', el); if (!b || !b.offsetWidth) return;
-      ind.style.setProperty('--x', (b.offsetLeft + b.offsetWidth / 2 - 8) + 'px');
-      $$('button', el).forEach(function (x) { x.tabIndex = x === b ? 0 : -1; });
-      if (first) { first = false; requestAnimationFrame(function () { ind.classList.remove('nt'); }); }
-    }
-    el.addEventListener('click', place);
-    el.addEventListener('keydown', function (e) {
-      var bs = $$('button', el), i = bs.indexOf(document.activeElement); if (i < 0) return;
-      var n = e.key === 'ArrowRight' ? (i + 1) % bs.length : e.key === 'ArrowLeft' ? (i + bs.length - 1) % bs.length : e.key === 'Home' ? 0 : e.key === 'End' ? bs.length - 1 : -1;
-      if (n < 0) return; e.preventDefault(); bs[n].focus(); bs[n].click();
-    });
-    if (window.ResizeObserver) new ResizeObserver(place).observe(el);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
-    place();
-  }
-
   $$('[data-chan]').forEach(function (b) {
     b.addEventListener('click', function () {
       chan = b.dataset.chan; $$('[data-chan]').forEach(function (x) { var on = x.dataset.chan === chan; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); }); render();
     });
   });
 
-  bar($('#chan'));
+  cfBar($('#chan'), 'dl-ind');
 
   function go(r) { rels = r; render(); }
   function load() {
@@ -211,10 +190,12 @@
   function started() {
     var b = $('[data-dl]'), t = b && $('span', b);
     if (!t || mobile || b.classList.contains('done')) return;
+    var desk = $('.dl-desk'); if (desk) desk.classList.add('launch');
     var o = t.textContent, sv = $('svg', b), osv = sv && sv.innerHTML, st = $('.isl-stack[data-demo]'), ok = $('.dl-ok .isl');
     b.classList.add('done'); t.textContent = '下载已开始'; if (sv) sv.innerHTML = '<path d="M5 12.5l4.5 4.5L19 7"/>';
     if (st && st._c && ok) { st._c.stop(); $$('.isl', st).forEach(function (n) { n.classList.remove('on'); }); ok.classList.add('on'); }
     setTimeout(function () {
+      if (desk) desk.classList.remove('launch');
       b.classList.remove('done'); t.textContent = o; if (sv) sv.innerHTML = osv;
       if (st && st._c && ok) { ok.classList.remove('on'); st._c.start(); }
     }, 3150);

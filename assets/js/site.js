@@ -360,3 +360,28 @@
     items[0].classList.add('open'); items[0].querySelector('button').setAttribute('aria-expanded', true); panel(items[0]).style.height = 'auto';
   });
 })();
+
+/* Win11 SelectorBar / Pivot 的滑动指示条：选中项（aria-selected 或 aria-current）下方的强调色短横随选中滑动。
+   el 为容器，cls 为指示条类名；role=tablist 时启用方向键与 roving tabindex。返回重新定位函数。 */
+window.cfBar = function (el, cls) {
+  if (!el || el.__bar) return el && el.__bar;
+  var all = function (s) { return Array.prototype.slice.call(el.querySelectorAll(s)); };
+  var cur = function () { return el.querySelector('[aria-selected="true"],[aria-current="true"]'); };
+  var ind = document.createElement('i'), first = true, tabs = el.getAttribute('role') === 'tablist';
+  ind.className = cls + ' nt'; ind.setAttribute('aria-hidden', 'true'); el.appendChild(ind);
+  function place() {
+    var b = cur(); if (!b || !b.offsetWidth) return;
+    ind.style.setProperty('--x', (b.offsetLeft + b.offsetWidth / 2 - 8) + 'px');
+    if (tabs) all('button').forEach(function (x) { x.tabIndex = x === b ? 0 : -1; });
+    if (first) { first = false; requestAnimationFrame(function () { ind.classList.remove('nt'); }); }
+  }
+  el.addEventListener('click', place);
+  if (tabs) el.addEventListener('keydown', function (e) {
+    var bs = all('button'), i = bs.indexOf(document.activeElement); if (i < 0) return;
+    var n = e.key === 'ArrowRight' ? (i + 1) % bs.length : e.key === 'ArrowLeft' ? (i + bs.length - 1) % bs.length : e.key === 'Home' ? 0 : e.key === 'End' ? bs.length - 1 : -1;
+    if (n < 0) return; e.preventDefault(); bs[n].focus(); bs[n].click();
+  });
+  if (window.ResizeObserver) new ResizeObserver(place).observe(el);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+  place(); el.__bar = place; return place;
+};

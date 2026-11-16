@@ -58,12 +58,18 @@ with sync_playwright() as p:
     pg.keyboard.press('Home'); pg.wait_for_timeout(300)
     ck('Home selects 1st', ev(pg, 'document.querySelector("#chan [aria-selected=true]").dataset.chan') == 'stable')
     ck('rows staggered', ev(pg, '[...document.querySelectorAll(".dl-file.dl-in")].every((r,i)=>r.style.getPropertyValue("--i")!=="")'))
+    # 舞台事件：岛 ≥6 个真实状态；托盘右键换课的光标与菜单；启动弹跳
+    ck('stage: island has >=6 states', ev(pg, 'document.querySelectorAll(".isl-stack[data-demo] .isl").length>=6'))
+    ck('stage: cursor + tray menu layers', ev(pg, '!!document.querySelector(".dl-cur") && !!document.querySelector(".dl-tm .tmenu") && !!document.querySelector(".dl-mh")'))
+    ck('stage: tray menu runs a loop', ev(pg, '[...document.getAnimations()].some(a=>a.animationName==="dl-tm")'))
+    ck('stage: app icon pop-in', ev(pg, '[...document.getAnimations()].some(a=>a.animationName==="dl-pop") || getComputedStyle(document.querySelector(".dl-desk .tb.cfapp")).opacity==="1"'))
     # 已开始：✓ + 岛联动 + 复位
     pg.click('[data-dl]'); pg.wait_for_timeout(300)
     ck('started: done class + label', ev(pg, 'document.querySelector("[data-dl]").classList.contains("done") && document.querySelector("[data-dl] span").textContent==="下载已开始"'))
+    ck('started: app icon launch bounce', ev(pg, 'document.querySelector(".dl-desk").classList.contains("launch")'))
     ck('started: island mask on', ev(pg, '!!document.querySelector(".dl-ok .isl.on")'))
     pg.wait_for_timeout(3400)
-    ck('started: reset', ev(pg, '!document.querySelector("[data-dl]").classList.contains("done") && !document.querySelector(".dl-ok .isl.on") && !!document.querySelector("[data-dl] svg path")'))
+    ck('started: reset', ev(pg, '!document.querySelector(".dl-desk").classList.contains("launch") && !document.querySelector("[data-dl]").classList.contains("done") && !document.querySelector(".dl-ok .isl.on") && !!document.querySelector("[data-dl] svg path")'))
     # 弹窗：打开 / Tab 循环 / Esc 回焦
     pg.evaluate('scrollTo(0,420)'); pg.wait_for_timeout(300)
     fd = pg.locator('a[data-rt=fd]').first; fd.click(); pg.wait_for_timeout(450)
@@ -92,6 +98,7 @@ with sync_playwright() as p:
 
     # 4 Android：整宽按钮、折叠
     ctx, pg, errs = mk(w=390, h=844, ua=AND, touch=True)
+    ck('android: cursor/menu hidden', ev(pg, 'getComputedStyle(document.querySelector(".dl-tm")).display==="none" && getComputedStyle(document.querySelector(".dl-cur")).display==="none"'))
     ck('android: cta full width', ev(pg, 'Math.round(document.querySelector("[data-dl]").getBoundingClientRect().width)>=340'))
     ck('android: cta >=56px', ev(pg, 'document.querySelector("[data-dl]").getBoundingClientRect().height>=56'))
     t = pg.locator('.dl-fold-t')
@@ -110,6 +117,7 @@ with sync_playwright() as p:
     # 6 reduced-motion：入场/视差/指示条全部静止
     ctx, pg, errs = mk(rm='reduce')
     ck('rm: no entrance animation', ev(pg, '["h1",".dl-lead",".dl-cta",".dl-st-l3",".dl-in"].every(s=>{const e=document.querySelector(".dl-top "+s)||document.querySelector(s);return !e||getComputedStyle(e).animationName==="none"})'))
+    ck('rm: event layers static', ev(pg, '[".dl-cur",".dl-tm",".dl-mh"].every(s=>getComputedStyle(document.querySelector(s)).animationName==="none")'))
     ck('rm: indicator no transition', ev(pg, 'parseFloat(getComputedStyle(document.querySelector("#chan .dl-ind")).transitionDuration)===0'))
     ck('rm: rv all in', ev(pg, 'document.querySelectorAll(".rv:not(.in)").length') == 0 or True)
     ctx.close()

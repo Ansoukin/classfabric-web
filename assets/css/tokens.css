@@ -77,3 +77,20 @@
 :root[data-theme=light]{--accent:#0a63c9;--on-accent:#fff;--cta-bg:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#fcfcfc;--acrylic-solid:#f9f9f9}
 @media(prefers-color-scheme:light){:root:not([data-theme=dark]){--accent:#0a63c9;--on-accent:#fff;--cta-bg:#0a63c9;--sh-edge:inset 0 1px 0 rgba(255,255,255,.9);--ok:#1a7f37;--sh-lift:0 18px 36px -20px rgba(20,40,90,.28);--layer:rgba(255,255,255,.5);--card:rgba(255,255,255,.7);--card-2:rgba(246,246,246,.5);--stroke:rgba(0,0,0,.06);--stroke-flyout:rgba(0,0,0,.06);--divider:rgba(0,0,0,.06);--mica-base:#f3f3f3;--mica-tint:.86;--acrylic:rgba(252,252,252,.86);--acrylic-solid:#fcfcfc;--acrylic-solid:#f9f9f9}}
 @media(max-width:640px){:root{--fs-claim:clamp(30px,9.4vw,46px);--sec-y:var(--s-7);--claim-gap:var(--s-5)}}
+
+/* —— 软件界面复刻色（仅用于 .isl / .tmenu 这类对真实软件的复刻；站点自身 UI 不得使用）——
+   默认深色；窗口内的岛保持深色。壁纸偏亮时由 wp.js 写入 data-wpi=light，切到真实软件的浅色皮肤（取自实机截图）。 */
+:root,.app,.w,.sapp,.sw2{
+  --rep-isl-bg:rgba(46,34,32,.8);--rep-isl-fg:#fff;--rep-isl-dim:rgba(255,255,255,.5);--rep-isl-sep:rgba(255,255,255,.5);
+  --rep-isl-cur:rgba(255,255,255,.07);--rep-isl-edge:rgba(255,255,255,.07);--rep-isl-line:#80b6ef;
+  --rep-pill-bg:rgba(255,255,255,.12);--rep-pill-ring:rgba(125,180,238,.7);--rep-pill-fg:#d6e8fb;
+  --rep-mask-bg:#78bbf0;--rep-mask-fg:#0b1e30;
+}
+:root{--rep-menu-bg:rgba(44,44,46,.96);--rep-menu-bd:rgba(255,255,255,.12);--rep-menu-fg:#fff;--rep-menu-hl:rgba(255,255,255,.13);--rep-menu-sh:rgba(0,0,0,.55);--rep-menu-icf:invert(1)}
+:root[data-wpi=light]{
+  --rep-isl-bg:rgba(249,249,249,.5);--rep-isl-fg:#1b1b1b;--rep-isl-dim:rgba(0,0,0,.45);--rep-isl-sep:rgba(0,0,0,.35);
+  --rep-isl-cur:rgba(0,0,0,.05);--rep-isl-edge:rgba(0,0,0,.06);--rep-isl-line:#005a9e;
+  --rep-pill-bg:rgba(0,90,158,.1);--rep-pill-ring:rgba(0,90,158,.55);--rep-pill-fg:#005a9e;
+  --rep-mask-bg:#005a9e;--rep-mask-fg:#fff;
+  --rep-menu-bg:#f9f9f9;--rep-menu-bd:rgba(0,0,0,.06);--rep-menu-fg:#1b1b1b;--rep-menu-hl:rgba(0,0,0,.06);--rep-menu-sh:rgba(0,0,0,.22);--rep-menu-icf:none
+}

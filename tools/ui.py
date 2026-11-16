@@ -281,12 +281,12 @@ def swap_dialog():
             '<span id="swPerm" style="display:none">' + cb(False, '永久换课') + '</span><span class="btnw acc" id="swOk" style="display:none">' + ic('check') + '确认换课</span></div></div></div></div>')
 
 def tray_menu():
-    items = [('info', 'ClassFabric', ''), ('school', '教学…', ''), ('help', '帮助文档…', ''), ('hr',), ('eyeoff', '隐藏主界面', ''), ('hr',), ('doc', '编辑档案…', 'edit'), ('doc', '加载临时课表…', ''), ('swap', '换课…', ''), ('hr',), ('edit', '编辑主界面…', ''), ('gear', '应用设置…', ''), ('hr',), ('sync', '重启', ''), ('exit', '退出', '')]
+    items = [('info', 'ClassFabric', ''), ('school', '教学...', ''), ('help', '帮助文档...', ''), ('hr',), ('eyeoff', '隐藏主界面', ''), ('hr',), ('doc', '编辑档案...', 'edit'), ('docclock', '加载临时课表...', ''), ('swap', '换课...', ''), ('hr',), ('edit', '编辑主界面...', ''), ('gear', '应用设置...', ''), ('hr',), ('restart', '重启', ''), ('exit', '退出', '')]
     h = '<div class="tmenu">'
     for it in items:
         if it[0] == 'hr': h += '<hr>'
         elif it[1] == 'ClassFabric': h += '<div class="mi" data-k="%s"><img class="ti" src="/assets/img/icon-64.png" alt="">%s</div>' % (it[2], it[1])
-        else: h += '<div class="mi" data-k="%s">%s%s</div>' % (it[2], ic(it[0]), it[1])
+        else: h += '<div class="mi" data-k="%s">%s%s</div>' % (it[2], ('<img class="ic" src="/assets/img/win/tm-%s.png" alt="">' % it[0]) if it[0] != 'exit' else ic('exit'), it[1])
     return h + '</div>'
 
 def recovery():

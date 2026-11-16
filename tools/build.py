@@ -102,6 +102,11 @@ JS_REDIR_D = ('<script>(function(){try{var u=navigator.userAgent,s=location.sear
               'var v=localStorage.getItem(k),ph=/iPhone|iPod|Android.+Mobile|Windows Phone|IEMobile|BlackBerry|Opera Mini|Mobile.+Firefox/i.test(u);'
               'if(v==="m"||(ph&&v!=="pc")){var p=location.pathname;location.replace((p==="/"||p==="/index.html"?"/m/":"/m"+p)+location.hash)}}catch(e){}})()</script>\n')
 
+def wp_early(flags):
+    js = open(os.path.join(OUT, 'assets/js/wp.js'), encoding='utf-8').read()
+    js = re.sub(r'/\*.*?\*/', '', js, flags=re.S)
+    return '<script>' + flags + re.sub(r'\s*\n\s*', ' ', js).strip() + '</script>\n'
+
 def head(title, desc, path, extra='', alt=None, m=False):
     url = SITE + path
     alt_tag = ('<link rel="alternate" media="only screen and (max-width: 640px)" href="%s%s">\n' % (SITE, alt)) if alt else ''
@@ -114,6 +119,10 @@ def head(title, desc, path, extra='', alt=None, m=False):
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
             '<meta name="color-scheme" content="dark light">\n<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("cf_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n<link rel="stylesheet" href="/assets/css/nav.css">\n%s%s</head>\n') % (
         title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, jsonld(path, title, desc), extra)
+    wpf = '' if path == '/download.html' else (('window.cfWpS=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
+    if wpf is not None:
+        css = '<link rel="stylesheet" href="/assets/css/site.css">'
+        out = out.replace(css, wp_early(wpf) + css, 1)
     spec = {'/': ['/download.html', '/about.html'], '/download.html': ['/', '/about.html'], '/about.html': ['/', '/download.html']}.get(path)
     if spec and not m:
         out = out.replace('</head>', '<script type="speculationrules">' + __import__('json').dumps({"prefetch": [{"source": "list", "urls": spec}]}, separators=(',', ':')) + '</script>\n</head>', 1)
@@ -139,7 +148,7 @@ RELEASE_DATE = '2026-11-08'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css', 'assets/css/dl.css'):
+    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css', 'assets/css/dl.css', 'assets/css/about.css', 'assets/js/about.js', 'assets/js/wp.js'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
@@ -185,7 +194,7 @@ def home(mob=False):
     import mobile as M
     M.init(globals())
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
-             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n' if mob else '<link rel="preload" as="image" href="/assets/img/wall.webp" fetchpriority="high">\n<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
+             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n' if mob else '<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
     h += navbar('home', [('features','功能'),('custom','定制'),('grow','增强'),('start','开始使用'),('faqs','常见问题')])
     h += '<main>\n'
     U3.init(globals())
@@ -319,7 +328,7 @@ def home(mob=False):
     amap = ('<div class="axmap rv"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div><div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div><div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
             '<div class="axkeep rv"><span>你的配置</span><b>课表</b><b>自动化</b><b>插件</b><b>主题</b></div>')
     h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2>' + amap + '<div class="rel">'
-          '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版，既不是它的完美替代品，也不是竞品。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
+          '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
           '<p>名字里的 Fabric，取自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来；正如 ClassIsland 的 Island，来自 iOS 的灵动岛。</p>'
           '<a class="btn glass" href="/about.html">了解更多</a></div>'
           '<div class="fit2 rv d1"><div><h4>适合你，如果……</h4><p>你想在 ClassIsland 生态上保持现有内容，又希望及时体验上游的新功能；或者想要开箱即用，装完就能用上上游、社区与我们开发的各类新功能。</p></div>'
@@ -337,6 +346,10 @@ def home(mob=False):
     h += '<template id="schedIc">' + ''.join('<i data-n="%s">%s</i>' % (n, ic(n)) for n in ('clock', 'text', 'atom')) + '</template>'
     return h + FOOT.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/bento.js" defer></script>\n<script src="/assets/js/home.js" defer></script>')
 
+def dl_menu():
+    """下载页舞台里的托盘菜单：完整的真实托盘菜单（ui.tray_menu）；高亮行单独成层（落在「换课...」行），由动画淡入"""
+    return tray_menu()[:-len('</div>')] + '<div class="mi mon dl-mh"></div></div>'
+
 def download():
     U3.init(globals())
     h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="stylesheet" href="/assets/css/dl.css">\n<link rel="stylesheet" href="/assets/css/modal.css">\n')
@@ -344,7 +357,7 @@ def download():
     chan = ''.join('<button type="button" role="tab" class="%s" aria-selected="%s" aria-controls="assets" data-chan="%s">%s</button>' % ((('on', 'true') if k == 'stable' else ('', 'false')) + (k, t)) for k, t in (('stable', '稳定版'), ('pre', '预览版')))
     sec = lambda i, t, body: '<section class="dl-sec rv" id="%s"><div class="dl-sh"><div><h2>%s</h2></div></div>%s</section>' % (i, t, body)
     chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
-    isl_states = idle('break', '56%', '78%', 3200).replace('<div class="isl"', '<div class="isl on"', 1) + bar_two('距上课还剩 16 秒', 2800) + idle('class', '30%', '70%', 3200)
+    isl_states = HERO_STATES.replace('<div class="isl"', '<div class="isl on"', 1)
     h += ('<main class="dl-wrap"><div class="dl-w"><header class="dl-top"><div class="dl-copy"><h1 class="rv">下载 ClassFabric</h1><p class="dl-lead"><span>紧跟上游的 ClassIsland 个人修改版，</span><span>目前提供 Windows 版本。</span></p>'
           '<div class="dl-cta"><a class="btn blue" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '<span>下载安装包</span><small data-dlsize></small></a>'
           '<a class="dl-link" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div>'
@@ -353,7 +366,7 @@ def download():
           '<div class="dl-info" id="plat" hidden></div></div>'
           '<div class="dl-stage"><div class="dl-st-l dl-st-l1" aria-hidden="true"></div>'
           '<div class="dl-st-l dl-st-l2" aria-hidden="true"><div class="isl-stack" data-demo="dl">' + isl_states + '</div><div class="isl-stack dl-ok">' + mask('下载已开始', 'dl', 3200) + '</div></div>'
-          '<div class="dl-st-l dl-st-l3" aria-hidden="true"><div class="dl-desk">' + vtask(True).replace('%s', 'dlTray', 1) + '</div></div></div></header>'
+          '<div class="dl-st-l dl-st-l3" aria-hidden="true"><div class="dl-desk"><div class="dl-tm">' + dl_menu() + '</div><i class="dl-cur"><svg viewBox="0 0 24 24"><path d="M4 2.5v16.2l4.3-3.9 2.6 6 2.7-1.2-2.6-5.9h5.7z"/></svg></i>' + vtask(True).replace('%s', 'dlTray', 1) + '</div></div></div></header>'
           '<section class="dl-sec rv" id="files"><div class="dl-sh"><div><h2>选择版本</h2><p id="chanDesc">不确定选哪个？下载第一项即可。</p></div>'
           '<div class="dl-sel" id="chan" role="tablist" aria-label="版本通道" hidden>' + chan + '</div></div>'
           '<button type="button" class="dl-fold-t" aria-expanded="false" aria-controls="assets">查看全部文件</button>'
@@ -370,7 +383,7 @@ FAQ = [
     ('支持 Linux 和 macOS 吗？', '目前仅提供 Windows 版本。代码中保留了相关支持，但我们暂无测试环境与精力维护，因此暂不提供官方构建。'),
     ('有交流群吗？', '暂时没有。ClassIsland 现有的 QQ 频道与群属于上游项目，ClassFabric 的问题请直接在 GitHub 提交 Issue。'),
     ('软件出现问题怎么办？', '可以先尝试内置的恢复模式：以安全模式启动、查看日志、恢复备份，必要时重置配置。仍无法解决，请在 GitHub 提交 Issue 并附上诊断信息。'),
-    ('它会取代 ClassIsland 吗？', '不会。ClassFabric 建立在 ClassIsland 之上，没有上游就没有它。可以把它看作一个「更早体验新功能，并带有额外改进」的选择。'),
+    ('和 ClassIsland 是什么关系？', 'ClassFabric 建立在 ClassIsland 之上，并持续同步上游，没有上游就没有它。可以把它看作一个「更早体验新功能，并带有额外改进」的选择。'),
     ('开源协议是什么？', 'GPL-3.0，与上游一致。ClassIsland 的版权归 HelloWRC，ClassFabric 的改动版权归各自贡献者。'),
 ]
 
@@ -384,44 +397,53 @@ def faq_html():
 
 
 def about():
-    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html', '<link rel="stylesheet" href="/assets/css/display.css">\n')
+    h = head('关于 ClassFabric — 与 ClassIsland 的关系、计划与常见问题', 'ClassFabric 是 ClassIsland 的个人修改版。了解它与上游的关系、从 ClassIsland 切换需要做什么、已完成与计划中的功能，以及常见问题。', '/about.html', '<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="stylesheet" href="/assets/css/about.css">\n')
     h += navbar('about')
-    def card(i, t, d, extra=''):
-        return '<div class="axc"><div><b>%s</b><p>%s</p>%s</div></div>' % (t, d, extra)
-    facts = ''.join(card(*x) for x in [('sync', '同步上游', '积极跟进 ClassIsland 的新功能与修复'), ('check', '无缝沿用', '课表、自动化、插件与主题直接继续使用'), ('plug', '来自社区的增强', '更多天气源、多语言（实验中）等'), ('doc', '开源免费', '沿用上游的 GPL-3.0 协议')])
-    amap = ('<div class="axmap"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div>'
-            '<div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div>'
-            '<div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
-            '<div class="axkeep"><span>你的配置</span><b>课表</b><b>自动化</b><b>插件</b><b>主题</b></div>')
-    steps = ''.join('<li><i>%s</i><div><b>%s</b><p>%s</p></div></li>' % x for x in [('1', '下载并安装', '从下载页获取适用于 Windows 的版本，安装或解压即可。'), ('2', '启动', '主界面出现在屏幕上方，界面中显示的名称为 ClassFabric。'), ('3', '接着用', '原有的课表、自动化、插件与主题可直接沿用。')])
-    done = ''.join(card(*x) for x in [
-        ('sync', '紧跟上游', '同步 ClassIsland 的新功能与修复。'),
-        ('cloud', '更多天气源', '除小米天气外，新增 OpenWeather 与和风天气。'),
-        ('text', '多语言（实验中）', '界面文字由写死改为可翻译的形式，支持简体中文、繁體中文与 English，已完成约 40%，欢迎在 Crowdin 上参与翻译。', '<div class="axbar"><i></i></div>'),
-        ('plug', '更好的插件预览', '插件市场的详情页可以预览更多内容。')])
-    road = ''.join('<li><span class="axd"></span><div><b>%s</b><p>%s</p></div><em>规划中</em></li>' % x for x in [
-        ('云功能 · 远程提醒', '从远端向大屏发送提醒。'),
-        ('云功能 · 集中管理', '统一管理多台设备。上游暂未提供，我们计划原生支持 <a href="https://miniclassisland.com/" rel="noopener">MINI ClassIsland</a> 及其它第三方集控；社区项目 <a href="https://github.com/1sIancl/ClassislandControlHub" rel="noopener">ClassislandControlHub</a> 也在积极开发。'),
-        ('云功能 · 云端备份', '通过 SFTP、WebDAV、OpenList 等方式备份档案与配置。'),
-        ('更好的自动化', '主要借助社区知名插件 SystemTools 实现。'),
-        ('更好的性能表现', '持续优化。')])
-    h += ('<main><section class="phead"><div class="wrap"><h1>关于 ClassFabric</h1><p>它是什么，与 ClassIsland 是什么关系，已经做了什么，接下来想做什么。</p>'
-          '</div></section><div class="wrap"><div class="ab">'
-          '<nav class="toc" aria-label="本页目录"><a href="#what">是什么</a><a href="#relation">与 ClassIsland 的关系</a><a href="#switch">如何切换</a><a href="#fit">适合谁</a><a href="#done">已经做了</a><a href="#planned">计划中</a><a href="#name">名字由来</a><a href="#join">参与贡献</a><a href="#faq">常见问题</a></nav><div class="prose">'
-          '<section id="what"><h2>ClassFabric 是什么</h2><p class="axlead">ClassFabric 是基于 HelloWRC 的 ClassIsland 二次开发的<strong>个人修改版</strong>。</p><p>在保持积极同步上游最新特性的同时，融入来自个人与社区的修改，例如多语言、云功能、更好的自动化、更好的性能表现与更多功能。其中一部分已经完成，另一部分仍处于规划阶段，详见下文「已经做了」与「计划中」。</p><div class="axgrid two">' + facts + '</div></section>'
-          '<section id="relation"><h2>与 ClassIsland 的关系</h2><p>ClassFabric 不是 ClassIsland 的完美替代品，也不是它的竞品，而是在其基础上二次开发的版本。ClassIsland 的作者是 HelloWRC；ClassFabric 沿用上游的 GPL-3.0 开源协议，软件的「关于」页中也保留了上游的版权声明。</p>' + amap + '</section>'
-          '<section id="switch"><h2>从 ClassIsland 切换，需要做什么</h2><p>不需要复杂的前期工作。ClassFabric 的底层代码与上游保持一致，只需下载并安装，原有的课表、自动化、插件与主题即可接着使用。</p><ol class="axsteps">' + steps + '</ol><div class="callout">我们正在把底层代码尽量还原到与上游一致，同时保持界面中显示的名称为 ClassFabric，目的就是让切换对你「无感」。</div></section>'
-          '<section id="fit"><h2>适合谁，不适合谁</h2><div class="axfit"><div class="yes"><h4>' + ic('check') + '适合</h4><ul><li>想在 ClassIsland 生态上保持现有内容，又希望及时体验上游新功能的人</li><li>希望开箱即用，装完就能体验上游、社区与我们开发的各类新功能的人</li></ul></div>'
-          '<div class="no"><h4>' + ic('info') + '不太适合</h4><ul><li>希望环境长期保持不变的人</li><li>对稳定性有极高要求的场合</li></ul><p>ClassFabric 会积极同步上游的更改，版本变化相对频繁。</p></div></div></section>'
-          '<section id="done"><h2>已经做了什么</h2><div class="axgrid two">' + done + '</div><p>想了解具体改动，可以查看 <a href="' + GH + '/commits/main" rel="noopener">GitHub 提交记录</a>。</p></section>'
-          '<section id="planned"><h2>计划中</h2><p>以下内容仍在规划阶段，<strong>尚未可用</strong>。</p><ul class="axroad">' + road + '</ul></section>'
-          '<section id="name"><h2>名字由来</h2><div class="axname"><div><span class="eq"><b>Class</b><i>+</i><b>Island</b></span><p>Island，来自 iOS 的「灵动岛」。</p></div><div class="ar">→</div><div><span class="eq g"><b>Class</b><i>+</i><b>Fabric</b></span><p>Fabric，取自 Minecraft 社区知名的模组加载器，寓意将社区与个人的功能连接起来。</p></div></div></section>'
-          '<section id="join"><h2>参与贡献</h2><p>欢迎任何有价值的贡献：在 GitHub 提交 Issue 或 PR 即可。我们也会考虑定期将有意义的改动提交给上游，一起建设 ClassIsland 生态。</p>'
-          '<div class="axjoin"><a href="' + GH + '" rel="noopener"><span>' + GHSVG.replace(' class="ghi"', '') + '</span><b>GitHub 仓库</b></a><a href="' + GH + '/issues" rel="noopener"><span>' + ic('info') + '</span><b>反馈问题</b></a><a href="' + GH + '/pulls" rel="noopener"><span>' + ic('sync') + '</span><b>提交 PR</b></a></div></section>'
-          '<section id="faq" class="faq"><h2>常见问题</h2>' + faq_html() + '</section>'
-          '</div></div></div><section class="final3"><div class="wrap"><h2 class="rv">立即体验<br><span class="g">ClassFabric</span></h2><p class="rv d1">更多功能留给您自行探索！</p>'
-          '<div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/">返回首页</a></div></div></section></main>\n')
-    return h + FOOT_LITE
+    chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
+    secs = [('relation', '关系'), ('switch', '切换'), ('fit', '适合谁'), ('progress', '进展'), ('name', '名字由来'), ('join', '参与'), ('faq', '常见问题')]
+    nav = '<nav class="ab-nav ab-w" id="abNav" aria-label="本页目录">' + ''.join('<a href="#%s">%s</a>' % x for x in secs) + '</nav>'
+    sec = lambda i, t, body: '<section class="ab-sec rv" id="%s"><h2>%s</h2><div class="ab-body">%s</div></section>' % (i, t, body)
+    steps = ''.join('<li class="ab-in" style="--i:%d"><i>%s</i><div><b>%s</b><p>%s</p></div></li>' % ((n,) + x) for n, x in enumerate([('1', '下载并安装', '从下载页获取适用于 Windows 的版本，安装或解压即可。'), ('2', '启动', '主界面出现在屏幕上方，界面中显示的名称为 ClassFabric。'), ('3', '接着用', '原有的课表、自动化、插件与主题可直接沿用。')]))
+    def rows(items, start=0):
+        out = ''
+        for n, (t, d, st, extra) in enumerate(items):
+            out += '<li class="ab-in" style="--i:%d"><div><b>%s</b><p>%s</p>%s</div>%s</li>' % (start + n, t, d, extra, ('<span class="ab-st">%s</span>' % st) if st else '')
+        return out
+    done = rows([
+        ('紧跟上游', '同步 ClassIsland 的新功能与修复。', '', ''),
+        ('更多天气源', '除小米天气外，新增 OpenWeather 与和风天气。', '', ''),
+        ('多语言', '界面文字由写死改为可翻译的形式，支持简体中文、繁體中文与 English，已完成约 40%，欢迎在 Crowdin 上参与翻译。', '实验中', '<div class="ab-pb"><i></i></div>'),
+        ('更好的插件预览', '插件市场的详情页可以预览更多内容。', '', '')])
+    road = rows([
+        ('云功能 · 远程提醒', '从远端向大屏发送提醒。', '规划中', ''),
+        ('云功能 · 集中管理', '统一管理多台设备。上游暂未提供，我们计划原生支持 <a href="https://miniclassisland.com/" rel="noopener">MINI ClassIsland</a> 及其它第三方集控；社区项目 <a href="https://github.com/1sIancl/ClassislandControlHub" rel="noopener">ClassislandControlHub</a> 也在积极开发。', '规划中', ''),
+        ('云功能 · 云端备份', '通过 SFTP、WebDAV、OpenList 等方式备份档案与配置。', '规划中', ''),
+        ('更好的自动化', '主要借助社区知名插件 SystemTools 实现。', '规划中', ''),
+        ('更好的性能表现', '持续优化。', '规划中', '')], 4)
+    go = ''.join('<li class="ab-in" style="--i:%d"><a class="ab-row" href="%s" rel="noopener">%s%s</a></li>' % (n, u, t, chev) for n, (u, t) in enumerate([(GH, 'GitHub 仓库'), (GH + '/issues', '反馈问题'), (GH + '/pulls', '提交 PR')]))
+    h += ('<main class="ab-wrap"><div class="ab-w"><header class="ab-top"><div class="ab-copy"><h1 class="rv">关于 ClassFabric</h1>'
+          '<p class="ab-lead"><span>ClassIsland 的个人修改版：</span><span>紧跟上游，</span><span>你的课表、</span><span>自动化、</span><span>插件与主题</span><span>直接沿用。</span></p>'
+          '<a class="ab-link" href="#switch">了解如何切换' + chev + '</a>'
+          '<p class="ab-line">基于 HelloWRC 的 ClassIsland 二次开发，沿用上游的 GPL-3.0 开源协议。</p></div></header></div>'
+          '<div class="ab-bar">' + nav + '</div><div class="ab-w">'
+          + sec('relation', '与 ClassIsland 的关系', '<p class="ab-q">ClassFabric 是基于 HelloWRC 的 ClassIsland 二次开发的<strong>个人修改版</strong>。</p>'
+                '<p>在保持积极同步上游最新特性的同时，融入来自个人与社区的修改，例如多语言、云功能、更好的自动化、更好的性能表现与更多功能。其中一部分已经完成，另一部分仍处于规划阶段，详见下文「进展」。</p>'
+                '<p>ClassIsland 的作者是 HelloWRC。ClassFabric 沿用上游的 GPL-3.0 开源协议，软件的「关于」页中也保留了上游的版权声明。</p>')
+          + sec('switch', '从 ClassIsland 切换，需要做什么', '<p class="ab-q">不需要复杂的前期工作。</p><p>ClassFabric 的底层代码与上游保持一致，只需下载并安装，原有的课表、自动化、插件与主题即可接着使用。</p><ol class="ab-steps">' + steps + '</ol>'
+                '<div class="ab-info">' + ic('info') + '<p>我们正在把底层代码尽量还原到与上游一致，同时保持界面中显示的名称为 ClassFabric，目的就是让切换对你「无感」。</p></div>')
+          + sec('fit', '适合谁，不适合谁', '<div class="ab-fit"><div class="yes"><h3>' + ic('check') + '适合</h3><ul><li>想在 ClassIsland 生态上保持现有内容，又希望及时体验上游新功能的人</li><li>希望开箱即用，装完就能体验上游、社区与我们开发的各类新功能的人</li></ul></div>'
+                '<div class="no"><h3>' + ic('info') + '不太适合</h3><ul><li>希望环境长期保持不变的人</li><li>对稳定性有极高要求的场合</li></ul><p>ClassFabric 会积极同步上游的更改，版本变化相对频繁。</p></div></div>')
+          + sec('progress', '进展', '<h3 class="ab-gh">已经做了</h3><ul class="ab-list">' + done + '</ul><p>想了解具体改动，可以查看 <a href="' + GH + '/commits/main" rel="noopener">GitHub 提交记录</a>。</p>'
+                '<h3 class="ab-gh">计划中</h3><p>以下内容仍在规划阶段，<strong>尚未可用</strong>。</p><ul class="ab-list">' + road + '</ul>')
+          + sec('name', '名字由来', '<div class="ab-name"><div class="ab-in" style="--i:0"><div class="ab-eq">Class<i>+</i>Island</div><p>Island，来自 iOS 的「灵动岛」。</p></div>'
+                '<div class="ab-ar ab-in" style="--i:3" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>'
+                '<div class="ab-in" style="--i:6"><div class="ab-eq">Class<i>+</i><span class="f">Fabric</span></div><p>Fabric，取自 Minecraft 社区知名的模组加载器，寓意将社区与个人的功能连接起来。</p></div></div>')
+          + sec('join', '参与贡献', '<p>欢迎任何有价值的贡献：在 GitHub 提交 Issue 或 PR 即可。我们也会考虑定期将有意义的改动提交给上游，一起建设 ClassIsland 生态。</p><ul class="ab-list ab-go">' + go + '</ul>')
+          + sec('faq', '常见问题', '<div class="faq">' + faq_html() + '</div>')
+          + '</div></main>'
+          '<section class="final3"><div class="wrap"><h2 class="rv">立即体验<br><span class="g">ClassFabric</span></h2><p class="rv d1">更多功能留给您自行探索！</p>'
+          '<div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/">返回首页</a></div></div></section>\n')
+    return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/about.js" defer></script>')
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about)):
     open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(fn()))

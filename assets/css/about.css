@@ -1,0 +1,124 @@
+/* 关于页。只使用 tokens.css 中的 token，规则见 AGENTS.md（任何情况下都不偏离 Fluent Design 与既定 token）。
+   版式：与下载页同一条 960px 版心。题头 = 纯文字（标题、一句话、锚点链接），不放示意图。
+   题头下方是吸顶 SelectorBar（滑动指示条随滚动联动）；正文每段「左：标题（吸顶）/ 右：内容」。
+   列表 = 分组列表（--card + 1px --stroke + 细分隔线），与下载页的文件列表同构；没有渐变、光晕、图标方块、卡片上浮。
+   动效：只动 transform / opacity；时长只用 --t-*，进入用 --ease-out；全部包在 prefers-reduced-motion:no-preference 里。 */
+
+.ab-wrap{--ab-top:calc(58px + var(--s-6));overflow-x:clip}
+.ab-w{width:min(960px,100% - var(--s-4) * 2);margin-inline:auto}
+
+/* —— 题头 —— */
+.ab-top{padding:var(--s-8) 0 var(--s-7)}
+.ab-copy{max-width:36em}
+.ab-top h1{margin:0;font-size:var(--fs-4);font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.ab-lead{text-wrap:balance;margin:var(--s-3) 0 0;font-size:var(--fs-3);line-height:1.6;color:var(--muted)}
+.ab-lead span{display:inline-block}
+.ab-link{display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;margin-top:var(--s-4);font-size:var(--fs-2);font-weight:600;color:var(--accent);text-decoration:none}
+.ab-link:hover{text-decoration:underline;text-underline-offset:3px}
+.ab-link svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ab-line{text-wrap:pretty;margin:var(--s-2) 0 0;font-size:var(--fs-1);line-height:1.7;color:var(--muted)}
+.ab-link:focus-visible,.ab-nav a:focus-visible,.ab-go a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* —— 吸顶目录条（SelectorBar） —— */
+/* 平时是 Mica 上的一条细线；吸顶后与导航同属应用内 Acrylic（materials.css） */
+.ab-bar{position:sticky;top:58px;z-index:5;border-block:1px solid var(--stroke)}
+.ab-bar.stuck{background:var(--noise),var(--acrylic);-webkit-backdrop-filter:var(--acrylic-blur);backdrop-filter:var(--acrylic-blur);border-bottom-color:var(--stroke-flyout)}
+.ab-nav{position:relative;display:flex;gap:var(--s-1);height:var(--s-6);overflow-x:auto;scrollbar-width:none}
+.ab-nav::-webkit-scrollbar{display:none}
+.ab-nav a{flex:none;display:inline-flex;align-items:center;padding:0 var(--s-3);color:var(--muted);font:600 var(--fs-2)/1 var(--ui);text-decoration:none;white-space:nowrap;transition:color var(--t-base) var(--ease-out)}
+.ab-nav a:hover,.ab-nav a[aria-current=true]{color:var(--fg)}
+.ab-ind{position:absolute;left:0;bottom:2px;width:16px;height:3px;border-radius:999px;background:var(--accent);transform:translateX(var(--x,0));opacity:0;transition:transform var(--t-base) var(--ease-out),opacity var(--t-base) var(--ease-out);pointer-events:none}
+.ab-nav[data-has] .ab-ind{opacity:1}
+.ab-ind.nt{transition:none}
+
+/* —— 正文：左标题（吸顶）/ 右内容 —— */
+.ab-sec{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:var(--s-6);padding:var(--s-7) 0;border-top:1px solid var(--stroke);scroll-margin-top:calc(var(--ab-top) - 1px)}
+.ab-bar+.ab-w .ab-sec:first-child{border-top:0}
+.ab-w>.ab-sec:last-child{padding-bottom:0}
+.ab-sec>h2{position:sticky;top:calc(var(--ab-top) + var(--s-4));align-self:start;margin:0;font-size:var(--fs-3);font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.ab-body{min-width:0;max-width:42em}
+.ab-q{margin:0 0 var(--s-3);font-size:var(--fs-3);font-weight:600;line-height:1.5;letter-spacing:-.01em}
+.ab-body p{margin:0 0 var(--s-3);font-size:var(--fs-2);line-height:1.85;color:var(--muted)}
+.ab-body p strong{font-weight:600;color:var(--fg)}
+.ab-body a:not(.ab-row){color:var(--accent);text-decoration:none}
+.ab-body a:not(.ab-row):hover{text-decoration:underline;text-underline-offset:3px}
+
+/* 步骤 */
+.ab-steps{list-style:none;margin:var(--s-4) 0;padding:0;border-top:1px solid var(--stroke)}
+.ab-steps li{display:grid;grid-template-columns:var(--s-7) minmax(0,1fr);gap:var(--s-3);padding:var(--s-3) 0;border-bottom:1px solid var(--stroke)}
+.ab-steps i{font-style:normal;font-size:var(--fs-4);font-weight:600;line-height:1;color:var(--faint);font-variant-numeric:tabular-nums}
+.ab-steps b{display:block;font-size:var(--fs-2);font-weight:600}
+.ab-steps p{margin:var(--s-1) 0 0;font-size:var(--fs-1);line-height:1.7}
+.ab-info{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);padding:var(--s-3);border:1px solid var(--stroke);border-radius:var(--r-m);background:var(--card)}
+.ab-info svg{width:20px;height:20px;margin-top:1px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ab-body .ab-info p{margin:0;font-size:var(--fs-2);line-height:1.75}
+
+/* 适合谁 */
+.ab-fit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-5)}
+.ab-fit h3{display:flex;align-items:center;gap:var(--s-2);margin:0 0 var(--s-2);font-size:var(--fs-2);font-weight:600}
+.ab-fit h3 svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ab-fit .yes h3 svg{stroke:var(--accent)}
+.ab-fit ul{list-style:none;margin:0;padding:0}
+.ab-fit li{padding:var(--s-2) 0;border-top:1px solid var(--stroke);font-size:var(--fs-2);line-height:1.7;color:var(--muted)}
+.ab-fit .no p{margin:var(--s-2) 0 0;font-size:var(--fs-1);line-height:1.7}
+
+/* 分组列表：进展、贡献入口 */
+.ab-gh{display:flex;align-items:baseline;gap:var(--s-2);margin:var(--s-5) 0 var(--s-2);font-size:var(--fs-2);font-weight:600}
+.ab-gh:first-child{margin-top:0}
+.ab-list{list-style:none;margin:0 0 var(--s-3);padding:0;border:1px solid var(--stroke);border-radius:var(--r-l);background:var(--card);overflow:hidden}
+.ab-list>li+li{border-top:1px solid var(--stroke)}
+.ab-list>li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-3);align-items:start;padding:var(--s-3) var(--s-4)}
+.ab-list b{display:block;font-size:var(--fs-2);font-weight:600}
+.ab-body .ab-list p{margin:var(--s-1) 0 0;font-size:var(--fs-1);line-height:1.7}
+.ab-st{font-size:var(--fs-1);color:var(--faint);white-space:nowrap}
+.ab-pb{height:4px;margin-top:var(--s-2);border-radius:999px;background:color-mix(in srgb,var(--fg) 14%,transparent);overflow:hidden}
+.ab-pb i{display:block;width:40%;height:100%;border-radius:inherit;background:var(--accent);transform-origin:0 50%}
+.ab-go>li{display:block;padding:0}
+.ab-go a{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);min-height:var(--s-6);padding:var(--s-2) var(--s-4);color:var(--fg);font-size:var(--fs-2);font-weight:600;text-decoration:none;transition:background var(--t-base) var(--ease-out)}
+.ab-go a:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
+.ab-go a:focus-visible{outline-offset:-2px}
+.ab-go svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--t-fast) var(--ease-out)}
+.ab-go a:hover svg{transform:translateX(2px)}
+
+/* 名字由来 */
+.ab-name{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:var(--s-4);align-items:start}
+.ab-eq{font-size:var(--fs-4);font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.ab-eq i{padding:0 .2em;font-style:normal;color:var(--faint)}
+.ab-eq .f{color:var(--accent)}
+.ab-body .ab-name p{margin:var(--s-2) 0 0;font-size:var(--fs-1);line-height:1.7}
+.ab-ar{padding-top:var(--s-1);color:var(--faint)}
+.ab-ar svg{display:block;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* 常见问题沿用共用的 .faq 折叠样式 */
+.ab-sec .faq{min-width:0}
+
+@media(max-width:900px){
+  .ab-top{padding:calc(var(--s-7) + var(--s-2)) 0 var(--s-6)}
+  .ab-sec{grid-template-columns:minmax(0,1fr);gap:var(--s-3);padding:var(--s-6) 0}
+  .ab-sec>h2{position:static}
+}
+@media(max-width:720px){
+  .ab-fit{grid-template-columns:minmax(0,1fr);gap:var(--s-4)}
+  .ab-name{grid-template-columns:minmax(0,1fr);gap:var(--s-3)}
+  .ab-ar{padding:0}.ab-ar svg{transform:rotate(90deg)}
+  .ab-list>li{padding:var(--s-3)}
+  .ab-go a{min-height:var(--s-6);padding-inline:var(--s-3)}
+}
+
+@media(prefers-reduced-motion:no-preference){
+  @keyframes ab-up{from{opacity:0;transform:translateY(.4em)}}
+
+  /* 入场：标题逐字（fx.js + display.css），其余上移淡入 */
+  .js .ab-lead{animation:ab-up calc(var(--t-slow) * 2) var(--ease-out) 120ms both}
+  .js .ab-link{animation:ab-up calc(var(--t-slow) * 2) var(--ease-out) 200ms both}
+  .js .ab-line{animation:ab-up calc(var(--t-slow) * 2) var(--ease-out) 280ms both}
+
+  /* 列表行与名字等式：区块进入视口后再错峰淡入 */
+  .ab-in{animation:ab-up var(--t-slow) var(--ease-out) calc(var(--i,0) * 45ms) both}
+  .js .rv:not(.in) .ab-in{animation-play-state:paused}
+  .js .rv:not(.in) .ab-pb i{transform:scaleX(0)}
+  .ab-pb i{transition:transform calc(var(--t-slow) * 2) var(--ease-out) var(--t-base)}
+}
+@media(prefers-reduced-motion:reduce){
+  .ab-ind,.ab-nav a,.ab-go a,.ab-go svg{transition:none}
+}
