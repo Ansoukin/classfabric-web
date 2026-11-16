@@ -1,42 +1,58 @@
-/* 404：桌面场景（随机壁纸 + 真实灵动岛）+ 超大的「404」，其中的「0」取岛的胶囊形。
-   只用 tokens.css 的 token；岛沿用复刻皮肤（--rep-*）。动效全部在 no-preference 内，只用 transform / opacity。 */
-.nf{position:relative;min-height:min(100svh,920px);display:grid;place-items:center;overflow:hidden;padding:calc(var(--s-8) + var(--s-6)) var(--s-4) var(--s-8);color:var(--on-wall);background:var(--wall-base)}
-.nf-bg{position:absolute;inset:0;overflow:hidden}
-.nf-bg i{position:absolute;inset:-6%;background:var(--wp,url(/assets/img/wp/lake.webp)) 50% 40%/cover no-repeat}
-.nf-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(54% 44% at 50% 58%,color-mix(in srgb,var(--scrim) 78%,transparent),color-mix(in srgb,var(--scrim) 40%,transparent) 55%,transparent 80%),linear-gradient(180deg,color-mix(in srgb,var(--scrim) 28%,transparent),transparent 34%,color-mix(in srgb,var(--scrim) 34%,transparent))}
-.nf-isl{position:absolute;top:calc(var(--s-8) + var(--s-3));left:0;right:0;z-index:1;display:grid;justify-items:center;pointer-events:none}
-.nf-isl .isl-stack{font-size:var(--fs-isl)}
-.nf-in{position:relative;z-index:1;display:grid;justify-items:center;gap:var(--s-3);width:min(880px,100%);text-align:center}
-.nf-n{display:block;width:100%;height:auto;margin-bottom:var(--s-4);overflow:visible;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.nf-n .sh{stroke:var(--scrim);opacity:.3}
-.nf-n .m{stroke:var(--on-wall)}
-.nf-h{margin:0;font-size:var(--fs-4);font-weight:var(--fw-display-soft);line-height:var(--lh-display);letter-spacing:var(--tr-display)}
-.nf-p{margin:0;font-size:var(--fs-3);color:var(--on-wall-soft)}
-.nf-path{margin:0;font-size:var(--fs-1);color:var(--on-wall-soft)}
-.nf-path code{font-family:var(--mono);color:var(--on-wall);word-break:break-all}
-.nf-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s-3);margin-top:var(--s-3)}
-.nf-w{width:min(960px,100% - var(--s-4) * 2);margin:var(--s-7) auto var(--s-8)}
-.nf-w h2{margin:0 0 var(--s-3);font-size:var(--fs-3);font-weight:600}
-.nf-list{margin:0;padding:0;list-style:none;border:1px solid var(--stroke);border-radius:var(--r-m);background:var(--card);overflow:hidden}
-.nf-list li+li{border-top:1px solid var(--divider)}
-.nf-list a{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);min-height:var(--s-7);padding:var(--s-3) var(--s-4);color:var(--fg);text-decoration:none;transition:background var(--t-base) var(--ease-out)}
-.nf-list a:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
-.nf-list a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-.nf-list b{display:block;font-size:var(--fs-2);font-weight:600}
-.nf-list small{display:block;margin-top:var(--s-1);font-size:var(--fs-1);color:var(--muted)}
-.nf-list svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--faint);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-@media(max-width:720px){
-  .nf{padding-top:calc(var(--s-8) + var(--s-7))}
-  .nf-cta{width:100%}
-  .nf-cta .btn{flex:1;justify-content:center}
+/* 404：「空课」。左：404、一句话、唯一的强调色按钮、三个文字链接；右：课表卡，选中条自上而下滑动并停在「未排课」那一节。
+   版式沿用下载页题头（左文右图）。只用 tokens.css 的 token（规则见 AGENTS.md）；卡片 = --card + 1px --stroke。
+   动效：只动 transform / opacity，时长用 --t-*，进入用 --ease-out；全部包在 prefers-reduced-motion:no-preference 里，
+   减少动态时直接呈现终态（选中条停在「未排课」）。 */
+.nf{--rh:calc(var(--s-6) + var(--s-2));display:grid;align-items:center;min-height:min(100svh,880px);padding:calc(var(--s-8) + var(--s-5)) 0 var(--s-7)}
+.nf-w{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:var(--s-7);align-items:center;width:min(960px,100% - var(--s-4) * 2);margin-inline:auto}
+.nf-copy{display:grid;justify-items:start}
+.nf-code{display:flex;margin:0 0 var(--s-3);font-size:var(--fs-stat);font-weight:var(--fw-display);line-height:var(--lh-display);letter-spacing:var(--tr-display-key);font-variant-numeric:tabular-nums;color:var(--accent)}
+.nf-code span{display:block}
+.nf-h{margin:0;font-size:var(--fs-4);font-weight:var(--fw-display-soft);line-height:1.15;letter-spacing:-.02em}
+.nf-p{margin:var(--s-3) 0 0;font-size:var(--fs-3);line-height:1.6;color:var(--muted)}
+.nf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.nf-cta{margin-top:var(--s-5)}
+.nf-links{display:flex;flex-wrap:wrap;gap:0 var(--s-4);margin-top:var(--s-3)}
+.nf-link{display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;font-size:var(--fs-2);font-weight:600;color:var(--accent);text-decoration:none}
+.nf-link svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--t-base) var(--ease-out)}
+.nf-link:hover{text-decoration:underline;text-underline-offset:3px}
+.nf-link:hover svg{transform:translateX(2px)}
+.nf-link:focus-visible,.nf .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--r-s)}
+.nf-card{border:1px solid var(--stroke);border-radius:var(--r-l);background:var(--card);box-shadow:var(--sh-1);overflow:hidden}
+.nf-hd{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-3);padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--divider)}
+.nf-hd b{font-size:var(--fs-3);font-weight:600}
+.nf-hd span{font-size:var(--fs-1);color:var(--muted);font-variant-numeric:tabular-nums}
+.nf-rows{--n:2;position:relative;padding:var(--s-2) 0}
+.nf-rows ol{position:relative;margin:0;padding:0;list-style:none}
+.nf-rows li{display:flex;align-items:center;gap:var(--s-3);height:var(--rh);padding:0 var(--s-4)}
+.nf-rows li+li{border-top:1px solid var(--divider)}
+.nf-t{flex:none;width:7.6em;font-size:var(--fs-1);color:var(--muted);font-variant-numeric:tabular-nums}
+.nf-s{display:grid;min-width:0;font-size:var(--fs-2)}
+.nf-s b{font-weight:600}
+.nf-s code{overflow:hidden;font-family:var(--mono);font-size:var(--fs-1);color:var(--muted);text-overflow:ellipsis;white-space:nowrap}
+.nf-miss .nf-s b{color:var(--accent)}
+.nf-sel{position:absolute;top:var(--s-2);left:0;right:0;height:var(--rh);background:color-mix(in srgb,var(--accent) 12%,transparent);translate:0 calc(var(--n) * var(--rh));transition:translate var(--t-slow) var(--ease-out);pointer-events:none}
+.nf-sel::before{content:"";position:absolute;left:var(--s-1);top:50%;width:3px;height:var(--s-4);margin-top:calc(var(--s-4) / -2);border-radius:var(--r-s);background:var(--accent)}
+.nf-rows:has(li:nth-child(1):hover){--n:0}
+.nf-rows:has(li:nth-child(2):hover){--n:1}
+.nf-rows:has(li:nth-child(4):hover){--n:3}
+.nf-rows:has(li:nth-child(5):hover){--n:4}
+@media(max-width:860px){
+  .nf{min-height:0;padding-top:calc(var(--s-8) + var(--s-3))}
+  .nf-w{grid-template-columns:minmax(0,1fr);gap:var(--s-6)}
 }
 @media(prefers-reduced-motion:no-preference){
-  @keyframes nf-pop{from{opacity:0;translate:0 -24px;scale:.9}}
-  @keyframes nf-up{from{opacity:0;translate:0 .6em}}
-  @keyframes nf-drift{from{translate:-1.5% 0}to{translate:1.5% -1%}}
-  .js .nf-bg i{animation:nf-drift calc(var(--t-slow) * 40) var(--ease-out) infinite alternate}
-  .js .nf-d{transform-box:fill-box;transform-origin:50% 50%;animation:nf-pop calc(var(--t-slow) * 2) var(--ease-out) calc(var(--i) * 120ms + 200ms) both}
-  .js .nf-p,.js .nf-path,.js .nf-cta{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 700ms both}
-  .js .nf-path{animation-delay:780ms}
-  .js .nf-cta{animation-delay:860ms}
+  .nf-rows li:nth-child(1){--i:0}.nf-rows li:nth-child(2){--i:1}.nf-rows li:nth-child(3){--i:2}.nf-rows li:nth-child(4){--i:3}.nf-rows li:nth-child(5){--i:4}
+  @keyframes nf-up{from{opacity:0;translate:0 .5em}}
+  @keyframes nf-rise{from{opacity:0;translate:0 var(--s-4)}}
+  @keyframes nf-sweep{from{translate:0 0}}
+  @keyframes nf-in{from{opacity:0;translate:0 var(--s-1)}}
+  .js .nf-code span{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) calc(var(--i) * 90ms) both}
+  .js .nf-code span:nth-child(1){--i:0}.js .nf-code span:nth-child(2){--i:1}.js .nf-code span:nth-child(3){--i:2}
+  .js .nf-p,.js .nf-cta,.js .nf-links{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 420ms both}
+  .js .nf-cta{animation-delay:500ms}
+  .js .nf-links{animation-delay:580ms}
+  .js .nf-card{animation:nf-rise calc(var(--t-slow) * 2) var(--ease-out) 160ms both}
+  .js .nf-rows li:not(.nf-miss){animation:nf-in calc(var(--t-slow) * 2) var(--ease-out) calc(var(--i) * 70ms + 420ms) both}
+  .js .nf-sel{animation:nf-sweep calc(var(--t-slow) * 3) var(--ease-out) 900ms backwards}
+  .js .nf-miss .nf-s{animation:nf-in calc(var(--t-slow) * 2) var(--ease-out) 1500ms both}
 }

@@ -7,7 +7,7 @@ import ui4 as U4
 from ui import *
 
 OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = 'https://ansoukin.top'
+SITE = 'https://cf.ansoukin.top'
 GH = 'https://github.com/Ansoukin/ClassFabric'
 REL = GH + '/releases/latest'
 
@@ -119,7 +119,7 @@ def head(title, desc, path, extra='', alt=None, m=False):
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
             '<meta name="color-scheme" content="dark light">\n<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("cf_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n<link rel="stylesheet" href="/assets/css/nav.css">\n%s%s</head>\n') % (
         title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, (jsonld(path, title, desc) if path != '/404.html' else ''), extra)
-    wpf = '' if path in ('/download.html', '/404.html') else (('window.cfWpS=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
+    wpf = '' if path == '/download.html' else (('window.cfWpS=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
     if wpf is not None:
         css = '<link rel="stylesheet" href="/assets/css/site.css">'
         out = out.replace(css, wp_early(wpf) + css, 1)
@@ -452,22 +452,25 @@ def notfound():
     h = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', '', h, flags=re.S)
     h = h.replace('content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"', 'content="noindex,follow"')
     h += navbar('')
-    shapes = ['<path d="M100 16L16 106H148M100 16V144"/>', '<rect x="204" y="16" width="96" height="128" rx="48"/>', '<path d="M442 16L358 106H490M442 16V144"/>']
-    digits = ''.join('<g class="nf-d" style="--i:%d"><g class="sh" stroke-width="40">%s</g><g class="m" stroke-width="28">%s</g></g>' % (i, sh, sh) for i, sh in enumerate(shapes))
     chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
-    row = lambda href, t, d, ext='': '<li><a href="%s"%s><span><b>%s</b><small>%s</small></span>%s</a></li>' % (href, ext, t, d, chev)
-    h += ('<main class="nf"><div class="nf-bg" aria-hidden="true"><i></i></div>'
-          '<div class="nf-isl" aria-hidden="true"><div class="isl-stack">' + mask('页面未找到', 'search').replace('class="isl mask"', 'class="isl mask static drop"') + '</div></div>'
-          '<div class="nf-in"><svg class="nf-n" viewBox="-8 -8 520 176" role="img" aria-label="404">' + digits + '</svg>'
-          '<h1 class="nf-h rv">课表里没有这一页。</h1><p class="nf-p">你访问的地址不存在，或者已经移走。</p>'
-          '<p class="nf-path">请求的地址 <code id="nfp"></code></p>'
-          '<div class="nf-cta"><a class="btn blue" href="/">' + ic('arrowr') + '回到首页</a><a class="btn glass" href="/download.html">' + ic('dl') + '下载 ClassFabric</a></div></div></main>'
-          '<section class="nf-w"><h2>也许你在找</h2><ul class="nf-list">'
-          + row('/download.html', '下载 ClassFabric', 'Windows 版，免费开源')
-          + row('/about.html', '关于 ClassFabric', '与 ClassIsland 的关系、如何切换')
-          + row('/about.html#faq', '常见问题', '课表、插件和主题还能不能用')
-          + row(GH + '/issues', '反馈失效链接', '在 GitHub 提交 Issue', ' rel="noopener"')
-          + '</ul></section>\n')
+    lk = lambda href, t, ext='': '<a class="nf-link" href="%s"%s>%s%s</a>' % (href, ext, t, chev)
+    # 课表样例沿用 ui.ROWS 的真实数据；第 3 节（09:20）是「未排课」，选中条最终停在这里
+    day = ROWS[:5]
+    lessons = []
+    for i, (t, name) in enumerate(day):
+        t = t.replace('-', '–')
+        if i == 2:
+            lessons.append('<li class="nf-miss"><span class="nf-t">%s</span><span class="nf-s"><b>未排课</b><code data-nfp></code></span></li>' % t)
+        else:
+            lessons.append('<li><span class="nf-t">%s</span><span class="nf-s"><b>%s</b></span></li>' % (t, name))
+    h += ('<main class="nf"><div class="nf-w"><div class="nf-copy">'
+          '<p class="nf-code" aria-label="404"><span aria-hidden="true">4</span><span aria-hidden="true">0</span><span aria-hidden="true">4</span></p>'
+          '<h1 class="nf-h rv">课表里没有这一页。</h1>'
+          '<p class="nf-p">你访问的地址不存在，或者已经移走。<span class="nf-sr"> 请求的地址：<span data-nfp></span></span></p>'
+          '<div class="nf-cta"><a class="btn blue" href="/">' + ic('arrowr') + '回到首页</a></div>'
+          '<div class="nf-links">' + lk('/download.html', '下载 ClassFabric') + lk('/about.html#faq', '常见问题') + lk(GH + '/issues', '反馈失效链接', ' rel="noopener"') + '</div></div>'
+          '<div class="nf-card" aria-hidden="true"><div class="nf-hd"><b>周三</b><span>10/28</span></div>'
+          '<div class="nf-rows"><i class="nf-sel"></i><ol>' + ''.join(lessons) + '</ol></div></div></div></main>\n')
     return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about), ('404.html', notfound)):

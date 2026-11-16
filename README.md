@@ -1,6 +1,6 @@
 # ClassFabric 官网
 
-[ClassFabric](https://github.com/Ansoukin/ClassFabric)（ClassIsland 的个人修改版）的官方网站源码，部署在 [ansoukin.top](https://ansoukin.top)。
+[ClassFabric](https://github.com/Ansoukin/ClassFabric)（ClassIsland 的个人修改版）的官方网站源码，部署在 [cf.ansoukin.top](https://cf.ansoukin.top)。
 
 纯静态站点：HTML + CSS + 原生 JS，**没有运行时依赖，不需要 `npm install`**。页面由 `tools/build.py` 生成，生成结果已提交，服务器上只需 `git pull`。
 
@@ -13,7 +13,7 @@
 | `/`（`index.html`） | 首页：可交互的 Windows 桌面演示（灵动岛、托盘菜单、软件窗口）、特性区块、常见问题 |
 | `/download.html` | 下载页：实时读取 GitHub Releases，自动识别系统与架构；顶部为桌面场景舞台 |
 | `/about.html` | 关于页：与 ClassIsland 的关系、如何切换、适合谁、进展、名字由来、常见问题 |
-| `/404.html` | 404 页：随机壁纸桌面 + 真实灵动岛 + 超大的「404」。`noindex`，不在 sitemap 里，需由服务器在地址不存在时返回（见「部署」） |
+| `/404.html` | 404 页：「空课」——超大的「404」+ 课表卡，选中条滑到「未排课」那一节，并显示请求的地址。`noindex`，不在 sitemap 里，需由服务器在地址不存在时返回（见「部署」） |
 | `/m/` | 手机版首页。手机 UA 访问 `/` 时自动跳转，可用 `?view=pc` / `?view=m` 手动切换并记住 |
 
 ## 目录
@@ -108,7 +108,7 @@ python3 tools/t_contrast.py about dark 1440   # 对比度，只输出不达标�
 ## 部署（1Panel）
 
 1. 在 1Panel 创建「静态网站」，网站根目录指向本仓库目录；
-2. 绑定域名 `ansoukin.top`，开启 HTTPS；
+2. 绑定域名 `cf.ansoukin.top`，开启 HTTPS（`tools/build.py` 的 `SITE` 与之保持一致，canonical、sitemap、robots 都由它生成）；
 3. 保持同步：在服务器上 `git pull`（用 1Panel 计划任务定时执行，或用 GitHub Webhook 触发）。
 4. **404 页**：在网站的配置文件（OpenResty）里加入 `error_page 404 /404.html;`，让不存在的地址返回**真正的 404 状态码**并显示 `404.html`。如果不存在的地址返回 200，搜索引擎会判为「软 404」，影响收录。
 
