@@ -3,7 +3,7 @@
    L 为画面中岛所在位置偏亮的壁纸（实测亮度 >130），主界面复刻切浅色皮肤，其余深色。
    本地时间：07–17 点白天，05–07 与 17–19 点晨昏，其余夜晚。由 <head> 内联执行，写入 --wp（1280 宽）与 --wpl（2400 宽，首页用）。 */
 (function () {
-  var W = { lake: 'd', pine: 'dt', dune: 'd', win10: 'd', dawn: 't', ember: 'tn', bloom: 'n' };
+  var W = { lake: 'd', pine: 'dt', dune: 'd', dawn: 't', ember: 'tn', bloom: 'n' };
   var L = { lake: 1, pine: 1, dawn: 1, dune: 1 };
   var d = document.documentElement, h = new Date().getHours();
   var ph = h >= 7 && h < 17 ? 'd' : (h >= 5 && h < 7) || (h >= 17 && h < 19) ? 't' : 'n';

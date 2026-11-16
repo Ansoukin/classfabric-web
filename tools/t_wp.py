@@ -6,8 +6,8 @@ H = functools.partial(http.server.SimpleHTTPRequestHandler, directory=ROOT)
 H.log_message = lambda *a, **k: None
 srv = socketserver.TCPServer(('127.0.0.1', 0), H); B = 'http://127.0.0.1:%d' % srv.server_address[1]
 threading.Thread(target=srv.serve_forever, daemon=True).start()
-ALL = {'lake', 'pine', 'dune', 'win10', 'dawn', 'ember', 'bloom'}
-POOL = {'d': {'lake', 'pine', 'dune', 'win10'}, 't': {'pine', 'dawn', 'ember'}, 'n': {'bloom', 'ember'}}
+ALL = {'lake', 'pine', 'dune', 'dawn', 'ember', 'bloom'}
+POOL = {'d': {'lake', 'pine', 'dune'}, 't': {'pine', 'dawn', 'ember'}, 'n': {'bloom', 'ember'}}
 HOUR = {3: 'n', 6: 't', 12: 'd', 18: 't', 22: 'n'}
 res = []
 def ck(n, ok, extra=''):
