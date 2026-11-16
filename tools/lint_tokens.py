@@ -1,7 +1,7 @@
 import re, sys, os
 
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FILES = ['assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/css/dl.css', 'assets/css/about.css', 'assets/css/modal.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css']
+FILES = ['assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/css/dl.css', 'assets/css/about.css', 'assets/css/nf.css', 'assets/css/modal.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css']
 bad = []
 for f in FILES:
     p = os.path.join(R, f)
@@ -20,7 +20,7 @@ for f in FILES:
             if re.search(r'\d+(\.\d+)?px', m.group(1)) and 'var(' not in m.group(1):
                 bad.append((f, n, '字号字面量', m.group(0)))
         # 动效时长只能来自 --t-* / --tick（dl.css、modal.css）；延迟（*-delay）与 calc 内的相对延迟不受限
-        if f.endswith(('dl.css', 'about.css', 'modal.css')):
+        if f.endswith(('dl.css', 'about.css', 'nf.css', 'modal.css')):
             for m in re.finditer(r'(?<![\w-])(transition|animation):([^;}]+)', line):
                 v = m.group(2)
                 if re.search(r'(?<![\w.-])\d*\.?\d+m?s\b', v) and not re.search(r'--t-|--tick|--dl-done', v):

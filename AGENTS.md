@@ -17,7 +17,7 @@
 
 ## 2. 适用范围
 
-- 适用：站点自身的版式（章节、卡片、按钮、文字、动效），即 `home2.css`、`dl.css`、`about.css`、`modal.css`、`tokens.css`。
+- 适用：站点自身的版式（章节、卡片、按钮、文字、动效），即 `home2.css`、`dl.css`、`about.css`、`nf.css`、`modal.css`、`tokens.css`。
 - 不适用：对真实软件界面的忠实复刻（`.vwin`、`.sapp`、`.isl`、`.vtask` 内部配色与圆角）。这些数值来自真实截图，不得"优化"。复刻色集中放在 `tokens.css` 的 `--rep-*`（岛、托盘菜单的深/浅两套），壁纸偏亮时由 `wp.js` 写入 `html[data-wpi=light]` 切换；`--rep-*` 仅限复刻组件使用，站点自身 UI 不得引用。
 
 ### 动效规范（下载页起适用）
@@ -32,7 +32,7 @@
 
 - **无论如何不得偏离 Fluent Design 与既定 token，不新增 token**（唯一例外：经用户明确放行的软件复刻色 `--rep-*`）。
 - 新增颜色、圆角、阴影、字号档位。需要新值时，先改 `tokens.css` 并说明理由。
-- 在 `home2.css` / `dl.css` / `about.css` / `modal.css` 里写颜色字面量、`px` 圆角、`px` 字号、动画时长字面量（延迟除外）。
+- 在 `home2.css` / `dl.css` / `about.css` / `nf.css` / `modal.css` 里写颜色字面量、`px` 圆角、`px` 字号、动画时长字面量（延迟除外）。
 - 往 `site.css` 追加覆盖旧规则的补丁。重做某个 section，就在新文件里用新类名完整重写，并删除被取代的旧规则。
 - 自绘 Windows 图标。图标只用 `assets/img/win/`（取自真实截图）与用户提供的图片。
 

@@ -118,8 +118,8 @@ def head(title, desc, path, extra='', alt=None, m=False):
             '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="ClassFabric 班级大屏课表">\n'
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
             '<meta name="color-scheme" content="dark light">\n<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("cf_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n<link rel="stylesheet" href="/assets/css/nav.css">\n%s%s</head>\n') % (
-        title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, jsonld(path, title, desc), extra)
-    wpf = '' if path == '/download.html' else (('window.cfWpS=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
+        title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, (jsonld(path, title, desc) if path != '/404.html' else ''), extra)
+    wpf = '' if path in ('/download.html', '/404.html') else (('window.cfWpS=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
     if wpf is not None:
         css = '<link rel="stylesheet" href="/assets/css/site.css">'
         out = out.replace(css, wp_early(wpf) + css, 1)
@@ -148,7 +148,7 @@ RELEASE_DATE = '2026-11-16'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css', 'assets/css/dl.css', 'assets/css/about.css', 'assets/js/about.js', 'assets/js/wp.js'):
+    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css', 'assets/css/dl.css', 'assets/css/about.css', 'assets/js/about.js', 'assets/js/wp.js', 'assets/css/nf.css', 'assets/js/nf.js'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
@@ -445,7 +445,32 @@ def about():
           '<div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/">返回首页</a></div></div></section>\n')
     return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/about.js" defer></script>')
 
-for name, fn in (('index.html', home), ('download.html', download), ('about.html', about)):
+def notfound():
+    h = head('页面未找到（404）— ClassFabric', 'ClassFabric 官网：你访问的页面不存在，或者已经移走。', '/404.html', '<link rel="stylesheet" href="/assets/css/nf.css">\n')
+    for pat in (r'<link rel="canonical"[^>]*>\n?', r'<link rel="alternate"[^>]*>\n?', r'<meta property="og:url"[^>]*>\n?'):
+        h = re.sub(pat, '', h)
+    h = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', '', h, flags=re.S)
+    h = h.replace('content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"', 'content="noindex,follow"')
+    h += navbar('')
+    shapes = ['<path d="M100 16L16 106H148M100 16V144"/>', '<rect x="204" y="16" width="96" height="128" rx="48"/>', '<path d="M442 16L358 106H490M442 16V144"/>']
+    digits = ''.join('<g class="nf-d" style="--i:%d"><g class="sh" stroke-width="40">%s</g><g class="m" stroke-width="28">%s</g></g>' % (i, sh, sh) for i, sh in enumerate(shapes))
+    chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
+    row = lambda href, t, d, ext='': '<li><a href="%s"%s><span><b>%s</b><small>%s</small></span>%s</a></li>' % (href, ext, t, d, chev)
+    h += ('<main class="nf"><div class="nf-bg" aria-hidden="true"><i></i></div>'
+          '<div class="nf-isl" aria-hidden="true"><div class="isl-stack">' + mask('页面未找到', 'search').replace('class="isl mask"', 'class="isl mask static drop"') + '</div></div>'
+          '<div class="nf-in"><svg class="nf-n" viewBox="-8 -8 520 176" role="img" aria-label="404">' + digits + '</svg>'
+          '<h1 class="nf-h rv">课表里没有这一页。</h1><p class="nf-p">你访问的地址不存在，或者已经移走。</p>'
+          '<p class="nf-path">请求的地址 <code id="nfp"></code></p>'
+          '<div class="nf-cta"><a class="btn blue" href="/">' + ic('arrowr') + '回到首页</a><a class="btn glass" href="/download.html">' + ic('dl') + '下载 ClassFabric</a></div></div></main>'
+          '<section class="nf-w"><h2>也许你在找</h2><ul class="nf-list">'
+          + row('/download.html', '下载 ClassFabric', 'Windows 版，免费开源')
+          + row('/about.html', '关于 ClassFabric', '与 ClassIsland 的关系、如何切换')
+          + row('/about.html#faq', '常见问题', '课表、插件和主题还能不能用')
+          + row(GH + '/issues', '反馈失效链接', '在 GitHub 提交 Issue', ' rel="noopener"')
+          + '</ul></section>\n')
+    return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')
+
+for name, fn in (('index.html', home), ('download.html', download), ('about.html', about), ('404.html', notfound)):
     open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(fn()))
 open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n' % SITE)
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n' % (SITE, p, datetime.date.today().isoformat()) for p in ('/', '/download.html', '/about.html')) + '</urlset>\n')

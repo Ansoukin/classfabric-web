@@ -13,12 +13,13 @@
 | `/`（`index.html`） | 首页：可交互的 Windows 桌面演示（灵动岛、托盘菜单、软件窗口）、特性区块、常见问题 |
 | `/download.html` | 下载页：实时读取 GitHub Releases，自动识别系统与架构；顶部为桌面场景舞台 |
 | `/about.html` | 关于页：与 ClassIsland 的关系、如何切换、适合谁、进展、名字由来、常见问题 |
+| `/404.html` | 404 页：随机壁纸桌面 + 真实灵动岛 + 超大的「404」。`noindex`，不在 sitemap 里，需由服务器在地址不存在时返回（见「部署」） |
 | `/m/` | 手机版首页。手机 UA 访问 `/` 时自动跳转，可用 `?view=pc` / `?view=m` 手动切换并记住 |
 
 ## 目录
 
 ```
-index.html  download.html  about.html  m/       生成的页面（不要手改，改 tools/build.py）
+index.html  download.html  about.html  404.html  m/   生成的页面（不要手改，改 tools/build.py）
 assets/
   css/
     tokens.css       设计 token 的唯一来源（颜色、圆角、字号、间距、动效、材质）
@@ -27,6 +28,7 @@ assets/
     home2.css        首页区块
     dl.css           下载页
     about.css        关于页
+    nf.css           404 页
     modal.css        对话框
     bento.css  display.css  m.css   手机首页与共用的大字区块
     site.css         历史共用样式与软件界面复刻（.isl / .tmenu / .vtask / 软件窗口），逐步清理中
@@ -37,6 +39,7 @@ assets/
     home.js  apps.js  widgets.js  bento.js   首页演示与可交互的软件窗口复刻
     dl.js            下载页：GitHub Releases、平台识别、舞台事件
     about.js         关于页：滚动联动的目录
+    nf.js            404 页：显示请求的地址
     m.js             手机首页
   img/
     *.webp / *.png   软件截图、Logo、OG 图
@@ -70,6 +73,7 @@ python3 -m http.server 8080     # 在仓库根目录预览：http://localhost:80
 python3 tools/t_wp.py   # 壁纸随机：时间段、不连续重复、各页面接入
 python3 tools/t_dl3.py  # 下载页：舞台事件、点击下载、手机适配、减少动态
 python3 tools/t_ab.py   # 关于页：锚点、滚动联动、溢出、CLS
+python3 tools/t_nf.py   # 404 页：SEO 标记、溢出、动效、点击区
 python3 tools/t_contrast.py about dark 1440   # 对比度，只输出不达标项
 ```
 
@@ -106,6 +110,7 @@ python3 tools/t_contrast.py about dark 1440   # 对比度，只输出不达标�
 1. 在 1Panel 创建「静态网站」，网站根目录指向本仓库目录；
 2. 绑定域名 `ansoukin.top`，开启 HTTPS；
 3. 保持同步：在服务器上 `git pull`（用 1Panel 计划任务定时执行，或用 GitHub Webhook 触发）。
+4. **404 页**：在网站的配置文件（OpenResty）里加入 `error_page 404 /404.html;`，让不存在的地址返回**真正的 404 状态码**并显示 `404.html`。如果不存在的地址返回 200，搜索引擎会判为「软 404」，影响收录。
 
 ## 许可
 
