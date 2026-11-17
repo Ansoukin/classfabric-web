@@ -1,36 +1,27 @@
-/* 404：整屏 Bing 每日壁纸（风景）+ 颜文字 + 404 + 一首随机的 404 诗 + 一个按钮。
-   壁纸由 nf.js 取得：Bing 每日壁纸，失败时退回站内壁纸池（wp.js 已选好 --wp）。
-   只用 tokens.css 的 token（规则见 AGENTS.md）。遮罩用 --scrim，保证任何壁纸上文字都可读；文字无阴影、无光晕。
-   动效：只动 transform / opacity，时长用 --t-*，进入用 --ease-out，全部包在 prefers-reduced-motion:no-preference 里；
-   减少动态时直接呈现终态。 */
-.nf{position:relative;display:grid;grid-template-rows:1fr auto;min-height:100svh;overflow:hidden;padding:calc(var(--s-8) + var(--s-3)) var(--s-4) var(--s-4);color:var(--on-wall);background:var(--wall-base)}
+/* 404：Win11 ContentDialog 叠在整屏 Bing 每日壁纸上。
+   对话框沿用下载页弹窗（modal.css）的材质：底色 = Mica 回退色，描边 = 浮层描边，阴影 = --sh-win；
+   背景压暗 = --smoke；命令区在底部（--layer），按钮等宽并排。只用 tokens.css 的 token（规则见 AGENTS.md）。
+   壁纸由 nf.js 取得，失败时退回站内壁纸池（wp.js 已选好 --wp）。
+   动效：只动 transform / opacity，时长用 --t-*，进入用 --ease-out，全部包在 prefers-reduced-motion:no-preference 里。 */
+.nf{position:relative;display:grid;place-items:center;min-height:100svh;overflow:hidden;padding:calc(var(--s-8) + var(--s-3)) var(--s-3) var(--s-6);background:var(--wall-base)}
 .nf-bg{position:absolute;inset:0;overflow:hidden}
 .nf-bg i{position:absolute;inset:0;background:var(--wp,url(/assets/img/wp/lake.webp)) 50% 50%/cover no-repeat}
 .js .nf-bg i{opacity:0}
 .js .nf-bg.on i{opacity:1}
-.nf-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 56% at 50% 52%,color-mix(in srgb,var(--scrim) 76%,transparent),color-mix(in srgb,var(--scrim) 50%,transparent) 72%,color-mix(in srgb,var(--scrim) 38%,transparent)),linear-gradient(180deg,color-mix(in srgb,var(--scrim) 32%,transparent),transparent 28%,transparent 60%,color-mix(in srgb,var(--scrim) 60%,transparent))}
-.nf-in{position:relative;z-index:1;align-self:center;display:grid;justify-items:center;gap:var(--s-3);width:min(640px,100%);margin-inline:auto;text-align:center}
-.nf-k{margin:0 0 var(--s-2);font-size:var(--fs-5);font-weight:var(--fw-display-soft);line-height:var(--lh-display);white-space:nowrap}
-.nf-h{margin:0;font-size:var(--fs-3);font-weight:600;letter-spacing:.04em}
-.nf-poem{display:grid;justify-items:center;gap:var(--s-2);margin:var(--s-4) 0 var(--s-3)}
-.nf-pt{font-size:var(--fs-1);color:var(--on-wall-soft)}
+.nf-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in srgb,var(--scrim) 40%,transparent),transparent 160px),var(--smoke)}
+.nf-dlg{position:relative;z-index:1;width:min(548px,100%);border:1px solid var(--stroke-flyout);border-radius:var(--r-m);background:var(--mica-base);color:var(--fg);box-shadow:var(--sh-win);overflow:hidden}
+.nf-b{padding:var(--s-4)}
+.nf-k{margin:0 0 var(--s-3);font-size:var(--fs-5);font-weight:400;line-height:var(--lh-display);white-space:nowrap}
+.nf-t{margin:0 0 var(--s-3);font-size:var(--fs-3);font-weight:600;line-height:1.3}
 .nf-pl{display:grid;gap:var(--s-1);margin:0;font-size:var(--fs-3);line-height:1.7}
 .nf-pl span{display:block}
-.nf-by{font-size:var(--fs-1);font-style:normal;color:var(--on-wall-soft)}
-.nf-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--s-2) var(--s-3)}
-.nf-path{max-width:100%;overflow:hidden;font-family:var(--mono);font-size:var(--fs-1);color:var(--on-wall-soft);text-overflow:ellipsis;white-space:nowrap}
-.nf-path:empty{display:none}
-.nf-credit{position:relative;z-index:1;margin:var(--s-5) 0 0;font-size:var(--fs-1);line-height:1.5;color:var(--on-wall-soft)}
-.nf-credit[hidden]{display:block;visibility:hidden}
-.nf-credit a{color:inherit;text-decoration:none}
-.nf-credit a:hover{color:var(--on-wall);text-decoration:underline;text-underline-offset:3px}
-.nf-credit a:focus-visible,.nf .btn:focus-visible{outline:2px solid var(--on-wall);outline-offset:3px;border-radius:var(--r-s)}
+.nf-by{margin:var(--s-3) 0 0;font-size:var(--fs-3);color:var(--muted)}
+.nf-dlg .cfm-f{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
+.nf-dlg .cfm-btn{cursor:pointer;text-decoration:none}
 @media(prefers-reduced-motion:no-preference){
-  @keyframes nf-up{from{opacity:0;translate:0 .6em}}
+  @keyframes nf-dlg{from{opacity:0;translate:0 var(--s-3);scale:.98}}
   .js .nf-bg i{transition:opacity calc(var(--t-slow) * 4) var(--ease-out)}
-  .js .nf-k{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 200ms both}
-  .js .nf-pt,.js .nf-pl span,.js .nf-by{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) calc(var(--i, 0) * 110ms + 520ms) both}
-  .js .nf-pt{--i:0}.js .nf-pl span:nth-child(1){--i:1}.js .nf-pl span:nth-child(2){--i:2}.js .nf-pl span:nth-child(3){--i:3}.js .nf-pl span:nth-child(4){--i:4}.js .nf-pl span:nth-child(5){--i:5}
-  .js .nf-by{--i:6}
-  .js .nf-cta{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 1300ms both}
+  .js .nf-dlg{animation:nf-dlg var(--t-base) var(--ease-out) 360ms both}
+  .nf-k,.nf-pl,.nf-by{transition:opacity var(--t-fast) var(--ease-out),translate var(--t-fast) var(--ease-out)}
 }
+.nf-dlg.sw .nf-k,.nf-dlg.sw .nf-pl,.nf-dlg.sw .nf-by{opacity:0;translate:0 var(--s-1)}
