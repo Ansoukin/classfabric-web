@@ -452,14 +452,14 @@ def notfound():
     h = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', '', h, flags=re.S)
     h = h.replace('content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"', 'content="noindex,follow"')
     h += navbar('')
-    # Win11 ContentDialog 叠在 Bing 每日壁纸上。没有脚本时显示第一首；有脚本时由 nf.js 随机换成其中一首并启用「换一首」
-    h += ('<main class="nf"><div class="nf-bg" aria-hidden="true"><i></i></div>'
-          '<section class="nf-dlg" role="group" aria-labelledby="nft"><div class="nf-b">'
-          '<p class="nf-k" id="nfk" aria-hidden="true">¯\\_(ツ)_/¯</p>'
-          '<h1 class="nf-t" id="nft">404 · 页面不存在</h1>'
-          '<blockquote class="nf-pl" id="nfpl"><span>路牌还立在原处，</span><span>路却被谁悄悄收走了。</span><span>你来得没有错，</span><span>只是这里，今天什么也没有。</span></blockquote>'
-          '<p class="nf-by">—— Sonnet 5.5</p></div>'
-          '<div class="cfm-f"><a class="cfm-btn pri" href="/">回到首页</a><button class="cfm-btn" id="nfsw" type="button" hidden>换一首</button></div></section></main>\n')
+    # 整屏 Bing 每日壁纸 + 超大的诗。没有脚本时显示第一首；有脚本时由 nf.js 随机换成其中一首并启用「换一首」
+    poem = ('邮差照着旧地址，敲了三年的门。', '门后换了人，换了漆，换了门牌。', '他每次都问：「请问，是不是——」', '住户每次都说：「不是，进来喝口水。」', '信还在他包里。', '地址早就不存在了，', '水，倒一直是热的。')
+    h += ('<main class="nf"><div class="nf-bg" aria-hidden="true"><i></i></div><div class="nf-in">'
+          '<h1 class="nf-k"><span class="nf-n">404</span><span class="nf-sr"> 页面不存在</span><span class="nf-e" id="nfk" aria-hidden="true">(´･ω･`)</span></h1>'
+          '<blockquote class="nf-pl" id="nfpl">' + ''.join('<span class="l">%s</span>' % t for t in poem) + '</blockquote>'
+          '<p class="nf-by">—— Sonnet 5.5</p>'
+          '<div class="nf-bar"><span class="nf-t">页面不存在</span><a class="cfm-btn pri" href="/">回到首页</a><button class="cfm-btn" id="nfsw" type="button" hidden>换一首</button></div>'
+          '</div></main>\n')
     return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about), ('404.html', notfound)):

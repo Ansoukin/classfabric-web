@@ -30,26 +30,36 @@ with sync_playwright() as p:
         ev = pg.evaluate
         ck('%d/%s: no overflow, no pageerror' % (w, th), ev('document.documentElement.scrollWidth<=innerWidth') and not errs, errs[:1])
         ck('%d/%s: Bing wallpaper requested with the right size and shown' % (w, th), len(log) == 1 and size + '&mkt=zh-CN' in log[0] and ev('document.querySelector(".nf-bg").classList.contains("on") && getComputedStyle(document.querySelector(".nf-bg i")).backgroundImage.includes("api.bimg.cc/today")'), log)
-        ck('%d/%s: dialog shows kaomoji, 4 poem lines, signature, two buttons >=40px' % (w, th), ev('document.getElementById("nfk").textContent.length>2 && document.querySelectorAll("#nfpl span").length===4 && document.querySelector(".nf-by").textContent.includes("Sonnet 5.5") && !document.getElementById("nfsw").hidden && [...document.querySelectorAll(".cfm-btn")].every(a=>a.getBoundingClientRect().height>=40)'))
+        ck('%d/%s: h1 404, kaomoji, poem (>=6 lines), signature, two buttons >=40px' % (w, th), ev('document.getElementById("nfk").textContent.length>2 && document.querySelector("h1").textContent.includes("404") && document.querySelector("h1").textContent.includes("页面不存在") && document.querySelectorAll("#nfpl .l").length>=6 && parseFloat(getComputedStyle(document.getElementById("nfpl")).fontSize)>=26 && document.querySelector(".nf-by").textContent.includes("Sonnet 5.5") && !document.getElementById("nfsw").hidden && [...document.querySelectorAll(".cfm-btn")].every(a=>a.getBoundingClientRect().height>=40)'))
         ck('%d/%s: no small print (every text >=15px)' % (w, th), ev('[...document.querySelectorAll(".nf *")].filter(e=>[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())).every(e=>parseFloat(getComputedStyle(e).fontSize)>=15)'))
         c.close()
     # 接口失败 → 站内壁纸
     c = b.new_context(viewport={'width': 1280, 'height': 800}); pg = c.new_page(); mock(pg, fail=True)
     pg.goto(B + '/404.html', wait_until='load'); pg.wait_for_timeout(1500)
     ck('fallback: failure uses a site wallpaper', pg.evaluate('document.querySelector(".nf-bg").classList.contains("on") && getComputedStyle(document.querySelector(".nf-bg i")).backgroundImage.includes("/assets/img/wp/")'))
+    # 打字机：逐字出现、版面不跳动、结束后署名出现、读屏拿到完整的诗
+    c2 = b.new_context(viewport={'width': 1280, 'height': 800}); pg2 = c2.new_page(); mock(pg2, fail=True)
+    pg2.goto(B + '/404.html', wait_until='load'); pg2.wait_for_timeout(1900)
+    t1 = pg2.evaluate('({on:document.querySelectorAll("#nfpl .c.on").length,all:document.querySelectorAll("#nfpl .c").length,bar:document.querySelector(".nf-bar").getBoundingClientRect().top,k:document.querySelector(".nf-k").getBoundingClientRect().top,by:getComputedStyle(document.querySelector(".nf-by")).opacity,cur:document.querySelectorAll("#nfpl .c.cur").length})')
+    ck('typewriter: typing in progress, one caret, signature still hidden', 0 < t1['on'] < t1['all'] and t1['cur'] == 1 and t1['by'] == '0', t1)
+    pg2.wait_for_function('document.querySelector(".nf-in").classList.contains("done")', timeout=25000); pg2.wait_for_timeout(1100)
+    t2 = pg2.evaluate('({on:document.querySelectorAll("#nfpl .c.on").length,all:document.querySelectorAll("#nfpl .c").length,bar:document.querySelector(".nf-bar").getBoundingClientRect().top,k:document.querySelector(".nf-k").getBoundingClientRect().top,by:getComputedStyle(document.querySelector(".nf-by")).opacity,label:document.getElementById("nfpl").getAttribute("aria-label"),text:[...document.querySelectorAll("#nfpl .l")].map(e=>e.textContent).join("")})')
+    ck('typewriter: all characters shown, signature visible, aria-label has the whole poem', t2['on'] == t2['all'] and t2['by'] == '1' and t2['label'] == t2['text'] and len(t2['label']) > 40, t2)
+    ck('typewriter: layout does not move while typing', abs(t1['bar'] - t2['bar']) < 1 and abs(t1['k'] - t2['k']) < 1, (t1, t2))
+    c2.close()
     # 「换一首」：每次都换，颜文字跟着换
     pg.wait_for_timeout(300); seen = []
     for i in range(8):
-        pg.click('#nfsw'); pg.wait_for_timeout(330); seen.append(pg.evaluate('document.getElementById("nfk").textContent+"|"+document.querySelector("#nfpl span").textContent'))
-    ck('swap: every click changes the poem and kaomoji, 4 lines each time', all(a != b2 for a, b2 in zip(seen, seen[1:])) and pg.evaluate('document.querySelectorAll("#nfpl span").length===4 && !document.querySelector(".nf-dlg").classList.contains("sw")'), seen)
+        pg.click('#nfsw'); pg.wait_for_timeout(330); seen.append(pg.evaluate('document.getElementById("nfk").textContent+"|"+document.querySelector("#nfpl .l").textContent'))
+    ck('swap: every click changes the poem and kaomoji', all(a != b2 for a, b2 in zip(seen, seen[1:])) and pg.evaluate('document.querySelectorAll("#nfpl .l").length>=6'), seen)
     c.close()
     # 刷新：随机、不连续重复
     c = b.new_context(viewport={'width': 1280, 'height': 800}); pg = c.new_page(); mock(pg, fail=True); seen = []
     for i in range(9):
-        pg.goto(B + '/404.html', wait_until='load'); pg.wait_for_timeout(100); seen.append(pg.evaluate('document.querySelector("#nfpl span").textContent'))
+        pg.goto(B + '/404.html', wait_until='load'); pg.wait_for_timeout(100); seen.append(pg.evaluate('document.querySelector("#nfpl .l").textContent'))
     ck('poems: random per load, never the same twice in a row, >=4 distinct', all(a != b2 for a, b2 in zip(seen, seen[1:])) and len(set(seen)) >= 4, seen)
     c.close()
     c = b.new_context(viewport={'width': 1440, 'height': 800}, reduced_motion='reduce'); pg = c.new_page(); mock(pg); pg.goto(B + '/404.html', wait_until='load'); pg.wait_for_timeout(500)
-    ck('reduced motion: no animations or transitions, dialog and wallpaper shown', pg.evaluate('[...document.querySelectorAll(".nf *")].every(e=>getComputedStyle(e).animationName==="none") && getComputedStyle(document.querySelector(".nf-bg i")).transitionDuration==="0s" && getComputedStyle(document.querySelector(".nf-k")).transitionDuration==="0s" && getComputedStyle(document.querySelector(".nf-dlg")).opacity==="1" && document.querySelector(".nf-bg").classList.contains("on")'))
+    ck('reduced motion: whole poem shown at once, no animations or transitions', pg.evaluate('[...document.querySelectorAll(".nf *")].every(e=>getComputedStyle(e).animationName==="none") && getComputedStyle(document.querySelector(".nf-bg i")).transitionDuration==="0s" && getComputedStyle(document.querySelector(".nf-k")).transitionDuration==="0s" && document.querySelectorAll("#nfpl .c.on").length===document.querySelectorAll("#nfpl .c").length && document.querySelector(".nf-in").classList.contains("done") && document.querySelector(".nf-bg").classList.contains("on")'))
     c.close(); b.close()
 print('\n%d/%d passed' % (sum(res), len(res))); sys.exit(0 if all(res) else 1)

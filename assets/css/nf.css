@@ -1,27 +1,52 @@
-/* 404：Win11 ContentDialog 叠在整屏 Bing 每日壁纸上。
-   对话框沿用下载页弹窗（modal.css）的材质：底色 = Mica 回退色，描边 = 浮层描边，阴影 = --sh-win；
-   背景压暗 = --smoke；命令区在底部（--layer），按钮等宽并排。只用 tokens.css 的 token（规则见 AGENTS.md）。
-   壁纸由 nf.js 取得，失败时退回站内壁纸池（wp.js 已选好 --wp）。
+/* 404：整屏 Bing 每日壁纸 + 打字机效果的诗（左下，与导航左边对齐）+ 一条 Acrylic 命令栏。
+   版面靠尺度对比：404 与颜文字（--fs-5）→ 诗（--fs-4）→ 署名（--fs-3）→ 命令栏（--fs-2/3）。没有卡片、没有小字。
+   命令栏 = 导航同款 Acrylic（--acrylic + 噪点 + 浮层描边），按钮沿用 modal.css 的 .cfm-btn。
+   诗由 nf.js 逐字显示：每个字先占好位置（opacity:0），所以打字时版面不跳动。
+   壁纸由 nf.js 取得，失败时退回站内壁纸池（wp.js 已选好 --wp）。只用 tokens.css 的 token（规则见 AGENTS.md）。
    动效：只动 transform / opacity，时长用 --t-*，进入用 --ease-out，全部包在 prefers-reduced-motion:no-preference 里。 */
-.nf{position:relative;display:grid;place-items:center;min-height:100svh;overflow:hidden;padding:calc(var(--s-8) + var(--s-3)) var(--s-3) var(--s-6);background:var(--wall-base)}
+.nf{position:relative;display:grid;align-items:end;min-height:100svh;overflow:hidden;padding:calc(var(--s-7) + var(--s-2)) 0 var(--s-6);color:var(--on-wall);background:var(--wall-base)}
 .nf-bg{position:absolute;inset:0;overflow:hidden}
 .nf-bg i{position:absolute;inset:0;background:var(--wp,url(/assets/img/wp/lake.webp)) 50% 50%/cover no-repeat}
 .js .nf-bg i{opacity:0}
 .js .nf-bg.on i{opacity:1}
-.nf-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in srgb,var(--scrim) 40%,transparent),transparent 160px),var(--smoke)}
-.nf-dlg{position:relative;z-index:1;width:min(548px,100%);border:1px solid var(--stroke-flyout);border-radius:var(--r-m);background:var(--mica-base);color:var(--fg);box-shadow:var(--sh-win);overflow:hidden}
-.nf-b{padding:var(--s-4)}
-.nf-k{margin:0 0 var(--s-3);font-size:var(--fs-5);font-weight:400;line-height:var(--lh-display);white-space:nowrap}
-.nf-t{margin:0 0 var(--s-3);font-size:var(--fs-3);font-weight:600;line-height:1.3}
-.nf-pl{display:grid;gap:var(--s-1);margin:0;font-size:var(--fs-3);line-height:1.7}
-.nf-pl span{display:block}
-.nf-by{margin:var(--s-3) 0 0;font-size:var(--fs-3);color:var(--muted)}
-.nf-dlg .cfm-f{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
-.nf-dlg .cfm-btn{cursor:pointer;text-decoration:none}
-@media(prefers-reduced-motion:no-preference){
-  @keyframes nf-dlg{from{opacity:0;translate:0 var(--s-3);scale:.98}}
-  .js .nf-bg i{transition:opacity calc(var(--t-slow) * 4) var(--ease-out)}
-  .js .nf-dlg{animation:nf-dlg var(--t-base) var(--ease-out) 360ms both}
-  .nf-k,.nf-pl,.nf-by{transition:opacity var(--t-fast) var(--ease-out),translate var(--t-fast) var(--ease-out)}
+.nf-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,color-mix(in srgb,var(--scrim) 70%,transparent),color-mix(in srgb,var(--scrim) 38%,transparent) 62%,color-mix(in srgb,var(--scrim) 12%,transparent)),linear-gradient(180deg,color-mix(in srgb,var(--scrim) 36%,transparent),transparent 160px,transparent 50%,color-mix(in srgb,var(--scrim) 52%,transparent)),var(--smoke)}
+.nf-in{position:relative;z-index:1;width:min(1180px,100% - var(--s-5) * 2);margin-inline:auto}
+.nf-k{display:flex;align-items:baseline;gap:var(--s-3);margin:0 0 var(--s-3);line-height:var(--lh-display);white-space:nowrap}
+.nf-n{font-size:var(--fs-5);font-weight:var(--fw-display);letter-spacing:var(--tr-display-key);color:var(--blue)}
+.nf-e{font-size:var(--fs-5);font-weight:300}
+.nf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.nf-pl{margin:0;max-width:22em;font-size:var(--fs-4);font-weight:var(--fw-display-soft);line-height:1.5;letter-spacing:-.01em;text-wrap:pretty}
+.nf-pl .l{display:block}
+.nf-pl .c{opacity:0}
+.nf-pl .c.on{opacity:1}
+.nf-pl .c.cur{position:relative}
+.nf-pl .c.cur::after{content:"";position:absolute;left:100%;top:.14em;bottom:.14em;width:.07em;margin-left:.04em;background:var(--blue)}
+.nf-by{margin:var(--s-4) 0 0;font-size:var(--fs-3);color:var(--on-wall-soft)}
+.js .nf-by{opacity:0}
+.js .nf-in.done .nf-by{opacity:1}
+.nf-bar{display:inline-flex;align-items:center;gap:var(--s-1);margin-top:var(--s-5);padding:var(--s-1);border:1px solid var(--stroke-flyout);border-radius:var(--r-m);background:var(--noise),var(--acrylic);-webkit-backdrop-filter:var(--acrylic-blur);backdrop-filter:var(--acrylic-blur);color:var(--fg);box-shadow:var(--sh-win)}
+.nf-t{padding:0 var(--s-3) 0 var(--s-2);font-size:var(--fs-3);font-weight:600;line-height:1.3;white-space:nowrap}
+.nf-bar .cfm-btn{padding:0 var(--s-3);cursor:pointer;text-decoration:none}
+@media(max-height:820px) and (min-width:721px){
+  .nf-n,.nf-e{font-size:var(--fs-4)}
+  .nf-pl{line-height:1.4}
+  .nf-by{margin-top:var(--s-3)}
+  .nf-bar{margin-top:var(--s-4)}
 }
-.nf-dlg.sw .nf-k,.nf-dlg.sw .nf-pl,.nf-dlg.sw .nf-by{opacity:0;translate:0 var(--s-1)}
+@media(max-width:720px){
+  .nf{padding-top:calc(var(--s-8) + var(--s-2));padding-bottom:var(--s-5)}
+  .nf-bg::after{background:linear-gradient(180deg,color-mix(in srgb,var(--scrim) 40%,transparent),color-mix(in srgb,var(--scrim) 30%,transparent) 30%,color-mix(in srgb,var(--scrim) 70%,transparent) 55%,color-mix(in srgb,var(--scrim) 82%,transparent)),var(--smoke)}
+  .nf-bar{display:flex;flex-wrap:wrap}
+  .nf-t{flex:1 0 100%;padding:var(--s-2) var(--s-2) var(--s-1)}
+  .nf-bar .cfm-btn{flex:1}
+}
+@media(prefers-reduced-motion:no-preference){
+  @keyframes nf-up{from{opacity:0;translate:0 .6em}}
+  @keyframes nf-caret{50%{opacity:0}}
+  .js .nf-bg i{transform:scale(1.06);transition:opacity calc(var(--t-slow) * 4) var(--ease-out),transform calc(var(--t-slow) * 12) var(--ease-out)}
+  .js .nf-bg.on i{transform:none}
+  .js .nf-k{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 300ms both}
+  .js .nf-bar{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 700ms both}
+  .nf-pl .c.cur::after{animation:nf-caret calc(var(--t-slow) * 2.4) steps(1) infinite}
+  .js .nf-by{transition:opacity calc(var(--t-slow) * 2) var(--ease-out)}
+}

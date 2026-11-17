@@ -4,32 +4,45 @@
   function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
-  /* 404 诗：每次打开随机一首，「换一首」不会重复当前这首。颜文字与诗一一对应。 */
+  /* 404 诗：每次打开随机一首（逐字打出来），「换一首」不会重复当前这首。颜文字与诗一一对应。 */
   var POEMS = [
-    ['¯\\_(ツ)_/¯', ['路牌还立在原处，', '路却被谁悄悄收走了。', '你来得没有错，', '只是这里，今天什么也没有。']],
-    ['(´･ω･`)', ['我朝这个地址喊了一声，', '没有人应，只有回声说：', '「找不到。」', '它说得那样轻，像怕吵醒什么。']],
-    ['(・_・;)', ['门是开着的，', '灯也曾亮过。', '主人搬走时忘了留话，', '这一页，去了别处。']],
-    ['(°ー°〃)', ['四，像一扇半掩的门；', '零，是门后那片空；', '四，又是一扇门。', '你推开的，全是风。']],
-    ['( ˘ω˘ )', ['有些链接像蒲公英，', '被一阵风吹散了。', '你捡起其中一朵，', '它说：我也不知道落在了哪里。']],
-    ['(；′⌒`)', ['地图上没有这个点，', '指南针转了半圈又停下。', '迷路并不可耻，', '来时的路，还在身后。']],
-    ['(´･_･`)', ['也许它存在过，', '在某个下午，某次点击里。', '现在只剩你记得的这个地址，', '和一个很礼貌的 404。']]
+    ['(´･ω･`)', ['邮差照着旧地址，敲了三年的门。', '门后换了人，换了漆，换了门牌。', '他每次都问：「请问，是不是——」', '住户每次都说：「不是，进来喝口水。」', '信还在他包里。', '地址早就不存在了，', '水，倒一直是热的。']],
+    ['( ˘ω˘ )', ['老街拆了，路灯没人拆，', '还亮着，照着一块空地。', '夜里有人路过，抬头看灯，', '又低头看看空地，轻声说：', '「原来你一直在这儿等。」', '没有人答话。', '灯，又亮了一点。']],
+    ['(・_・?)', ['图书馆的第 404 号书架', '一直是空的。', '管理员说是特意留的：', '总得有一格，', '让人伸手去拿的时候，', '摸到的是整齐的空气，', '并且知道，这不是你的错。']],
+    ['¯\\_(ツ)_/¯', ['地图上这一格是白的。', '不是没人测量，', '是测量的人写了一行小字：', '「这里的东西走开了。', '如果你正好在这里，', '请原地坐一会儿，', '也许它只是出去买东西了。」']],
+    ['(´･_･`)', ['我捡到一把钥匙，', '刻着一个早就不存在的门牌号。', '我把它挂在窗台上。', '风一来，它就叮当响一下，', '像在回答：', '「我在，我在，', '只是锁不在了。」']],
+    ['(°ー°〃)', ['有人问我：「怎么走到这一页？」', '我说：「往前，右转，再右转，', '会遇到一堵很诚实的墙。」', '他道了谢，真的去了。', '回来时手里捧着一个小小的零：', '「墙上只有这个，送你。」']]
   ];
-  var dlg = $('.nf-dlg'), k = $('#nfk'), pl = $('#nfpl'), sw = $('#nfsw'), cur = parseInt(get('cf_nfp'), 10);
+  var box = $('.nf-in'), k = $('#nfk'), pl = $('#nfpl'), sw = $('#nfsw'), cur = parseInt(get('cf_nfp'), 10), timer = 0;
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function other() { var n = Math.floor(Math.random() * POEMS.length); return n === cur ? (n + 1 + Math.floor(Math.random() * (POEMS.length - 1))) % POEMS.length : n; }
+  /* 每个字先占好位置（透明），再逐个显示，打字时版面不会跳动；标点处停顿，行尾多停一下 */
   function render(n) {
-    cur = n; set('cf_nfp', String(n));
-    k.textContent = POEMS[n][0]; pl.textContent = '';
-    POEMS[n][1].forEach(function (t) { var s = d.createElement('span'); s.textContent = t; pl.appendChild(s); });
+    clearTimeout(timer); cur = n; set('cf_nfp', String(n));
+    var lines = POEMS[n][1], chars = [], ends = {};
+    k.textContent = POEMS[n][0]; pl.textContent = ''; box.classList.remove('done');
+    pl.setAttribute('aria-label', lines.join(''));
+    lines.forEach(function (t) {
+      var l = d.createElement('span'); l.className = 'l'; l.setAttribute('aria-hidden', 'true');
+      t.split('').forEach(function (ch) { var c = d.createElement('span'); c.className = 'c'; c.textContent = ch; l.appendChild(c); chars.push(c); });
+      ends[chars.length - 1] = 1; pl.appendChild(l);
+    });
+    function finish() { box.classList.add('done'); }
+    if (calm) { chars.forEach(function (c) { c.className = 'c on'; }); finish(); return; }
+    var i = 0;
+    (function step() {
+      if (i) chars[i - 1].className = 'c on';
+      if (i >= chars.length) { finish(); return; }
+      var c = chars[i], ch = c.textContent;
+      c.className = 'c on cur';
+      var wait = /[，、]/.test(ch) ? 170 : /[。！？；：」]/.test(ch) ? 280 : 55;
+      if (ends[i]) wait += 260;
+      i++; timer = setTimeout(step, wait);
+    })();
   }
-  if (dlg && k && pl) {
+  if (box && k && pl) {
     render(other());
-    if (sw) {
-      sw.hidden = false;
-      sw.addEventListener('click', function () {
-        dlg.classList.add('sw');
-        setTimeout(function () { render(other()); dlg.classList.remove('sw'); }, 140);
-      });
-    }
+    if (sw) { sw.hidden = false; sw.addEventListener('click', function () { render(other()); }); }
   }
 
   /* 壁纸：Bing 每日壁纸（api.bimg.cc/today，直接返回图片）；任何一步失败都退回站内壁纸池 */
