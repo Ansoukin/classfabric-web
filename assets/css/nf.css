@@ -1,58 +1,36 @@
-/* 404：「空课」。左：404、一句话、唯一的强调色按钮、三个文字链接；右：课表卡，选中条自上而下滑动并停在「未排课」那一节。
-   版式沿用下载页题头（左文右图）。只用 tokens.css 的 token（规则见 AGENTS.md）；卡片 = --card + 1px --stroke。
-   动效：只动 transform / opacity，时长用 --t-*，进入用 --ease-out；全部包在 prefers-reduced-motion:no-preference 里，
-   减少动态时直接呈现终态（选中条停在「未排课」）。 */
-.nf{--rh:calc(var(--s-6) + var(--s-2));display:grid;align-items:center;min-height:min(100svh,880px);padding:calc(var(--s-8) + var(--s-5)) 0 var(--s-7)}
-.nf-w{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:var(--s-7);align-items:center;width:min(960px,100% - var(--s-4) * 2);margin-inline:auto}
-.nf-copy{display:grid;justify-items:start}
-.nf-code{display:flex;margin:0 0 var(--s-3);font-size:var(--fs-stat);font-weight:var(--fw-display);line-height:var(--lh-display);letter-spacing:var(--tr-display-key);font-variant-numeric:tabular-nums;color:var(--accent)}
-.nf-code span{display:block}
-.nf-h{margin:0;font-size:var(--fs-4);font-weight:var(--fw-display-soft);line-height:1.15;letter-spacing:-.02em}
-.nf-p{margin:var(--s-3) 0 0;font-size:var(--fs-3);line-height:1.6;color:var(--muted)}
-.nf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-.nf-cta{margin-top:var(--s-5)}
-.nf-links{display:flex;flex-wrap:wrap;gap:0 var(--s-4);margin-top:var(--s-3)}
-.nf-link{display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;font-size:var(--fs-2);font-weight:600;color:var(--accent);text-decoration:none}
-.nf-link svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--t-base) var(--ease-out)}
-.nf-link:hover{text-decoration:underline;text-underline-offset:3px}
-.nf-link:hover svg{transform:translateX(2px)}
-.nf-link:focus-visible,.nf .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--r-s)}
-.nf-card{border:1px solid var(--stroke);border-radius:var(--r-l);background:var(--card);box-shadow:var(--sh-1);overflow:hidden}
-.nf-hd{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-3);padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--divider)}
-.nf-hd b{font-size:var(--fs-3);font-weight:600}
-.nf-hd span{font-size:var(--fs-1);color:var(--muted);font-variant-numeric:tabular-nums}
-.nf-rows{--n:2;position:relative;padding:var(--s-2) 0}
-.nf-rows ol{position:relative;margin:0;padding:0;list-style:none}
-.nf-rows li{display:flex;align-items:center;gap:var(--s-3);height:var(--rh);padding:0 var(--s-4)}
-.nf-rows li+li{border-top:1px solid var(--divider)}
-.nf-t{flex:none;width:7.6em;font-size:var(--fs-1);color:var(--muted);font-variant-numeric:tabular-nums}
-.nf-s{display:grid;min-width:0;font-size:var(--fs-2)}
-.nf-s b{font-weight:600}
-.nf-s code{overflow:hidden;font-family:var(--mono);font-size:var(--fs-1);color:var(--muted);text-overflow:ellipsis;white-space:nowrap}
-.nf-miss .nf-s b{color:var(--accent)}
-.nf-sel{position:absolute;top:var(--s-2);left:0;right:0;height:var(--rh);background:color-mix(in srgb,var(--accent) 12%,transparent);translate:0 calc(var(--n) * var(--rh));transition:translate var(--t-slow) var(--ease-out);pointer-events:none}
-.nf-sel::before{content:"";position:absolute;left:var(--s-1);top:50%;width:3px;height:var(--s-4);margin-top:calc(var(--s-4) / -2);border-radius:var(--r-s);background:var(--accent)}
-.nf-rows:has(li:nth-child(1):hover){--n:0}
-.nf-rows:has(li:nth-child(2):hover){--n:1}
-.nf-rows:has(li:nth-child(4):hover){--n:3}
-.nf-rows:has(li:nth-child(5):hover){--n:4}
-@media(max-width:860px){
-  .nf{min-height:0;padding-top:calc(var(--s-8) + var(--s-3))}
-  .nf-w{grid-template-columns:minmax(0,1fr);gap:var(--s-6)}
-}
+/* 404：整屏 Bing 每日壁纸（风景）+ 颜文字 + 404 + 一首随机的 404 诗 + 一个按钮。
+   壁纸由 nf.js 取得：Bing 每日壁纸，失败时退回站内壁纸池（wp.js 已选好 --wp）。
+   只用 tokens.css 的 token（规则见 AGENTS.md）。遮罩用 --scrim，保证任何壁纸上文字都可读；文字无阴影、无光晕。
+   动效：只动 transform / opacity，时长用 --t-*，进入用 --ease-out，全部包在 prefers-reduced-motion:no-preference 里；
+   减少动态时直接呈现终态。 */
+.nf{position:relative;display:grid;grid-template-rows:1fr auto;min-height:100svh;overflow:hidden;padding:calc(var(--s-8) + var(--s-3)) var(--s-4) var(--s-4);color:var(--on-wall);background:var(--wall-base)}
+.nf-bg{position:absolute;inset:0;overflow:hidden}
+.nf-bg i{position:absolute;inset:0;background:var(--wp,url(/assets/img/wp/lake.webp)) 50% 50%/cover no-repeat}
+.js .nf-bg i{opacity:0}
+.js .nf-bg.on i{opacity:1}
+.nf-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 56% at 50% 52%,color-mix(in srgb,var(--scrim) 76%,transparent),color-mix(in srgb,var(--scrim) 50%,transparent) 72%,color-mix(in srgb,var(--scrim) 38%,transparent)),linear-gradient(180deg,color-mix(in srgb,var(--scrim) 32%,transparent),transparent 28%,transparent 60%,color-mix(in srgb,var(--scrim) 60%,transparent))}
+.nf-in{position:relative;z-index:1;align-self:center;display:grid;justify-items:center;gap:var(--s-3);width:min(640px,100%);margin-inline:auto;text-align:center}
+.nf-k{margin:0 0 var(--s-2);font-size:var(--fs-5);font-weight:var(--fw-display-soft);line-height:var(--lh-display);white-space:nowrap}
+.nf-h{margin:0;font-size:var(--fs-3);font-weight:600;letter-spacing:.04em}
+.nf-poem{display:grid;justify-items:center;gap:var(--s-2);margin:var(--s-4) 0 var(--s-3)}
+.nf-pt{font-size:var(--fs-1);color:var(--on-wall-soft)}
+.nf-pl{display:grid;gap:var(--s-1);margin:0;font-size:var(--fs-3);line-height:1.7}
+.nf-pl span{display:block}
+.nf-by{font-size:var(--fs-1);font-style:normal;color:var(--on-wall-soft)}
+.nf-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--s-2) var(--s-3)}
+.nf-path{max-width:100%;overflow:hidden;font-family:var(--mono);font-size:var(--fs-1);color:var(--on-wall-soft);text-overflow:ellipsis;white-space:nowrap}
+.nf-path:empty{display:none}
+.nf-credit{position:relative;z-index:1;margin:var(--s-5) 0 0;font-size:var(--fs-1);line-height:1.5;color:var(--on-wall-soft)}
+.nf-credit[hidden]{display:block;visibility:hidden}
+.nf-credit a{color:inherit;text-decoration:none}
+.nf-credit a:hover{color:var(--on-wall);text-decoration:underline;text-underline-offset:3px}
+.nf-credit a:focus-visible,.nf .btn:focus-visible{outline:2px solid var(--on-wall);outline-offset:3px;border-radius:var(--r-s)}
 @media(prefers-reduced-motion:no-preference){
-  .nf-rows li:nth-child(1){--i:0}.nf-rows li:nth-child(2){--i:1}.nf-rows li:nth-child(3){--i:2}.nf-rows li:nth-child(4){--i:3}.nf-rows li:nth-child(5){--i:4}
-  @keyframes nf-up{from{opacity:0;translate:0 .5em}}
-  @keyframes nf-rise{from{opacity:0;translate:0 var(--s-4)}}
-  @keyframes nf-sweep{from{translate:0 0}}
-  @keyframes nf-in{from{opacity:0;translate:0 var(--s-1)}}
-  .js .nf-code span{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) calc(var(--i) * 90ms) both}
-  .js .nf-code span:nth-child(1){--i:0}.js .nf-code span:nth-child(2){--i:1}.js .nf-code span:nth-child(3){--i:2}
-  .js .nf-p,.js .nf-cta,.js .nf-links{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 420ms both}
-  .js .nf-cta{animation-delay:500ms}
-  .js .nf-links{animation-delay:580ms}
-  .js .nf-card{animation:nf-rise calc(var(--t-slow) * 2) var(--ease-out) 160ms both}
-  .js .nf-rows li:not(.nf-miss){animation:nf-in calc(var(--t-slow) * 2) var(--ease-out) calc(var(--i) * 70ms + 420ms) both}
-  .js .nf-sel{animation:nf-sweep calc(var(--t-slow) * 3) var(--ease-out) 900ms backwards}
-  .js .nf-miss .nf-s{animation:nf-in calc(var(--t-slow) * 2) var(--ease-out) 1500ms both}
+  @keyframes nf-up{from{opacity:0;translate:0 .6em}}
+  .js .nf-bg i{transition:opacity calc(var(--t-slow) * 4) var(--ease-out)}
+  .js .nf-k{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 200ms both}
+  .js .nf-pt,.js .nf-pl span,.js .nf-by{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) calc(var(--i, 0) * 110ms + 520ms) both}
+  .js .nf-pt{--i:0}.js .nf-pl span:nth-child(1){--i:1}.js .nf-pl span:nth-child(2){--i:2}.js .nf-pl span:nth-child(3){--i:3}.js .nf-pl span:nth-child(4){--i:4}.js .nf-pl span:nth-child(5){--i:5}
+  .js .nf-by{--i:6}
+  .js .nf-cta{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 1300ms both}
 }

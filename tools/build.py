@@ -452,25 +452,15 @@ def notfound():
     h = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', '', h, flags=re.S)
     h = h.replace('content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"', 'content="noindex,follow"')
     h += navbar('')
-    chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
-    lk = lambda href, t, ext='': '<a class="nf-link" href="%s"%s>%s%s</a>' % (href, ext, t, chev)
-    # 课表样例沿用 ui.ROWS 的真实数据；第 3 节（09:20）是「未排课」，选中条最终停在这里
-    day = ROWS[:5]
-    lessons = []
-    for i, (t, name) in enumerate(day):
-        t = t.replace('-', '–')
-        if i == 2:
-            lessons.append('<li class="nf-miss"><span class="nf-t">%s</span><span class="nf-s"><b>未排课</b><code data-nfp></code></span></li>' % t)
-        else:
-            lessons.append('<li><span class="nf-t">%s</span><span class="nf-s"><b>%s</b></span></li>' % (t, name))
-    h += ('<main class="nf"><div class="nf-w"><div class="nf-copy">'
-          '<p class="nf-code" aria-label="404"><span aria-hidden="true">4</span><span aria-hidden="true">0</span><span aria-hidden="true">4</span></p>'
-          '<h1 class="nf-h rv">课表里没有这一页。</h1>'
-          '<p class="nf-p">你访问的地址不存在，或者已经移走。<span class="nf-sr"> 请求的地址：<span data-nfp></span></span></p>'
-          '<div class="nf-cta"><a class="btn blue" href="/">' + ic('arrowr') + '回到首页</a></div>'
-          '<div class="nf-links">' + lk('/download.html', '下载 ClassFabric') + lk('/about.html#faq', '常见问题') + lk(GH + '/issues', '反馈失效链接', ' rel="noopener"') + '</div></div>'
-          '<div class="nf-card" aria-hidden="true"><div class="nf-hd"><b>周三</b><span>10/28</span></div>'
-          '<div class="nf-rows"><i class="nf-sel"></i><ol>' + ''.join(lessons) + '</ol></div></div></div></main>\n')
+    # 没有脚本时显示第一首；有脚本时由 nf.js 随机换成其中一首（诗与颜文字都在 nf.js 里）
+    h += ('<main class="nf"><div class="nf-bg" aria-hidden="true"><i></i></div><div class="nf-in">'
+          '<p class="nf-k" id="nfk" aria-hidden="true">¯\\_(ツ)_/¯</p>'
+          '<h1 class="nf-h rv">404 · 页面不存在</h1>'
+          '<figure class="nf-poem" id="nfpoem"><figcaption class="nf-pt">《路牌》</figcaption><blockquote class="nf-pl">'
+          '<span>路牌还立在原处，</span><span>路却被谁悄悄收走了。</span><span>你来得没有错，</span><span>只是这里，今天什么也没有。</span></blockquote>'
+          '<cite class="nf-by">—— Sonnet 5.5</cite></figure>'
+          '<div class="nf-cta"><a class="btn blue" href="/">' + ic('arrowr') + '回到首页</a><code class="nf-path" id="nfp"></code></div></div>'
+          '<p class="nf-credit" id="nfc" hidden>Bing 每日壁纸 · <a id="nfcl" target="_blank" rel="noopener"></a><span id="nfct"></span></p></main>\n')
     return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about), ('404.html', notfound)):

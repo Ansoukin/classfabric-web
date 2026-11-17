@@ -13,7 +13,7 @@
 | `/`（`index.html`） | 首页：可交互的 Windows 桌面演示（灵动岛、托盘菜单、软件窗口）、特性区块、常见问题 |
 | `/download.html` | 下载页：实时读取 GitHub Releases，自动识别系统与架构；顶部为桌面场景舞台 |
 | `/about.html` | 关于页：与 ClassIsland 的关系、如何切换、适合谁、进展、名字由来、常见问题 |
-| `/404.html` | 404 页：「空课」——超大的「404」+ 课表卡，选中条滑到「未排课」那一节，并显示请求的地址。`noindex`，不在 sitemap 里，需由服务器在地址不存在时返回（见「部署」） |
+| `/404.html` | 404 页：整屏 Bing 每日壁纸（经 bing.biturl.top 取得，失败时退回站内壁纸）+ 颜文字 + 随机一首 404 诗（署名 Sonnet 5.5）。`noindex`，不在 sitemap 里，需由服务器在地址不存在时返回（见「部署」） |
 | `/m/` | 手机版首页。手机 UA 访问 `/` 时自动跳转，可用 `?view=pc` / `?view=m` 手动切换并记住 |
 
 ## 目录
@@ -39,7 +39,7 @@ assets/
     home.js  apps.js  widgets.js  bento.js   首页演示与可交互的软件窗口复刻
     dl.js            下载页：GitHub Releases、平台识别、舞台事件
     about.js         关于页：滚动联动的目录
-    nf.js            404 页：显示请求的地址
+    nf.js            404 页：Bing 每日壁纸、随机诗与颜文字、请求的地址
     m.js             手机首页
   img/
     *.webp / *.png   软件截图、Logo、OG 图
