@@ -1,6 +1,5 @@
-/* 404：整屏 Bing 每日壁纸 + 打字机效果的诗（左下，与导航左边对齐）+ 一条 Acrylic 命令栏。
-   版面靠尺度对比：404 与颜文字（--fs-5）→ 诗（--fs-4）→ 署名（--fs-3）→ 命令栏（--fs-2/3）。没有卡片、没有小字。
-   命令栏 = 导航同款 Acrylic（--acrylic + 噪点 + 浮层描边），按钮沿用 modal.css 的 .cfm-btn。
+/* 404：整屏 Bing 每日壁纸 + 打字机效果的诗（左下，与导航左边对齐）+ 两个按钮（Fluent 规范：导航用主按钮，次要操作用无边框的文字按钮，不套容器）。
+   版面靠尺度对比：404 与颜文字（--fs-5）→ 诗（--fs-4）→ 署名（--fs-3）→ 按钮（--fs-2）。没有卡片、没有小字。
    诗由 nf.js 逐字显示：每个字先占好位置（opacity:0），所以打字时版面不跳动。
    壁纸由 nf.js 取得，失败时退回站内壁纸池（wp.js 已选好 --wp）。只用 tokens.css 的 token（规则见 AGENTS.md）。
    动效：只动 transform / opacity，时长用 --t-*，进入用 --ease-out，全部包在 prefers-reduced-motion:no-preference 里。 */
@@ -24,21 +23,23 @@
 .nf-by{margin:var(--s-4) 0 0;font-size:var(--fs-3);color:var(--on-wall-soft)}
 .js .nf-by{opacity:0}
 .js .nf-in.done .nf-by{opacity:1}
-.nf-bar{display:inline-flex;align-items:center;gap:var(--s-1);margin-top:var(--s-5);padding:var(--s-1);border:1px solid var(--stroke-flyout);border-radius:var(--r-m);background:var(--noise),var(--acrylic);-webkit-backdrop-filter:var(--acrylic-blur);backdrop-filter:var(--acrylic-blur);color:var(--fg);box-shadow:var(--sh-win)}
-.nf-t{padding:0 var(--s-3) 0 var(--s-2);font-size:var(--fs-3);font-weight:600;line-height:1.3;white-space:nowrap}
-.nf-bar .cfm-btn{padding:0 var(--s-3);cursor:pointer;text-decoration:none}
+.nf-act{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3);margin-top:var(--s-5)}
+.nf-b{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:44px;padding:0 var(--s-3);border:1px solid transparent;border-radius:var(--r-m);background:transparent;color:var(--on-wall);font:600 var(--fs-2)/1.2 var(--ui);text-decoration:none;cursor:pointer;transition:background var(--t-base) var(--ease-out)}
+.nf-b svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nf-b:hover{background:color-mix(in srgb,var(--on-wall) 16%,transparent)}
+.nf-b.pri{padding:0 var(--s-4);background:var(--accent);color:var(--on-accent)}
+.nf-b.pri:hover{background:color-mix(in srgb,var(--accent) 88%,var(--on-wall))}
+.nf-b:focus-visible{outline:2px solid var(--on-wall);outline-offset:3px}
 @media(max-height:820px) and (min-width:721px){
   .nf-n,.nf-e{font-size:var(--fs-4)}
   .nf-pl{line-height:1.4}
   .nf-by{margin-top:var(--s-3)}
-  .nf-bar{margin-top:var(--s-4)}
 }
 @media(max-width:720px){
   .nf{padding-top:calc(var(--s-8) + var(--s-2));padding-bottom:var(--s-5)}
   .nf-bg::after{background:linear-gradient(180deg,color-mix(in srgb,var(--scrim) 40%,transparent),color-mix(in srgb,var(--scrim) 30%,transparent) 30%,color-mix(in srgb,var(--scrim) 70%,transparent) 55%,color-mix(in srgb,var(--scrim) 82%,transparent)),var(--smoke)}
-  .nf-bar{display:flex;flex-wrap:wrap}
-  .nf-t{flex:1 0 100%;padding:var(--s-2) var(--s-2) var(--s-1)}
-  .nf-bar .cfm-btn{flex:1}
+  .nf-act{margin-top:var(--s-4)}
+  .nf-b.pri{flex:1}
 }
 @media(prefers-reduced-motion:no-preference){
   @keyframes nf-up{from{opacity:0;translate:0 .6em}}
@@ -46,7 +47,7 @@
   .js .nf-bg i{transform:scale(1.06);transition:opacity calc(var(--t-slow) * 4) var(--ease-out),transform calc(var(--t-slow) * 12) var(--ease-out)}
   .js .nf-bg.on i{transform:none}
   .js .nf-k{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 300ms both}
-  .js .nf-bar{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 700ms both}
+  .js .nf-act{animation:nf-up calc(var(--t-slow) * 2) var(--ease-out) 700ms both}
   .nf-pl .c.cur::after{animation:nf-caret calc(var(--t-slow) * 2.4) steps(1) infinite}
   .js .nf-by{transition:opacity calc(var(--t-slow) * 2) var(--ease-out)}
 }

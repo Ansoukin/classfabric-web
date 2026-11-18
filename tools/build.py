@@ -446,7 +446,7 @@ def about():
     return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/about.js" defer></script>')
 
 def notfound():
-    h = head('页面未找到（404）— ClassFabric', 'ClassFabric 官网：你访问的页面不存在，或者已经移走。', '/404.html', '<link rel="stylesheet" href="/assets/css/modal.css">\n<link rel="stylesheet" href="/assets/css/nf.css">\n')
+    h = head('页面未找到（404）— ClassFabric', 'ClassFabric 官网：你访问的页面不存在，或者已经移走。', '/404.html', '<link rel="stylesheet" href="/assets/css/nf.css">\n')
     for pat in (r'<link rel="canonical"[^>]*>\n?', r'<link rel="alternate"[^>]*>\n?', r'<meta property="og:url"[^>]*>\n?'):
         h = re.sub(pat, '', h)
     h = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', '', h, flags=re.S)
@@ -458,7 +458,7 @@ def notfound():
           '<h1 class="nf-k"><span class="nf-n">404</span><span class="nf-sr"> 页面不存在</span><span class="nf-e" id="nfk" aria-hidden="true">(´･ω･`)</span></h1>'
           '<blockquote class="nf-pl" id="nfpl">' + ''.join('<span class="l">%s</span>' % t for t in poem) + '</blockquote>'
           '<p class="nf-by">—— Sonnet 5.5</p>'
-          '<div class="nf-bar"><span class="nf-t">页面不存在</span><a class="cfm-btn pri" href="/">回到首页</a><button class="cfm-btn" id="nfsw" type="button" hidden>换一首</button></div>'
+          '<div class="nf-act"><a class="nf-b pri" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>回到首页</a><button class="nf-b" id="nfsw" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 10-2.3 5.7M20 4v7h-7"/></svg>换一首</button></div>'
           '</div></main>\n')
     return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')
 
