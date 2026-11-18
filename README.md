@@ -113,6 +113,8 @@ python3 tools/t_contrast.py about dark 1440   # 对比度，只输出不达标�
 3. 保持同步：在服务器上 `git pull`（用 1Panel 计划任务定时执行，或用 GitHub Webhook 触发）。
 4. **404 页**：在网站的配置文件（OpenResty）里加入 `error_page 404 /404.html;`，让不存在的地址返回**真正的 404 状态码**并显示 `404.html`。如果不存在的地址返回 200，搜索引擎会判为「软 404」，影响收录。
 
+5. **传输与缓存（手机端实测收益最大）**：在 OpenResty 开启 `gzip on; gzip_types text/css application/javascript image/svg+xml application/json;`（支持的话加 `brotli on` 与 `brotli_types`；`site.css` 139 KB → gzip 约 30 KB）；站内引用的 CSS/JS 都带 `?v=内容哈希`，可放心设置 `location ~* \.(css|js|webp|png|svg|woff2)$ { add_header Cache-Control "public, max-age=31536000, immutable"; }`，HTML 保持 `no-cache`。
+
 ## 许可
 
 ClassFabric 基于 HelloWRC 的 ClassIsland，以 GPL-3.0 协议开源。站点中的软件截图来自 ClassFabric 2.1.1.3；壁纸为 Windows 11 自带壁纸，版权归微软所有，仅用于展示软件界面。

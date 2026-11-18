@@ -51,10 +51,10 @@ def fit(inner, dw, style='', dwm=None, cls='', extra=''):
 
 def vtask(running=False):
     def W(n, w):
-        return '<img src="/assets/img/win/%s.png" alt="" style="width:%dpx" draggable="false" loading="lazy" decoding="async">' % (n, w)
+        return '<img src="/assets/img/win/%s.png" alt="" width="%d" height="%d" style="width:%dpx;height:auto" draggable="false" loading="lazy" decoding="async">' % (n, w, w, w)
     tb = ''.join('<span class="tb%s">%s</span>' % (' on0' if n == 'start' else '', W(n, w)) for n, w in
                  [('start', 24), ('search', 22), ('taskview', 24), ('widgets', 24), ('chat', 24), ('explorer', 24), ('edge', 24), ('store', 23)])
-    cf = '<img src="/assets/img/icon-64.png" alt="" style="width:24px" draggable="false" loading="lazy" decoding="async">'
+    cf = '<img src="/assets/img/icon-64.png" alt="" width="24" height="24" style="width:24px;height:auto" draggable="false" loading="lazy" decoding="async">'
     return ('<div class="vtask"><div class="vtb">' + tb + '<span class="tb cfapp' + (' on' if running else ' run') + '">' + cf + '</span></div>'
             '<div class="vtray"><span class="tg2 hide">' + W('chev', 12) + '</span><span class="tg2 ime">英</span>'
             '<span class="tg2 ctray" id="%s" title="ClassFabric"><img src="/assets/img/icon-64.png" alt=""></span>'
@@ -119,7 +119,7 @@ def head(title, desc, path, extra='', alt=None, m=False):
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
             '<meta name="color-scheme" content="dark light">\n<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("cf_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n<link rel="stylesheet" href="/assets/css/nav.css">\n%s%s</head>\n') % (
         title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, (jsonld(path, title, desc) if path != '/404.html' else ''), extra)
-    wpf = '' if path == '/download.html' else (('window.cfWpS=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
+    wpf = 'window.cfWpPre=2;' if path == '/download.html' else (('window.cfWpS=1;window.cfWpPre=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
     if wpf is not None:
         css = '<link rel="stylesheet" href="/assets/css/site.css">'
         out = out.replace(css, wp_early(wpf) + css, 1)
@@ -216,7 +216,7 @@ def home(mob=False):
     c_mig = fc('cal', '课表与档案', '', used) + fc('bolt', '自动化', '', used) + fc('plug', '插件', '', used) + fc('brush', '主题', '', used)
     c_enh = fc('cloud', '更多天气源', '小米天气 · OpenWeather · 和风天气', on) + fc('text', '多语言', '实验中', on) + fc('plug', '更好的插件预览', '', on) + fc('sync', '持续同步上游', '', on)
     if mob:
-        h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
+        h += ('<section class="sec" id="features"><div class="wrap"><h2 class="claim rv">一款<span class="g">紧跟上游</span>的大屏课表软件</h2><div class="grid3">'
               '<div class="copy rv"><h3>积极同步上游特性</h3><p>ClassIsland 的新功能与修复，会尽快同步到 ClassFabric。</p><div class="fstack">' + c_sync + '</div></div>'
               '<div class="copy rv d1"><h3>无感切换，沿用现有配置</h3><p>底层代码与上游保持一致。原有的课表、自动化、插件与主题，安装后即可继续使用。</p><div class="fstack">' + c_mig + '</div></div>'
               '<div class="copy rv d2"><h3>来自社区与我们的增强</h3><p>在上游之上加入更多天气源、多语言支持（实验中）与更好的插件预览，并将持续扩充。</p><div class="fstack">' + c_enh + '</div></div>'
@@ -443,7 +443,7 @@ def about():
           + '</div></main>'
           '<section class="final3"><div class="wrap"><h2 class="rv">立即体验<br><span class="g">ClassFabric</span></h2><p class="rv d1">更多功能留给您自行探索！</p>'
           '<div class="cta rv d2"><a class="btn blue" href="/download.html">' + ic('dl') + '立即下载</a><a class="btn glass" href="/">返回首页</a></div></div></section>\n')
-    return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/about.js" defer></script>')
+    return h + FOOT_LITE.replace('<script src="/assets/js/dl.js" defer></script>\n', '').replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/about.js" defer></script>')
 
 def notfound():
     h = head('页面未找到（404）— ClassFabric', 'ClassFabric 官网：你访问的页面不存在，或者已经移走。', '/404.html', '<link rel="stylesheet" href="/assets/css/nf.css">\n')
@@ -460,7 +460,7 @@ def notfound():
           '<p class="nf-by">—— Sonnet 5.5</p>'
           '<div class="nf-act"><a class="nf-b pri" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>回到首页</a><button class="nf-b" id="nfsw" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 10-2.3 5.7M20 4v7h-7"/></svg>换一首</button></div>'
           '</div></main>\n')
-    return h + FOOT_LITE.replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')
+    return h + FOOT_LITE.replace('<script src="/assets/js/dl.js" defer></script>\n', '').replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')  # 404 没有版本号/下载区，不加载 dl.js
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about), ('404.html', notfound)):
     open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(fn()))

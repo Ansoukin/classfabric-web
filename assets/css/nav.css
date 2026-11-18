@@ -35,12 +35,14 @@ body:has(.hz,.nf) .nav:not(.solid):not(.open){--nav-fg:var(--on-wall-soft);--nav
 .ibtn svg{width:19px;height:19px}
 :root[data-theme=dark] .i-moon,:root[data-theme=light] .i-sun,.menu-btn[aria-expanded=true] .i-open,.menu-btn[aria-expanded=false] .i-close{display:none}
 .menu-btn{display:none}
+/* 触屏：品牌与图标按钮的点击区 ≥44px（视觉尺寸不变） */
+@media(pointer:coarse){.brand{min-height:44px}.ibtn{width:44px;height:44px}}
 
 @media(min-width:901px){.nav.past .links{display:none}.nav.past .slinks{display:flex}}
 
 /* 手机/窄屏：链接收进下拉面板，面板与导航条同为纯色（Acrylic 不能嵌套），含下载按钮 */
 @media(max-width:900px){
-  .menu-btn{display:grid;width:40px;height:40px}
+  .menu-btn{display:grid;width:44px;height:44px}
   .tools{margin-left:auto}
   .tools>.btn{display:none}
   .links{position:absolute;top:100%;left:0;right:0;flex:none;flex-direction:column;gap:0;padding:var(--s-1) var(--s-4) var(--s-4);background:var(--acrylic-solid);border-bottom:1px solid var(--stroke-flyout);

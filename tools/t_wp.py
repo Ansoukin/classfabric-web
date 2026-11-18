@@ -55,11 +55,18 @@ with sync_playwright() as p:
     uses = pg.evaluate('[...document.querySelectorAll(".n5-band,.n5-live,.hz-bg,.panel .wp")].map(e=>getComputedStyle(e).backgroundImage)')
     ck('home: wallpaper blocks use the chosen large file', len(uses) > 0 and all(('/wp/%s-l.webp' % d['k']) in u for u in uses), (len(uses), uses[:1]))
     ck('home: no pageerror', not errs, errs[:1]); c.close()
-    # 4 手机首页：小图、无预加载
+    # 4 手机首页：小图，预载同一张小图（首屏背景即 LCP）
     c = b.new_context(viewport={'width': 390, 'height': 800}); pg = c.new_page()
     pg.goto(B + '/m/', wait_until='domcontentloaded'); d = info(pg)
     v = pg.evaluate('document.documentElement.style.getPropertyValue("--wpl")')
     ck('m: small wallpaper variable', ('/wp/%s.webp' % d['k']) in v and '-l.webp' not in v, v)
-    ck('m: no preload', pg.evaluate('!document.querySelector("link[rel=preload][as=image]")'))
+    pre = pg.evaluate('[...document.querySelectorAll("link[rel=preload][as=image]")].map(l=>l.href)')
+    ck('m: preloads the small file only', len(pre) == 1 and ('/wp/%s.webp' % d['k']) in pre[0] and '-l.webp' not in pre[0], pre)
+    c.close()
+    # 5 下载页：舞台只用 --wp（小图），预载同一张
+    c = b.new_context(viewport={'width': 390, 'height': 800}); pg = c.new_page()
+    pg.goto(B + '/download.html', wait_until='domcontentloaded'); d = info(pg)
+    pre = pg.evaluate('[...document.querySelectorAll("link[rel=preload][as=image]")].map(l=>l.href)')
+    ck('download: preloads the small file only', len(pre) == 1 and ('/wp/%s.webp' % d['k']) in pre[0] and '-l.webp' not in pre[0], pre)
     c.close(); b.close()
 print('\n%d/%d passed' % (sum(res), len(res))); sys.exit(0 if all(res) else 1)

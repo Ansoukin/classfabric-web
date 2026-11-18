@@ -52,4 +52,32 @@
     sc.addEventListener('scroll', function () { if (!t) t = requestAnimationFrame(sync); }, { passive: true });
     sync();
   });
+
+  /* 页内锚点：离屏区块用 content-visibility:auto，渲染前的高度只是估值，浏览器自带的跳转会因此落偏。
+     这里改为：瞬时跳到目标，随后几帧按相邻区块渲染后的真实位置逐帧校正；同时保留地址栏 hash 与键盘焦点。 */
+  function jump(t) {
+    var want = parseFloat(getComputedStyle(t).scrollMarginTop) || 0, n = 0;
+    (function step() {
+      var d = t.getBoundingClientRect().top - want;
+      if (Math.abs(d) > 1) window.scrollBy({ top: d, behavior: 'instant' });
+      if (++n < 6) requestAnimationFrame(step);
+    })();
+  }
+  function target(h) { try { return h.length > 1 ? document.getElementById(decodeURIComponent(h.slice(1))) : null; } catch (e) { return null; } }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]'), t = a && target(a.getAttribute('href'));
+    if (!t || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    history.pushState(null, '', a.getAttribute('href'));
+    if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
+    t.focus({ preventScroll: true }); jump(t);
+  });
+  window.addEventListener('popstate', function () { var t = target(location.hash); if (t) jump(t); });
+  window.addEventListener('load', function () {
+    var t = target(location.hash), touched = false;
+    if (!t) return;
+    function mark() { touched = true; }
+    addEventListener('touchstart', mark, { once: true, passive: true }); addEventListener('wheel', mark, { once: true, passive: true });
+    jump(t); setTimeout(function () { if (!touched) jump(t); }, 700);   // 图片等晚到的内容会再改变高度，补一次
+  });
 })();

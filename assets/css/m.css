@@ -31,3 +31,20 @@ html.lbo{overflow:hidden}
 .foot ul{gap:0}
 .foot li a{display:block;padding:var(--s-3) 0;line-height:1.4}
 .foot-mark{font-size:16.8vw}
+
+/* 手机首页很长（≈17000px）：首屏之后的区块离屏时跳过样式/布局/绘制，滚到附近才渲染。
+   auto 会记住渲染后的真实高度；初值取窄屏实测，避免滚动跳动。 */
+main>.sec~.sec{content-visibility:auto;contain-intrinsic-size:auto none auto 1300px}
+#custom{contain-intrinsic-size:auto none auto 2950px}
+.n5-grow+.sec{contain-intrinsic-size:auto none auto 930px}
+#start{contain-intrinsic-size:auto none auto 850px}
+#faqs{contain-intrinsic-size:auto none auto 1290px}
+#faqs+.sec{contain-intrinsic-size:auto none auto 680px}
+main>.sec.show{contain-intrinsic-size:auto none auto 290px}
+main>.sec.light{contain-intrinsic-size:auto none auto 3800px}
+main>.sec.n5-grow{contain-intrinsic-size:auto none auto 2500px}
+main>.sec~.bigmq{content-visibility:auto;contain-intrinsic-size:auto none auto 120px}
+/* content-visibility 会让区块成为独立格式化上下文，末尾 70px 的外边距不再与下一块的 60px 合并（原为取较大者 70px）；这里抵消，保证与原版间距一致 */
+main>.sec:not(.light)+.bigmq{margin-top:0}
+main>.final3{content-visibility:auto;contain-intrinsic-size:auto none auto 410px}
+.pcl a{display:inline-flex;align-items:center;min-height:44px}

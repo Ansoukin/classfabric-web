@@ -18,5 +18,5 @@
   d.style.setProperty('--wpl', 'url(' + big + ')');
   d.dataset.wp = k; d.dataset.wpi = L[k] ? 'light' : 'dark'; d.dataset.wpm = mode; d.dataset.wpt = ph;
   window.cfWp = { key: k, mode: mode, phase: ph };
-  if (window.cfWpPre) { var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = big; l.setAttribute('fetchpriority', 'high'); document.head.appendChild(l); }
+  if (window.cfWpPre) { var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.type = 'image/webp'; l.href = window.cfWpPre === 2 ? '/assets/img/wp/' + k + '.webp' : big; l.setAttribute('fetchpriority', 'high'); document.head.appendChild(l); }
 })();
