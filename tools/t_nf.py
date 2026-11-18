@@ -30,7 +30,7 @@ with sync_playwright() as p:
         ev = pg.evaluate
         ck('%d/%s: no overflow, no pageerror' % (w, th), ev('document.documentElement.scrollWidth<=innerWidth') and not errs, errs[:1])
         ck('%d/%s: Bing wallpaper requested with the right size and shown' % (w, th), len(log) == 1 and size + '&mkt=zh-CN' in log[0] and ev('document.querySelector(".nf-bg").classList.contains("on") && getComputedStyle(document.querySelector(".nf-bg i")).backgroundImage.includes("api.bimg.cc/today")'), log)
-        ck('%d/%s: h1 404, kaomoji, poem (>=6 lines), signature, two buttons >=40px' % (w, th), ev('document.getElementById("nfk").textContent.length>2 && document.querySelector("h1").textContent.includes("404") && document.querySelector("h1").textContent.includes("页面不存在") && document.querySelectorAll("#nfpl .l").length>=6 && parseFloat(getComputedStyle(document.getElementById("nfpl")).fontSize)>=26 && document.querySelector(".nf-by").textContent.includes("Sonnet 5.5") && !document.getElementById("nfsw").hidden && [...document.querySelectorAll(".cfm-btn")].every(a=>a.getBoundingClientRect().height>=40)'))
+        ck('%d/%s: h1 404, kaomoji, poem (>=4 lines), signature, two buttons >=40px' % (w, th), ev('document.getElementById("nfk").textContent.length>2 && document.querySelector("h1").textContent.includes("404") && document.querySelector("h1").textContent.includes("页面不存在") && document.querySelectorAll("#nfpl .l").length>=4 && parseFloat(getComputedStyle(document.getElementById("nfpl")).fontSize)>=26 && document.querySelector(".nf-by").textContent.includes("5.5") && !document.getElementById("nfsw").hidden && [...document.querySelectorAll(".cfm-btn")].every(a=>a.getBoundingClientRect().height>=40)'))
         ck('%d/%s: no small print (every text >=15px)' % (w, th), ev('[...document.querySelectorAll(".nf *")].filter(e=>[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())).every(e=>parseFloat(getComputedStyle(e).fontSize)>=15)'))
         c.close()
     # 接口失败 → 站内壁纸
@@ -47,11 +47,17 @@ with sync_playwright() as p:
     ck('typewriter: all characters shown, signature visible, aria-label has the whole poem', t2['on'] == t2['all'] and t2['by'] == '1' and t2['label'] == t2['text'] and len(t2['label']) > 40, t2)
     ck('typewriter: layout does not move while typing', abs(t1['bar'] - t2['bar']) < 1 and abs(t1['k'] - t2['k']) < 1, (t1, t2))
     c2.close()
+    # 11 首全部：两种署名都出现，每首都不溢出 360px、至少 4 行
+    c3 = b.new_context(viewport={'width': 360, 'height': 800}); pg3 = c3.new_page(); mock(pg3, fail=True)
+    pg3.goto(B + '/404.html', wait_until='load'); pg3.wait_for_timeout(300)
+    seen3 = pg3.evaluate('() => { var out = {by: {}, bad: 0}; var btn = document.getElementById("nfsw"); for (var i = 0; i < 24; i++) { btn.click(); var by = document.querySelector(".nf-by").textContent; out.by[by] = (out.by[by] || 0) + 1; if (document.documentElement.scrollWidth > innerWidth || document.querySelectorAll("#nfpl .l").length < 4) out.bad++; } return out; }')
+    ck('all poems: both signatures appear, every poem fits 360px and has >=4 lines', '—— Sonnet 5.5' in seen3['by'] and '—— Haiku 5.5' in seen3['by'] and seen3['bad'] == 0, seen3)
+    c3.close()
     # 「换一首」：每次都换，颜文字跟着换
     pg.wait_for_timeout(300); seen = []
     for i in range(8):
         pg.click('#nfsw'); pg.wait_for_timeout(330); seen.append(pg.evaluate('document.getElementById("nfk").textContent+"|"+document.querySelector("#nfpl .l").textContent'))
-    ck('swap: every click changes the poem and kaomoji', all(a != b2 for a, b2 in zip(seen, seen[1:])) and pg.evaluate('document.querySelectorAll("#nfpl .l").length>=6'), seen)
+    ck('swap: every click changes the poem and kaomoji', all(a != b2 for a, b2 in zip(seen, seen[1:])) and pg.evaluate('document.querySelectorAll("#nfpl .l").length>=4'), seen)
     c.close()
     # 刷新：随机、不连续重复
     c = b.new_context(viewport={'width': 1280, 'height': 800}); pg = c.new_page(); mock(pg, fail=True); seen = []
