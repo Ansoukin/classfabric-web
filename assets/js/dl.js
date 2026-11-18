@@ -94,15 +94,15 @@
     var ch = $('#chan'); if (ch && rels) ch.hidden = !rels.some(function (x) { return !x.draft && x.prerelease; });
     fillHist();
     if (!r) {
-      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; e.classList.remove('dl-sk'); });
+      $$('[data-ver]').forEach(function (e) { e.textContent = chan === 'pre' ? '暂无预览版' : '—'; e.classList.remove('dl-sk', 'sk'); });
       $$('[data-date]').forEach(function (e) { e.textContent = '—'; });
       if (box) box.innerHTML = '<div class="dl-none">' + (chan === 'pre' ? '目前没有发布预览版，请先使用稳定版。' : '暂无可下载的版本。') + '</div>';
       if (dl) dl.classList.add('dis');
       $$('[data-dlsize]').forEach(function (e) { e.textContent = ''; });
       return;
     }
-    $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; e.classList.remove('dl-sk'); });
-    $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); e.classList.remove('dl-sk'); });
+    $$('[data-ver]').forEach(function (e) { e.textContent = r.tag_name; e.classList.remove('dl-sk', 'sk'); });
+    $$('[data-date]').forEach(function (e) { e.textContent = (r.published_at || '').slice(0, 10); e.classList.remove('dl-sk', 'sk'); });
     $$('[data-releaselink]').forEach(function (e) { e.href = r.html_url; });
 
     var items = (r.assets || []).map(parse).filter(Boolean);
@@ -170,7 +170,7 @@
     fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=20').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (r) { go(r); try { localStorage.setItem('cf_rels', JSON.stringify({ t: Date.now(), r: r })); } catch (e) { } })
       .catch(function () {
-        $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; e.classList.remove('dl-sk'); });
+        $$('[data-ver]').forEach(function (e) { e.textContent = '见 GitHub'; e.classList.remove('dl-sk', 'sk'); });
         var box = $('#assets'); if (box) box.innerHTML = '<div class="dl-none">暂时无法读取版本信息，请前往 <a href="https://github.com/' + REPO + '/releases" rel="noopener">GitHub Releases</a> 下载。</div>';
         var hs = $('#hist'); if (hs) hs.innerHTML = '<li class="dl-none">暂时无法读取。</li>';
       });

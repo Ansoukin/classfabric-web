@@ -74,6 +74,7 @@ python3 tools/t_wp.py   # 壁纸随机：时间段、不连续重复、各页面
 python3 tools/t_dl3.py  # 下载页：舞台事件、点击下载、手机适配、减少动态
 python3 tools/t_ab.py   # 关于页：锚点、滚动联动、溢出、CLS
 python3 tools/t_nf.py   # 404 页：SEO 标记、溢出、动效、点击区
+python3 tools/t_ver.py  # 版本号占位：读到版本后不留骨架底色
 python3 tools/t_contrast.py about dark 1440   # 对比度，只输出不达标项
 ```
 
