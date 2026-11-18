@@ -64,3 +64,8 @@ body:has(.hz,.nf) .nav:not(.solid):not(.open){--nav-fg:var(--on-wall-soft);--nav
 ::view-transition-group(cf-nav){animation:none}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:var(--t-slow);animation-timing-function:var(--ease-out)}
 @media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+
+/* 跳到正文：键盘用户的第一个 Tab 停靠点，聚焦时才出现（WCAG 2.4.1 绕过块） */
+.skip{position:fixed;left:var(--s-3);top:var(--s-3);z-index:70;display:inline-flex;align-items:center;min-height:44px;padding:0 var(--s-4);border-radius:var(--r-m);border:1px solid var(--stroke);background:var(--card);color:var(--fg);font-size:var(--fs-2);font-weight:600;box-shadow:var(--sh-win);transform:translateY(calc(-100% - var(--s-5)))}
+.skip:focus-visible{transform:none}
+main:focus{outline:none}

@@ -4,6 +4,13 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ui import ic, tg, cb, pg_auto, pg_plugins, pg_themes, titlebar, TITLE_ISL
 
+import functools as _ft, re as _re
+def _pres(f):
+    """软件界面复刻里的标题不是本页的文档结构：去掉标题语义（文字仍可读），避免出现第二个 h1 与乱序层级"""
+    @_ft.wraps(f)
+    def w(*a, **k): return _re.sub(r'<h([1-6])(?=[ >])', r'<h\1 role="presentation"', f(*a, **k))
+    return w
+
 def sc(icon, title, desc='', trail='', cls=''):
     return '<div class="sc %s"><span style="width:22px;display:grid;place-items:center">%s</span><div class="tx"><b>%s</b>%s</div>%s</div>' % (cls, ic(icon) if icon else '', title, ('<span>%s</span>' % desc) if desc else '', trail)
 
@@ -25,6 +32,7 @@ def exp(icon, title, desc, body, on=True, open_=True, tgl=True):
 
 EMPTY = '<div class="empty"><svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="9" stroke-dasharray="9 7"/></svg><b>啥都没有</b></div>'
 
+@_pres
 def page_remind():
     prov = [('school', '上下课提醒', '在准备上课、上课和下课时发出醒目提醒，并预告下一节课程。'), ('power', '放学提醒', '在当天的课程结束后发出提醒。'),
             ('cloud', '天气预警', '当有降雨或者极端天气时发出提醒。'), ('bolt', '行动提醒', '显示由行动发出的提醒。')]
@@ -54,6 +62,7 @@ def page_remind():
              '<div class="scr" data-pane="b">' + basic + '</div><div class="scr" data-pane="a" hidden>' + adv + '</div></div><div class="rempty">' + EMPTY + '</div></div>')
     return '<h2>提醒</h2><div class="two">' + left + right + '</div>'
 
+@_pres
 def page_widgets():
     lib = [('text', '文本', '显示自定义文本。'), ('split', '分割线', '显示一个分割线，视觉上对组件进行分组。'), ('doc', '课程表', '显示当前的课程表信息。'), ('cal', '日期', '显示今天的日期和星期。'),
            ('clock', '时钟', '显示现在的时间，支持精确到秒。'), ('sun', '天气简报', '显示当前的天气概况和气象预警。'), ('timer', '倒计时', '显示距离某一天的倒计时。'), ('carousel', '轮播容器', '轮播多个组件。'),
@@ -66,6 +75,7 @@ def page_widgets():
             '<div class="ibar"><span class="dot">i</span>新功能：现在可以使用「编辑模式」更加直观地编辑主界面上的组件！<span class="btnw">进入编辑模式</span><span class="x">' + ic('x') + '</span></div>'
             '<div class="lib2 wxlibsrc" hidden>' + g + '</div></div>')
 
+@_pres
 def page_appearance():
     def sec(icon, t): return '<div class="sech">%s%s</div>' % (ic(icon), t)
     return ('<div class="pg pgc"><h2>外观</h2>' + sec('gear', '基本') +
@@ -76,6 +86,7 @@ def page_appearance():
             sec('text', '字体') + sc('text', '自定义字体', '自定义主界面显示课表的字体。', combo('HarmonyOS Sans SC（默认）', 240)) + sc('text', '自定义字重', '自定义主界面显示的字体的字重，需要对应字体支持。', combo('Medium', 98, '', 'Light|Regular|Medium|Bold')) +
             sc('text', '字体大小', '调整主界面上各类字体的大小。', '<span class="car2">' + ic('chev') + '</span>') + sc('text', '字体颜色', '调整字体颜色，将覆盖主题默认值。', tg(False)) + '</div>')
 
+@_pres
 def page_window():
     pos = ''.join('<span class="dock%s" data-dock="%d" style="%s"></span>' % (' on' if i == 1 else '', i, st) for i, st in enumerate(
         ['left:8%;top:10%', 'left:46%;top:10%', 'right:8%;top:10%', 'left:8%;bottom:20%', 'left:46%;bottom:20%', 'right:8%;bottom:20%']))

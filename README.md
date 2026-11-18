@@ -115,6 +115,16 @@ python3 tools/t_contrast.py about dark 1440   # 对比度，只输出不达标�
 
 5. **传输与缓存（手机端实测收益最大）**：在 OpenResty 开启 `gzip on; gzip_types text/css application/javascript image/svg+xml application/json;`（支持的话加 `brotli on` 与 `brotli_types`；`site.css` 139 KB → gzip 约 30 KB）；站内引用的 CSS/JS 都带 `?v=内容哈希`，可放心设置 `location ~* \.(css|js|webp|png|svg|woff2)$ { add_header Cache-Control "public, max-age=31536000, immutable"; }`，HTML 保持 `no-cache`。
 
+6. **安全响应头**（静态站，风险低，可直接加在站点的 `server` 块里）：
+   ```nginx
+   add_header X-Content-Type-Options "nosniff" always;
+   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+   add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()" always;
+   add_header X-Frame-Options "SAMEORIGIN" always;
+   add_header Strict-Transport-Security "max-age=300" always;   # 确认 HTTPS 全站正常后，逐步加到 31536000
+   ```
+   暂不建议上严格的 CSP：页面里有内联脚本（壁纸/主题的首屏脚本、JSON-LD）与大量内联样式，需要逐个加哈希，收益不抵维护成本；站点只向 `api.github.com`（下载页取版本）与 `api.bimg.cc`（404 壁纸）发请求。
+
 ## 许可
 
 ClassFabric 基于 HelloWRC 的 ClassIsland，以 GPL-3.0 协议开源。站点中的软件截图来自 ClassFabric 2.1.1.3；壁纸为 Windows 11 自带壁纸，版权归微软所有，仅用于展示软件界面。

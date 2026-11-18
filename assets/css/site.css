@@ -372,7 +372,7 @@ table.tt{border-collapse:collapse;width:100%;font-size:12px;table-layout:fixed}
 
 .foot{border-top:1px solid var(--line);padding:52px 0 34px;font-size:14px;color:var(--muted)}
 .foot .cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px}
-.foot h5{margin:0 0 12px;font-size:13px;color:var(--fg);font-weight:650}
+.foot .fh{margin:0 0 12px;font-size:13px;line-height:inherit;letter-spacing:normal;color:var(--fg);font-weight:650}
 .foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .foot a:hover{color:#fff}
 @media(pointer:coarse){.foot li a{display:flex;align-items:center;min-height:44px}.foot ul{gap:0}}
@@ -1998,6 +1998,8 @@ html.tt *,html.tt *::before,html.tt *::after{transition:background-color .4s,col
 
 :root{--ease-out:cubic-bezier(.16,1,.3,1);--ease-in:cubic-bezier(.7,0,.84,0);--ease-io:cubic-bezier(.65,0,.35,1);--t-fast:.12s;--t-base:.22s;--t-slow:.45s}
 h1,h2,h3,h4,.claim,.mtxt{text-wrap:balance}
+/* 正文段落避免末行只剩一两个字；只作用于站点文案，软件界面复刻（.fitbox）里的排版保持原样 */
+:where(.copy,.n5-t,.n5-tx,.sub-i,.thx-tx,.ab-in,.ab-copy,.dl-copy,.acc-p,.fcard) p:not(.fitbox *){text-wrap:pretty}
 p,li{text-wrap:pretty}
 ::selection{background:color-mix(in srgb,var(--accent) 34%,transparent);color:inherit}
 :focus-visible{outline:2px solid var(--g1,#0a84ff);outline-offset:2px;box-shadow:0 0 0 5px color-mix(in srgb,var(--g1,#0a84ff) 24%,transparent)}

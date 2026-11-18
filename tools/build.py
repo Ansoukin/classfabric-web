@@ -133,7 +133,7 @@ def navbar(cur, secs=None):
         return '<a href="%s"%s>%s</a>' % (href, ' aria-current="page"' if cur == key else '', label)
     moon = '<svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 019.5 4 8.5 8.5 0 1020 14.5z"/></svg>'
     sun = '<svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
-    return ('<body>\n<header class="nav" id="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/img/icon-64.png" width="26" height="26" alt="">ClassFabric</a>'
+    return ('<body>\n<a class="skip" href="#main">跳到正文</a>\n<header class="nav" id="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/img/icon-64.png" width="26" height="26" alt="">ClassFabric</a>'
             '<nav class="links" id="links" aria-label="主导航">' + a('/', '首页', 'home') + a('/download.html', '下载', 'dl') + a('/about.html', '关于', 'about') + '<a class="ghl" href="' + GH + '" rel="noopener">' + GHSVG + 'GitHub 仓库</a>'
             '<a class="btn blue nav-cta" href="/download.html">' + ic('dl') + '立即下载</a></nav>'
             + ('<nav class="slinks" aria-label="页面章节">' + ''.join('<a href="#%s">%s</a>' % (i, l) for i, l in secs) + '</nav>' if secs else '')
@@ -154,6 +154,19 @@ def build_id():
 
 BD, BH, BT = build_id()
 
+def levels(h):
+    """标题层级不跳级（WCAG 1.3.1 / 2.4.6）：版面用的 h4 直接跟在 h2 后面时，给它补 aria-level（父级 +1），样式不受影响。
+    软件界面复刻里的标题已是 role=presentation，不参与。"""
+    st = []   # (原始层级, 有效层级)
+    def f(m):
+        n = int(m.group(1)); attrs = m.group(2)
+        if 'role=' in attrs or 'aria-level' in attrs: return m.group(0)
+        while st and st[-1][0] >= n: st.pop()
+        eff = min(n, (st[-1][1] if st else 0) + 1)
+        st.append((n, eff))
+        return m.group(0) if eff == n else '<h%d%s role="heading" aria-level="%d">' % (n, attrs, eff)
+    return re.sub(r'<h([1-6])((?:\s[^>]*)?)>', f, h)
+
 def vers(h):
     """给 CSS/JS 引用加 ?v=内容哈希：文件一变 URL 就变，Cloudflare 与浏览器缓存不会再返回旧版本"""
     return re.sub(r'((?:href|src)="/assets/(?:css|js)/[\w.-]+\.(?:css|js))"', r'\1?v=' + BH + '"', h)
@@ -161,9 +174,9 @@ BUILD = ('<div class="bld" title="V%s 发布于 %s"><span class="dot"></span><sp
 
 FOOT = ('<footer class="foot"><div class="wrap"><div class="cols"><div><a class="brand" href="/"><img src="/assets/img/icon-64.png" width="26" height="26" alt="">ClassFabric</a>'
         '<p class="about">ClassIsland 的个人修改版班级大屏课表。紧跟上游，并加入来自社区与我们的改进。</p></div>'
-        '<div><h5>产品</h5><ul><li><a href="/download.html">下载</a></li><li><a href="' + GH + '/releases" rel="noopener">版本发布</a></li><li><a href="/about.html#planned">计划中的功能</a></li></ul></div>'
-        '<div><h5>项目</h5><ul><li><a href="' + GH + '" rel="noopener">GitHub 仓库</a></li><li><a href="' + GH + '/issues" rel="noopener">反馈问题</a></li><li><a href="/about.html#join">参与贡献</a></li></ul></div>'
-        '<div><h5>了解更多</h5><ul><li><a href="/about.html">关于 ClassFabric</a></li><li><a href="/about.html#faq">常见问题</a></li><li><a href="https://classisland.tech" rel="noopener">ClassIsland 官网</a></li></ul></div></div>'
+        '<div><h2 class="fh">产品</h2><ul><li><a href="/download.html">下载</a></li><li><a href="' + GH + '/releases" rel="noopener">版本发布</a></li><li><a href="/about.html#planned">计划中的功能</a></li></ul></div>'
+        '<div><h2 class="fh">项目</h2><ul><li><a href="' + GH + '" rel="noopener">GitHub 仓库</a></li><li><a href="' + GH + '/issues" rel="noopener">反馈问题</a></li><li><a href="/about.html#join">参与贡献</a></li></ul></div>'
+        '<div><h2 class="fh">了解更多</h2><ul><li><a href="/about.html">关于 ClassFabric</a></li><li><a href="/about.html#faq">常见问题</a></li><li><a href="https://classisland.tech" rel="noopener">ClassIsland 官网</a></li></ul></div></div>'
         '<div class="legal">© 2026 ClassFabric　基于 HelloWRC 的 ClassIsland（© 2023–2026 HelloWRC）二次开发，以 GPL-3.0 协议开源。<br>ClassFabric 是个人修改版，并非 ClassIsland 官方项目；ClassIsland 的名称与原有功能归其原作者所有。</div>' + BUILD + '</div><div class="foot-mark" aria-hidden="true">ClassFabric</div></footer>\n'
         '<script src="/assets/js/site.js" defer></script>\n<script src="/assets/js/apps.js" defer></script>\n<script src="/assets/js/widgets.js" defer></script>\n<script src="/assets/js/dl.js" defer></script>\n<script src="/assets/js/fx.js" defer></script>\n</body>\n</html>\n')
 
@@ -196,7 +209,7 @@ def home(mob=False):
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
              'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n' if mob else '<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
     h += navbar('home', [('features','功能'),('custom','定制'),('grow','增强'),('start','开始使用'),('faqs','常见问题')])
-    h += '<main>\n'
+    h += '<main id="main" tabindex="-1">\n'
     U3.init(globals())
     h += U3.hero(mob)
 
@@ -358,7 +371,7 @@ def download():
     sec = lambda i, t, body: '<section class="dl-sec rv" id="%s"><div class="dl-sh"><div><h2>%s</h2></div></div>%s</section>' % (i, t, body)
     chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
     isl_states = HERO_STATES.replace('<div class="isl"', '<div class="isl on"', 1)
-    h += ('<main class="dl-wrap"><div class="dl-w"><header class="dl-top"><div class="dl-copy"><h1 class="rv">下载 ClassFabric</h1><p class="dl-lead"><span>紧跟上游的 ClassIsland 个人修改版，</span><span>目前提供 Windows 版本。</span></p>'
+    h += ('<main id="main" tabindex="-1" class="dl-wrap"><div class="dl-w"><header class="dl-top"><div class="dl-copy"><h1 class="rv">下载 ClassFabric</h1><p class="dl-lead"><span>紧跟上游的 ClassIsland 个人修改版，</span><span>目前提供 Windows 版本。</span></p>'
           '<div class="dl-cta"><a class="btn blue" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '<span>下载安装包</span><small data-dlsize></small></a>'
           '<a class="dl-link" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div>'
           '<p class="dl-line"><span id="chanTip">最新稳定版</span> <b data-ver class="dl-sk"></b>，<span data-date>—</span> 发布</p>'
@@ -421,7 +434,7 @@ def about():
         ('更好的自动化', '主要借助社区知名插件 SystemTools 实现。', '规划中', ''),
         ('更好的性能表现', '持续优化。', '规划中', '')], 4)
     go = ''.join('<li class="ab-in" style="--i:%d"><a class="ab-row" href="%s" rel="noopener">%s%s</a></li>' % (n, u, t, chev) for n, (u, t) in enumerate([(GH, 'GitHub 仓库'), (GH + '/issues', '反馈问题'), (GH + '/pulls', '提交 PR')]))
-    h += ('<main class="ab-wrap"><div class="ab-w"><header class="ab-top"><div class="ab-copy"><h1 class="rv">关于 ClassFabric</h1>'
+    h += ('<main id="main" tabindex="-1" class="ab-wrap"><div class="ab-w"><header class="ab-top"><div class="ab-copy"><h1 class="rv">关于 ClassFabric</h1>'
           '<p class="ab-lead"><span>ClassIsland 的个人修改版：</span><span>紧跟上游，</span><span>你的课表、</span><span>自动化、</span><span>插件与主题</span><span>直接沿用。</span></p>'
           '<a class="ab-link" href="#switch">了解如何切换' + chev + '</a>'
           '<p class="ab-line">基于 HelloWRC 的 ClassIsland 二次开发，沿用上游的 GPL-3.0 开源协议。</p></div></header></div>'
@@ -454,7 +467,7 @@ def notfound():
     h += navbar('')
     # 整屏 Bing 每日壁纸 + 超大的诗。没有脚本时显示第一首；有脚本时由 nf.js 随机换成其中一首并启用「换一首」
     poem = ('邮差照着旧地址，敲了三年的门。', '门后换了人，换了漆，换了门牌。', '他每次都问：「请问，是不是——」', '住户每次都说：「不是，进来喝口水。」', '信还在他包里。', '地址早就不存在了，', '水，倒一直是热的。')
-    h += ('<main class="nf"><div class="nf-bg" aria-hidden="true"><i></i></div><div class="nf-in">'
+    h += ('<main id="main" tabindex="-1" class="nf"><div class="nf-bg" aria-hidden="true"><i></i></div><div class="nf-in">'
           '<h1 class="nf-k"><span class="nf-n">404</span><span class="nf-sr"> 页面不存在</span><span class="nf-e" id="nfk" aria-hidden="true">(´･ω･`)</span></h1>'
           '<blockquote class="nf-pl" id="nfpl">' + ''.join('<span class="l">%s</span>' % t for t in poem) + '</blockquote>'
           '<p class="nf-by">—— Sonnet 5.5</p>'
@@ -463,9 +476,9 @@ def notfound():
     return h + FOOT_LITE.replace('<script src="/assets/js/dl.js" defer></script>\n', '').replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')  # 404 没有版本号/下载区，不加载 dl.js
 
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about), ('404.html', notfound)):
-    open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(fn()))
+    open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(levels(fn())))
 open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n' % SITE)
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n' % (SITE, p, datetime.date.today().isoformat()) for p in ('/', '/download.html', '/about.html')) + '</urlset>\n')
 os.makedirs(os.path.join(OUT, 'm'), exist_ok=True)
-open(os.path.join(OUT, 'm', 'index.html'), 'w', encoding='utf-8').write(vers(home(True)))
+open(os.path.join(OUT, 'm', 'index.html'), 'w', encoding='utf-8').write(vers(levels(home(True))))
 print('ok')

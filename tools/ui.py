@@ -56,6 +56,13 @@ P = {
  'dl': '<path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/>',
 }
 
+import functools as _ft, re as _re
+def _pres(f):
+    """软件界面复刻里的标题不是本页的文档结构：去掉标题语义（文字仍可读），避免出现第二个 h1 与乱序层级"""
+    @_ft.wraps(f)
+    def w(*a, **k): return _re.sub(r'<h([1-6])(?=[ >])', r'<h\1 role="presentation"', f(*a, **k))
+    return w
+
 def ic(n, cls=''):
     return '<svg viewBox="0 0 24 24"%s aria-hidden="true">%s</svg>' % ((' class="%s"' % cls) if cls else '', P[n])
 
@@ -97,6 +104,7 @@ def nav(on):
     o.append('</div>')
     return ''.join(o)
 
+@_pres
 def pg_remind():
     left = (
      '<div style="width:44%;flex:none">'
@@ -124,6 +132,7 @@ def pg_remind():
      '</div>')
     return '<div class="pg" style="display:flex;padding-top:12px">' + left + right + '</div>'
 
+@_pres
 def pg_auto():
     lft = (
      '<div class="auto"><div class="lft">'
@@ -156,6 +165,7 @@ def flyout_act():
     h += '<div class="fly" data-fly="act2" style="left:128px;top:180px;width:112px"><div class="mi">' + ic('window') + '应用程序</div><div class="mi">' + ic('list') + 'cmd 命令</div><div class="mi">' + ic('doc') + '文件</div><div class="mi">' + ic('folder') + '文件夹</div><div class="mi">' + ic('import') + 'Url 链接</div></div>'
     return h
 
+@_pres
 def pg_widgets():
     lib = [('text', '文本', '显示自定义文本。'), ('split', '分割线', '显示一个分割线，视觉上对组件进行分组。'), ('doc', '课程表', '显示当前的课程表信息。'), ('cal', '日期', '显示今天的日期和星期。'),
            ('clock', '时钟', '显示现在的时间，支持精确到秒。'), ('sun', '天气简报', '显示当前的天气概况和气象预警。'), ('timer', '倒计时', '显示距离某一天的倒计时。'), ('carousel', '轮播容器', '轮播多个组件。'),
@@ -168,6 +178,7 @@ def pg_widgets():
             '<div class="lib">' + g + '</div>'
             '<div class="ibar"><span class="dot">i</span>新功能：现在可以使用「编辑模式」更加直观地编辑主界面上的组件！<span class="btnw" style="margin-left:auto">进入编辑模式</span></div></div>')
 
+@_pres
 def pg_plugins():
     def icon(kind):
         if kind == 'win':
@@ -196,6 +207,7 @@ def pg_plugins():
             '<h2>许可证</h2><p>本项目基于 GNU General Public License v3.0 许可。</p></div>'
             '<div class="deps" data-pp="1" hidden><div class="dh"><span>插件 ID</span><span>必选?</span></div></div></div></div></div>')
 
+@_pres
 def pg_themes():
     def tc(img, name, on):
         return '<div class="tc"><img src="/assets/img/%s.webp" alt="" loading="lazy" width="322" height="144"><div class="nm">%s<small>ClassFabric</small></div>%s</div>' % (img, name, tg(on, ''))
@@ -272,6 +284,7 @@ def editor_window(dw=860, dh=520, filled=True, wid=''):
     return ('<div class="w editor"%s style="--dw:%dpx;--dh:%dpx">' % ((' id="%s"' % wid) if wid else '', dw, dh)) + titlebar('档案编辑', None, TITLE_ISL) + \
            '<div class="ed" style="height:calc(var(--dh) - 32px)">' + tabs + '<div class="tool"><span>' + ic('sync') + '刷新</span><b></b>' + tools + '</div>' + grid_view(filled) + timeline_view() + subjects_view() + '</div></div>'
 
+@_pres
 def swap_dialog():
     subs = ''.join('<span class="pick" data-s="%s" data-n="%s">%s</span>' % (s, n, s) for s, n in zip('语数英物化生政历地自自', ['语文', '数学', '英语', '物理', '化学', '生物', '政治', '历史', '地理', '自习', '自习']))
     return ('<div class="w swp" id="swap" style="--dw:640px">' + titlebar('换课', None, None, False) +
@@ -285,10 +298,11 @@ def tray_menu():
     h = '<div class="tmenu">'
     for it in items:
         if it[0] == 'hr': h += '<hr>'
-        elif it[1] == 'ClassFabric': h += '<div class="mi" data-k="%s"><img class="ti" src="/assets/img/icon-64.png" alt="">%s</div>' % (it[2], it[1])
-        else: h += '<div class="mi" data-k="%s">%s%s</div>' % (it[2], ('<img class="ic" src="/assets/img/win/tm-%s.png" alt="">' % it[0]) if it[0] != 'exit' else ic('exit'), it[1])
+        elif it[1] == 'ClassFabric': h += '<div class="mi" data-k="%s"><img class="ti" src="/assets/img/icon-64.png" width="16" height="16" alt="">%s</div>' % (it[2], it[1])
+        else: h += '<div class="mi" data-k="%s">%s%s</div>' % (it[2], ('<img class="ic" src="/assets/img/win/tm-%s.png" width="16" height="16" alt="">' % it[0]) if it[0] != 'exit' else ic('exit'), it[1])
     return h + '</div>'
 
+@_pres
 def recovery():
     def o(i, t, s='', dis=False, ext=False):
         return '<div class="o%s">%s<div><b>%s</b>%s</div>%s</div>' % (' dis' if dis else '', ic(i), t, ('<small>%s</small>' % s) if s else '', ic('ext', 'go') if ext else ic('chevr', 'go'))
