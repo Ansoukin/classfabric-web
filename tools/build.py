@@ -207,7 +207,7 @@ def home(mob=False):
     import mobile as M
     M.init(globals())
     h = head('ClassFabric — 紧跟上游的 ClassIsland 班级大屏课表',
-             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n' if mob else '<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', None if mob else '/m/', m=mob)
+             'ClassFabric 是基于 ClassIsland 的个人修改版班级大屏课表：积极同步上游特性，原有课表、自动化、插件与主题无缝沿用，并加入更多天气源、多语言等改进。', '/', '<link rel="preconnect" href="https://api.github.com" crossorigin>\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n' if mob else '<link rel="stylesheet" href="/assets/css/home2.css">\n<link rel="stylesheet" href="/assets/css/bento.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="preconnect" href="https://api.github.com" crossorigin>\n<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">\n', None if mob else '/m/', m=mob)
     h += navbar('home', [('features','功能'),('custom','定制'),('grow','增强'),('start','开始使用'),('faqs','常见问题')])
     h += '<main id="main" tabindex="-1">\n'
     U3.init(globals())
@@ -365,7 +365,7 @@ def dl_menu():
 
 def download():
     U3.init(globals())
-    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="stylesheet" href="/assets/css/dl.css">\n<link rel="stylesheet" href="/assets/css/modal.css">\n')
+    h = head('下载 ClassFabric（Windows 版）— 免费 · 开源', '下载 ClassFabric：ClassIsland 的个人修改版班级大屏课表。提供安装程序与免安装版，支持 Windows 10 及更高版本，免费开源，自动选择适合你设备的版本。', '/download.html', '<link rel="preconnect" href="https://api.github.com" crossorigin>\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/display.css">\n<link rel="stylesheet" href="/assets/css/dl.css">\n<link rel="stylesheet" href="/assets/css/modal.css">\n')
     h += navbar('dl')
     chan = ''.join('<button type="button" role="tab" class="%s" aria-selected="%s" aria-controls="assets" data-chan="%s">%s</button>' % ((('on', 'true') if k == 'stable' else ('', 'false')) + (k, t)) for k, t in (('stable', '稳定版'), ('pre', '预览版')))
     sec = lambda i, t, body: '<section class="dl-sec rv" id="%s"><div class="dl-sh"><div><h2>%s</h2></div></div>%s</section>' % (i, t, body)
@@ -459,7 +459,7 @@ def about():
     return h + FOOT_LITE.replace('<script src="/assets/js/dl.js" defer></script>\n', '').replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/about.js" defer></script>')
 
 def notfound():
-    h = head('页面未找到（404）— ClassFabric', 'ClassFabric 官网：你访问的页面不存在，或者已经移走。', '/404.html', '<link rel="stylesheet" href="/assets/css/nf.css">\n')
+    h = head('页面未找到（404）— ClassFabric', 'ClassFabric 官网：你访问的页面不存在，或者已经移走。', '/404.html', '<link rel="preconnect" href="https://api.bimg.cc">\n<link rel="stylesheet" href="/assets/css/nf.css">\n')
     for pat in (r'<link rel="canonical"[^>]*>\n?', r'<link rel="alternate"[^>]*>\n?', r'<meta property="og:url"[^>]*>\n?'):
         h = re.sub(pat, '', h)
     h = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', '', h, flags=re.S)
