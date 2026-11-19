@@ -28,6 +28,14 @@
 - 全部放进 `@media(prefers-reduced-motion:no-preference)`；滚动联动放进 `@supports(animation-timeline:scroll())`；离屏/页面隐藏时暂停。
 - 禁止 3D 倾斜、光斑跟随、光晕、粒子。
 
+### 滚动与粘性（sticky）规范（桌面端，2026-11 起适用；依据 Chrome 追踪实测 + taste-skill 的 Scroll 章）
+
+- **滚动只推动"主角时刻"**：首屏收缩成卡片、粘性面板（`.n5-pn`）、宣言逐字。其余卡片/行/块一律不在滚动时淡入、上移、错峰；不做视差漂移、滚动进度线、scroll-snap、平滑滚动库。`.rv` 在 ≥900px 下始终可见，`.in` 仍会添加，只供区块内演示动画触发。
+- **粘性靠 `position:sticky` + 原生滚动**（`animation-timeline:scroll()/view()` 擦洗），不用 JS 劫持滚动。
+- **被滚动时间线驱动的 `@keyframes` 只许 `transform` / `opacity`**（合成器线程）。禁止在其中动画 `clip-path`、`filter`、`background-*`、`width/height/margin`：实测把首屏 `clip-path` 换成 `transform` 后，光栅耗时从 2119ms 降到 254ms。需要"从满屏收缩成圆角卡片"时，做法见 `home2.css` 的 `hzbg`：卡片按终态尺寸静态排版（含圆角、`overflow:hidden`），起点用 `scale()`+`translateY()` 放大盖满视口。
+- **滚动监听**：优先 IntersectionObserver / CSS 时间线；确需 `scroll` 事件时用 `{passive:true}`，`requestAnimationFrame` 合帧，且只在目标靠近视口时挂载，不在回调里读布局后立即写样式。
+- `tools/t_scroll.py` 守护以上规则，改动首页滚动效果后必须通过。
+
 ## 3. 禁止
 
 - **无论如何不得偏离 Fluent Design 与既定 token，不新增 token**（唯一例外：经用户明确放行的软件复刻色 `--rep-*`）。

@@ -268,13 +268,28 @@
     var ws = Array.prototype.slice.call(mt.querySelectorAll('.mw'));
     var hlFrom = ws.length - 15;
     ws.forEach(function (w, i) { if (i >= hlFrom) w.classList.add('mhl'); });
+    var raf = 0, last = -1;
     var tick = function () {
+      raf = 0;
       var r = mt.getBoundingClientRect(), vh = window.innerHeight;
       var p = Math.max(0, Math.min(1, (vh * 0.82 - r.top) / (r.height + vh * 0.35)));
       var n = Math.round(p * ws.length * 1.08);
-      ws.forEach(function (w, i) { w.classList.toggle('on', i < n); });
+      if (n === last) return;
+      var lo = Math.min(n, last < 0 ? 0 : last), hi = Math.max(n, last < 0 ? ws.length : last);
+      for (var i = lo; i < hi && i < ws.length; i++) ws[i].classList.toggle('on', i < n);
+      last = n;
     };
-    window.addEventListener('scroll', tick, { passive: true }); window.addEventListener('resize', tick); tick();
+    var kick = function () { if (!raf) raf = requestAnimationFrame(tick); };
+    /* 只在宣言段靠近视口时才监听滚动，且每帧最多算一次，只改变化的那几个字 */
+    if ('IntersectionObserver' in window) {
+      var on = false;
+      new IntersectionObserver(function (es) {
+        var v = es[es.length - 1].isIntersecting;
+        if (v && !on) { window.addEventListener('scroll', kick, { passive: true }); on = true; kick(); }
+        else if (!v && on) { window.removeEventListener('scroll', kick); on = false; kick(); }
+      }, { rootMargin: '30% 0px' }).observe(mt);
+    } else window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick); kick();
   }
   if (window.matchMedia && window.matchMedia('(hover:hover)').matches) {
     document.addEventListener('pointermove', function (e) {

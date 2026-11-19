@@ -55,14 +55,7 @@
     $$('.sk,.sk-i,.g,.tv,.tv-f,.skr,.hist li.skl,.shotf,.thx-reel,.bigmq,.pmq,.mqw,.dl-stage').forEach(function (n) { av.observe(n); });
   }
 
-  var root = document.documentElement, sp = document.getElementById('nav') || root, tick = false;   // --sp 只有导航条的阅读进度线在用：写在 <html> 上会让整页 7000+ 个节点每帧重算样式
-  function onScroll() {
-    var h = root.scrollHeight - innerHeight, y = window.pageYOffset;
-    sp.style.setProperty('--sp', (h > 0 ? Math.min(1, y / h) : 0).toFixed(4));
-    tick = false;
-  }
-  window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(onScroll); } }, { passive: true });
-  onScroll();
+  var root = document.documentElement;
 
   var SEL = '.axc,.fcard,.cd,.sub-i,.stp4 li,.fit2>div,.thx-t,.tu,.acc-i,.pc,.repo';
   if (hover && !reduce) {

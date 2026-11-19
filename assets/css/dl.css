@@ -225,7 +225,7 @@ a.dl-file:hover .dl-go{border-color:var(--accent);color:var(--accent);background
   .dl-cta .btn.done::after{animation:dl-bar var(--dl-done) linear forwards}
 
   /* B. 滚动视差（支持 scroll-timeline 的浏览器；其余保持静态） */
-  @supports(animation-timeline:scroll()){
+  @supports((animation-timeline:scroll()) and (animation-range:0% 100%)){
     .dl-st-l1{animation:dl-px-bg linear both;animation-timeline:scroll(root);animation-range:0 60vh}
     .dl-st-l2{animation:dl-px-isl linear both;animation-timeline:scroll(root);animation-range:0 60vh}
   }

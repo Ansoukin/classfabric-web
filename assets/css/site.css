@@ -2007,6 +2007,8 @@ p,li{text-wrap:pretty}
 .btn:active{transform:scale(.97)}
 .sub-i,.cd,.thx-t,.pc,.acc-i,.axc,.fcard{transition-timing-function:var(--ease-out)}
 .js .rv{transition-timing-function:var(--ease-out);transition-duration:.7s}
+/* 桌面端滚动时不再让卡片逐个淡入上移：滚动只推动少数“主角时刻”（首屏收缩、粘性面板、宣言逐字），其余内容始终在位；.in 仍照常添加，供区块内的演示动画触发 */
+@media(min-width:900px){.js .rv{opacity:1;transform:none;transition:none}}
 [id]{scroll-margin-top:112px}
 
 

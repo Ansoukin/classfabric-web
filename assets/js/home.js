@@ -128,8 +128,8 @@
 
   var nav = $('#nav'), hero = $('.hero');
   if (nav && hero) {
-    var onScroll = function () { nav.classList.toggle('past', hero.getBoundingClientRect().bottom < 60); };
-    window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    /* 首屏离开导航条下方后加 .past：用 IntersectionObserver，不再每次滚动都读 getBoundingClientRect（会强制同步布局） */
+    if (hasIO) new IntersectionObserver(function (es) { nav.classList.toggle('past', !es[es.length - 1].isIntersecting); }, { rootMargin: '-60px 0px 0px 0px' }).observe(hero);
   }
   var sl = $$('.slinks a');
   if (sl.length && hasIO) {

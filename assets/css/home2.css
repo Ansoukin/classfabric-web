@@ -188,12 +188,7 @@
 .sec:has(.axmap){contain-intrinsic-size:auto 680px}
 .sec:has(.faq){contain-intrinsic-size:auto 500px}}
 
-@supports (animation-timeline:view()){
-  .n5-wide .panel .wp{animation:n5wp linear both;animation-timeline:view();animation-range:cover}
-  @keyframes n5wp{from{transform:translateY(-4%) scale(1.06)}to{transform:translateY(4%) scale(1.06)}}
-}
 @media(prefers-reduced-motion:reduce){
-  .n5-wide .panel .wp{animation:none}
   .n5-lane .trk{animation:none}
   .n5-anno,.wxw{transition:none}
   .n5-pn{transition:none}
@@ -206,14 +201,14 @@
 .hz-pin{width:min(1180px,100% - 48px);margin-inline:auto;position:relative;text-align:center}
 .hz-txt{width:auto!important}
 .hz-bg,.hz-r2{display:none}
-@media(min-width:900px) and (prefers-reduced-motion:no-preference){
-@supports(animation-timeline:scroll()){
+@media(min-width:900px) and (min-height:620px) and (prefers-reduced-motion:no-preference){
+@supports((animation-timeline:scroll()) and (animation-range:0% 100%)){
   .hz{height:215vh;min-height:0;display:block;padding:0;overflow:clip;background:none!important}
   .hz-pin{position:sticky;top:0;width:auto;margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:56px}
-  .hz-bg{display:block;position:absolute;inset:0;z-index:0;overflow:hidden;
+  .hz-bg{display:block;position:absolute;inset:76px 2.6vw 36px;z-index:0;overflow:hidden;border-radius:var(--r-l);transform-origin:50% 100%;
     background:radial-gradient(54% 40% at 50% 56%,color-mix(in srgb,var(--scrim) 78%,transparent),color-mix(in srgb,var(--scrim) 40%,transparent) 55%,transparent 80%),
       linear-gradient(180deg,color-mix(in srgb,var(--scrim) 28%,transparent),transparent 34%,color-mix(in srgb,var(--scrim) 34%,transparent)),var(--wall-base) var(--wpl,url(../img/wall.webp)) 50% 30%/cover no-repeat;
-    clip-path:inset(0 round 0);animation:hzbg linear both;animation-timeline:scroll(root);animation-range:0 95vh}
+    animation:hzbg linear both;animation-timeline:scroll(root);animation-range:0 95vh}
   .hz-bg .vtask{position:absolute;z-index:2}
   .hz+.mani{padding-top:clamp(50px,7vw,100px)}
   .hz-isl{position:absolute;top:clamp(88px,11vh,116px);left:0;right:0;z-index:2;margin:0;transform-origin:50% 0;animation:hzisl linear both;animation-timeline:scroll(root);animation-range:0 95vh}
@@ -223,7 +218,8 @@
   .hz-r2{display:flex;position:absolute;z-index:2;top:calc(clamp(88px,11vh,116px) + clamp(64px,5.4vw,84px));left:0;right:0;justify-content:center;gap:var(--s-2);font-size:calc(var(--fs-isl) * 1.28);opacity:0;animation:hzr2 linear both;animation-timeline:scroll(root);animation-range:34vh 92vh}
   .hz-r2 .isl{padding:0 1em}
   .hz-txt{position:relative;z-index:2;margin-top:clamp(40px,6vh,80px);animation:hztx linear both;animation-timeline:scroll(root);animation-range:0 46vh}
-  @keyframes hzbg{to{clip-path:inset(76px 2.6vw 36px round var(--r-l))}}
+  /* 只动 transform（合成器线程）：卡片本身就是终态大小，起点放大并下移到刚好盖满视口，滚动时缩回；不再逐帧动画 clip-path（主线程整屏重绘） */
+  @keyframes hzbg{from{transform:translateY(36px) scale(1.22)}to{transform:none}}
   @keyframes hzisl{to{transform:scale(1.28)}}
   @keyframes hzr2{from{opacity:0;transform:translateY(var(--s-3))}to{opacity:1;transform:none}}
   @keyframes hztx{to{opacity:0;transform:translateY(-7vh) scale(.97);pointer-events:none}}
