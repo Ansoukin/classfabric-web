@@ -1,0 +1,90 @@
+/* 全站共用的基础部件：按钮、徽标、页脚、折叠面板（FAQ）。只使用 tokens.css 中的 token，见 AGENTS.md。
+   取代 site.css 里原先层层覆盖的旧规则（旧规则已删除）。 */
+
+/* ===== 按钮：Fluent 的“强调色按钮”与“标准按钮” ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);height:44px;padding:0 var(--s-4);border:1px solid transparent;border-radius:var(--r-m);font-size:var(--fs-2);font-weight:600;white-space:nowrap;cursor:pointer;
+  transition:transform var(--t-fast) var(--ease-out),background var(--t-base) var(--ease-out),border-color var(--t-base) var(--ease-out),color var(--t-base) var(--ease-out),opacity var(--t-base) var(--ease-out)}
+.btn svg{width:17px;height:17px;flex:none}
+.btn:active{transform:scale(.97)}
+.btn.sm{height:36px;padding:0 var(--s-3);font-size:var(--fs-1)}
+.btn.blue{background:var(--accent);color:var(--on-accent)}
+.btn.blue:hover{background:color-mix(in srgb,var(--accent),var(--fg) 14%)}
+.btn.glass{background:var(--card);border-color:var(--line);color:var(--fg)}
+.btn.glass:hover{background:color-mix(in srgb,var(--fg) 9%,transparent)}
+.sec.light .btn.glass{background:var(--bg2)}
+.hz .btn.glass{background:var(--on-wall-bg);border-color:var(--on-wall-line);color:var(--on-wall)}
+.hz .btn.glass:hover{background:color-mix(in srgb,var(--on-wall-bg) 80%,var(--on-wall))}
+@media(prefers-reduced-motion:no-preference){.btn svg{transition:transform var(--t-base) var(--ease-out)}.btn:hover svg{transform:translateY(1px)}}
+
+/* ===== 徽标 ===== */
+.bdg{display:inline-flex;align-items:center;gap:var(--s-1);height:28px;padding:0 var(--s-2);border:1px solid var(--bc,var(--line));border-radius:999px;background:var(--bb,transparent);color:var(--bt,var(--muted));font:600 var(--fs-1)/1 var(--ui);white-space:nowrap}
+.bdg svg{width:13px;height:13px;flex:none}
+.bdg .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.bdg b{font-weight:inherit}
+.bdg.sm{height:20px;padding:0 var(--s-2);gap:var(--s-1)}
+.bdg.blue{--bc:color-mix(in srgb,var(--accent) 40%,transparent);--bb:color-mix(in srgb,var(--accent) 10%,transparent);--bt:var(--accent)}
+.bdg[hidden],[hidden].bdg{display:none!important}
+
+/* ===== 折叠面板（Fluent Expander）：整组 FAQ 共用 ===== */
+.acc{display:grid;gap:var(--s-2)}
+.acc-i{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-m);background:var(--card);transition:border-color var(--t-base) var(--ease-out),background var(--t-base) var(--ease-out)}
+.acc-i:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.acc-i::before{content:"";position:absolute;left:0;top:var(--s-3);bottom:var(--s-3);width:3px;border-radius:999px;background:var(--accent);transform:scaleY(0);transition:transform var(--t-base) var(--ease-out)}
+.acc-i.open::before{transform:scaleY(1)}
+.acc-i h3{margin:0;font-size:inherit}
+.acc-i button{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);width:100%;padding:var(--s-3) var(--s-4);border:0;background:none;color:var(--fg);font:inherit;font-size:var(--fs-2);font-weight:600;text-align:left;cursor:pointer;transition:background var(--t-base) var(--ease-out)}
+.acc-i button:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
+.acc-i button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.acc-i button svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--muted);transition:transform var(--t-base) var(--ease-out),color var(--t-base) var(--ease-out)}
+.acc-i.open button svg{transform:rotate(180deg);color:var(--accent)}
+.acc-p{display:block;height:0;overflow:hidden}
+.acc-i.open .acc-p{height:auto}
+.acc-p>div{padding:0 var(--s-4) var(--s-3)}
+.acc-p p{margin:0;color:var(--muted);font-size:var(--fs-2);line-height:1.75}
+
+/* ===== 页脚 ===== */
+.foot{position:relative;overflow:hidden;padding:var(--s-6) 0 var(--s-5);border-top:1px solid var(--line);color:var(--muted);font-size:var(--fs-1)}
+:root[data-theme=light] .foot{background:var(--bg3)}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]) .foot{background:var(--bg3)}}
+.foot .cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--s-5);margin-bottom:var(--s-6)}
+.foot .fh{margin:0 0 var(--s-3);color:var(--fg);font-size:var(--fs-1);font-weight:650;line-height:inherit;letter-spacing:normal}
+.foot ul{display:grid;gap:var(--s-2);margin:0;padding:0;list-style:none}
+.foot a{transition:color var(--t-base) var(--ease-out)}
+.foot a:hover{color:var(--fg)}
+.foot .brand{margin-bottom:var(--s-3);color:var(--fg)}
+.foot .about{max-width:22em;margin:0;line-height:1.8}
+.foot .legal{padding-top:var(--s-4);border-top:1px solid var(--line);color:var(--faint);font-size:var(--fs-1);line-height:1.9}
+.foot .bld{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-2);color:var(--faint);font-size:var(--fs-1);font-variant-numeric:tabular-nums}
+.foot .bld .dot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.foot .bld i{width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.5}
+.foot .bld code{padding:2px var(--s-2);border-radius:var(--r-s);background:var(--card);color:var(--muted);font:inherit;font-family:var(--mono)}
+.foot-mark{margin:var(--s-6) 0 -.17em;text-align:center;white-space:nowrap;user-select:none;pointer-events:none;font-weight:var(--fw-display);font-size:min(15.7vw,calc(var(--fs-5) * 2.7));line-height:.8;letter-spacing:var(--tr-display-key);color:color-mix(in srgb,var(--fg) 7%,transparent)}
+@media(max-width:980px){.foot .cols{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.foot .cols{grid-template-columns:1fr}}
+@media(pointer:coarse){.foot li a{display:flex;align-items:center;min-height:44px}.foot ul{gap:0}}
+
+/* ===== 面板：承托软件窗口的壁纸舞台（Fluent：大容器 --r-l，投影只用 --sh-win） ===== */
+.panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--r-l);background:var(--bg2);box-shadow:var(--sh-win)}
+.panel.pad{padding:clamp(var(--s-3),2vw,var(--s-5))}
+.panel .wp{position:absolute;inset:0;background:var(--wall-base) var(--wpl,url(../img/wall.webp)) var(--wx,50%) var(--wy,50%)/var(--ws,180%) no-repeat}
+.panel .wp::after{content:"";position:absolute;inset:0;background:color-mix(in srgb,var(--scrim) 14%,transparent)}
+
+/* ===== 首页首屏（.hz）：壁纸 + 灵动岛 + 主标题。文字色只用 --on-wall 系；遮罩用 --scrim 混合 ===== */
+.hz{position:relative;min-height:min(94svh,880px);display:flex;align-items:center;padding:clamp(118px,13vw,160px) 0 clamp(70px,9vw,120px);overflow:hidden;color:var(--on-wall);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--scrim) 38%,transparent),color-mix(in srgb,var(--scrim) 76%,transparent) 55%,color-mix(in srgb,var(--scrim) 80%,transparent)),var(--wall-base) var(--wpl,url(../img/wall.webp)) 50% 28%/cover no-repeat}
+.hz .wrap{position:relative;text-align:center}
+.hz-isl{display:flex;justify-content:center;margin-bottom:clamp(var(--s-4),4vw,var(--s-6))}
+.hz-isl .isl-stack{font-size:var(--fs-isl)}
+.hz .eyebrow{display:inline-flex;align-items:center;gap:var(--s-2);margin:0 0 var(--s-3);font-size:var(--fs-2);font-weight:600;letter-spacing:.04em;color:var(--on-wall-soft)}
+.hz .eyebrow img{width:26px;height:auto}
+.hz h1{font-size:var(--fs-5);line-height:var(--lh-display);letter-spacing:-.03em;margin:0 0 var(--s-3);font-weight:var(--fw-display);color:var(--on-wall);text-shadow:0 2px 24px color-mix(in srgb,var(--scrim) 45%,transparent)}
+.hz h1 .g{color:var(--on-wall-soft)}
+.hz h1 .nw{white-space:nowrap}
+.hz .sub{font-size:var(--fs-3);font-weight:500;color:var(--on-wall-soft);margin:0 auto var(--s-5);max-width:30em}
+.hz .note{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s-1) 0;margin:var(--s-4) 0 0;font-size:var(--fs-1);color:var(--on-wall-soft)}
+.hz .note>span{white-space:nowrap}
+.hz .note>span+span::before{content:"·";margin:0 .7em;opacity:.7}
+.hz .note b{font-weight:700;color:var(--on-wall)}
+.hz .note b.sk{display:inline-block;width:4.4em;height:1em;vertical-align:-2px;border-radius:var(--r-s)}
+@media(max-width:560px){.hz .note{column-gap:1.2em}.hz .note>span+span::before{display:none}}
+@media(max-width:720px){.hz-isl .isl .wx,.hz-isl .isl .idt{display:none}.hz-isl .isl .sep~.s:nth-last-child(-n+5){display:none}.hz-isl .isl-stack{font-size:var(--fs-1)}.hz{min-height:0;display:block;padding:calc(var(--s-8) + var(--s-2)) 0 calc(var(--s-6) + var(--s-2))}.hz h1{font-size:min(13vw,calc(var(--fs-5) * 1.6))}}

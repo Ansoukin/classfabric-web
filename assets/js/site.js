@@ -331,21 +331,11 @@
 
 (function () {
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var canHover = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
-  var linearOk = window.CSS && CSS.supports && CSS.supports('animation-timing-function', 'linear(0, 1)');
-  function springCurve(zeta, w) {
-    var wd = w * Math.sqrt(1 - zeta * zeta), pts = [], n = 40, T = 1.1;
-    for (var i = 0; i <= n; i++) {
-      var tt = i / n * T, v = 1 - Math.exp(-zeta * w * tt) * (Math.cos(wd * tt) + zeta * w / wd * Math.sin(wd * tt));
-      pts.push(v.toFixed(4));
-    }
-    pts[n] = '1';
-    return 'linear(' + pts.join(',') + ')';
-  }
-  var OPEN = linearOk ? springCurve(0.46, 13) : 'cubic-bezier(.34,1.56,.64,1)';
-  var CLOSE = 'cubic-bezier(.3,.9,.3,1)';
+  /* 时长与缓动取自 tokens.css（--t-base / --ease-out），不再用弹簧过冲 */
+  var rs = getComputedStyle(document.documentElement);
+  var T = Math.round(parseFloat(rs.getPropertyValue('--t-base')) * 1000) || 220, EASE = rs.getPropertyValue('--ease-out').trim() || 'ease-out';
   Array.prototype.forEach.call(document.querySelectorAll('[data-acc]'), function (acc) {
-    var items = Array.prototype.slice.call(acc.querySelectorAll('.acc-i')), lock = 0;
+    var items = Array.prototype.slice.call(acc.querySelectorAll('.acc-i'));
     function panel(it) { return it.querySelector('.acc-p'); }
     function set(it, open, animate) {
       if (it.classList.contains('open') === open && !animate) return;
@@ -357,19 +347,15 @@
       if (reduce || !p.animate) return;
       if (p._a) p._a.cancel();
       p.style.height = to + 'px';
-      p._a = p.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: open ? 900 : 320, easing: open ? OPEN : CLOSE });
+      p._a = p.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: T, easing: EASE });
       p._a.onfinish = function () { p.style.height = open ? 'auto' : '0px'; p._a = null; };
-      var inner = p.firstElementChild;
-      if (inner && inner.animate) inner.animate(open ? [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1 }, { opacity: 0 }], { duration: open ? 420 : 160, easing: 'ease-out', fill: 'backwards' });
+            if (inner && inner.animate) inner.animate(open ? [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1 }, { opacity: 0 }], { duration: open ? 420 : 160, easing: 'ease-out', fill: 'backwards' });
     }
-    function openOnly(it) { items.forEach(function (x) { if (x !== it) set(x, false); }); set(it, true); lock = performance.now() + 380; }
+    function openOnly(it) { items.forEach(function (x) { if (x !== it) set(x, false); }); set(it, true); }
     items.forEach(function (it) {
       var btn = it.querySelector('button');
       btn.addEventListener('click', function () {
-        if (it.classList.contains('open')) { set(it, false); lock = performance.now() + 380; } else openOnly(it);
-      });
-      if (canHover) it.addEventListener('pointermove', function () {
-        if (!it.classList.contains('open') && performance.now() > lock) openOnly(it);
+        if (it.classList.contains('open')) set(it, false); else openOnly(it);
       });
     });
     items[0].classList.add('open'); items[0].querySelector('button').setAttribute('aria-expanded', true); panel(items[0]).style.height = 'auto';

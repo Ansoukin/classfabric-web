@@ -57,16 +57,6 @@
 
   var root = document.documentElement;
 
-  var SEL = '.axc,.fcard,.cd,.sub-i,.stp4 li,.fit2>div,.thx-t,.tu,.acc-i,.pc,.repo';
-  if (hover && !reduce) {
-    document.addEventListener('pointermove', function (e) {
-      var t = e.target.closest && e.target.closest(SEL); if (!t) return;
-      if (!t.__rfx) { var f = document.createElement('span'); f.className = 'rfx'; f.setAttribute('aria-hidden', 'true'); t.appendChild(f); t.classList.add('rvl'); t.__rfx = f; }
-      var r = t.getBoundingClientRect();
-      t.style.setProperty('--mx', (e.clientX - r.left) + 'px'); t.style.setProperty('--my', (e.clientY - r.top) + 'px');
-    }, { passive: true });
-  }
-
   $$('img.sk-i').forEach(function (img) {
     var host = img.parentElement;
     function ok() { img.classList.add('ok'); if (host) host.classList.add('ok'); }

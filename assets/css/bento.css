@@ -9,7 +9,7 @@
 .n5-t>p{margin:0;color:var(--muted);font-size:var(--fs-2);line-height:1.75}
 .n5-tv{margin-top:auto;padding-top:var(--s-3)}
 .n5-cap{margin-top:var(--s-1);font-size:var(--fs-1);color:var(--faint)}
-.n5-t .chip{border-radius:var(--r-s);font-size:var(--fs-1)}
+
 .n5-ln{display:inline-flex;align-items:center;gap:var(--s-1);margin-top:var(--s-3);font-size:var(--fs-1);font-weight:600;color:var(--accent)}
 .n5-ln svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--t-base) var(--ease-out)}
 .n5-ln:hover svg{transform:translate(2px,-2px)}

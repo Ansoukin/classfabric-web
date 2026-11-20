@@ -71,7 +71,7 @@ def _fin(h, m, path='/'):
         from mobile import JS_REDIR_M
         h = h.replace('width=device-width,initial-scale=1', 'width=device-width,initial-scale=1,viewport-fit=cover', 1)
         h = h.replace('<meta name="viewport"', JS_REDIR_M + '<meta name="viewport"', 1)
-        h = h.replace('<link rel="stylesheet" href="/assets/css/site.css">\n', '<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/m.css">\n', 1)
+        h = h.replace('<link rel="stylesheet" href="/assets/css/base.css">\n', '<link rel="stylesheet" href="/assets/css/base.css">\n<link rel="stylesheet" href="/assets/css/m.css">\n', 1)   # m.css 必须在 base.css 之后，才能覆盖共用部件
     elif path == '/':
         h = h.replace('<meta name="viewport"', JS_REDIR_D + '<meta name="viewport"', 1)
     return h
@@ -117,7 +117,7 @@ def head(title, desc, path, extra='', alt=None, m=False):
             '<meta property="og:type" content="website">\n<meta property="og:locale" content="zh_CN">\n<meta property="og:site_name" content="ClassFabric">\n<meta property="og:title" content="%s">\n<meta property="og:description" content="%s">\n'
             '<meta property="og:url" content="%s">\n<meta property="og:image" content="%s/assets/img/og.jpg">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="ClassFabric 班级大屏课表">\n'
             '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="%s">\n<meta name="twitter:description" content="%s">\n<meta name="twitter:image" content="%s/assets/img/og.jpg">\n'
-            '<meta name="color-scheme" content="dark light">\n<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("cf_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n<link rel="stylesheet" href="/assets/css/nav.css">\n%s%s</head>\n') % (
+            '<meta name="color-scheme" content="dark light">\n<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("cf_theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}</script>\n<link rel="stylesheet" href="/assets/css/site.css">\n<link rel="stylesheet" href="/assets/css/tokens.css">\n<link rel="stylesheet" href="/assets/css/materials.css">\n<link rel="stylesheet" href="/assets/css/nav.css">\n<link rel="stylesheet" href="/assets/css/base.css">\n%s%s</head>\n') % (
         title, desc, url, url, url, alt_tag, title, desc, url, SITE, title, desc, SITE, (jsonld(path, title, desc) if path != '/404.html' else ''), extra)
     wpf = 'window.cfWpPre=2;' if path == '/download.html' else (('window.cfWpS=1;window.cfWpPre=1;' if m else 'window.cfWpPre=1;') if path == '/' else None)
     if wpf is not None:
@@ -148,7 +148,7 @@ RELEASE_DATE = '2026-11-16'
 
 def build_id():
     h = hashlib.sha1()
-    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css', 'assets/css/dl.css', 'assets/css/about.css', 'assets/js/about.js', 'assets/js/wp.js', 'assets/css/nf.css', 'assets/js/nf.js'):
+    for f in ('assets/css/site.css', 'assets/css/tokens.css', 'assets/css/materials.css', 'assets/css/nav.css', 'assets/css/base.css', 'assets/css/m.css', 'assets/js/site.js', 'assets/js/apps.js', 'assets/js/widgets.js', 'assets/js/dl.js', 'assets/js/fx.js', 'assets/js/m.js', 'assets/js/home.js', 'assets/css/home2.css', 'assets/css/bento.css', 'assets/css/display.css', 'assets/js/bento.js', 'assets/css/tokens.css', 'assets/css/modal.css', 'assets/css/dl.css', 'assets/css/about.css', 'assets/js/about.js', 'assets/js/wp.js', 'assets/css/nf.css', 'assets/js/nf.js'):
         h.update(open(os.path.join(OUT, f), 'rb').read())
     return RELEASE_DATE.replace('-', ''), h.hexdigest()[:7], RELEASE_DATE
 
@@ -335,17 +335,29 @@ def home(mob=False):
               + '<div class="n4-wide crop rv">' + rec_vis + '</div></section>\n')
 
     st = [('01', 'dl', '下载', '前往下载页，获取适用于 Windows 的最新版本。', '安装程序 · 免安装压缩包'), ('02', 'play', '运行', '按文件类型安装或解压后启动，主界面会出现在屏幕上方。', '右键托盘图标，打开设置'), ('03', 'check', '接着用', '如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。', '')]
-    h += ('<section class="sec" id="start"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="stp4">' +
-          ''.join('<li class="rv d%d"><div class="top"><span class="no">%s</span></div><h4>%s</h4><p>%s</p>%s</li>' % (k, n, b, c, ('<span class="ch">%s</span>' % d) if d else '') for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
+    if mob:
+        h += ('<section class="sec" id="start"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="stp4">' +
+              ''.join('<li class="rv d%d"><div class="top"><span class="no">%s</span></div><h4>%s</h4><p>%s</p>%s</li>' % (k, n, b, c, ('<span class="ch">%s</span>' % d) if d else '') for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
+    else:
+        h += ('<section class="sec" id="start"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="n5-st">' +
+              ''.join('<li><span class="n5-sn">第 %d 步</span><h4>%s</h4><p>%s</p>%s</li>' % (k + 1, b, c, ('<span class="n5-sc">%s</span>' % d) if d else '') for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
 
-    amap = ('<div class="axmap rv"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div><div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div><div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
-            '<div class="axkeep rv"><span>你的配置</span><b>课表</b><b>自动化</b><b>插件</b><b>主题</b></div>')
-    h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2>' + amap + '<div class="rel">'
-          '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
-          '<p>名字里的 Fabric，取自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来；正如 ClassIsland 的 Island，来自 iOS 的灵动岛。</p>'
-          '<a class="btn glass" href="/about.html">了解更多</a></div>'
-          '<div class="fit2 rv d1"><div><h4>适合你，如果……</h4><p>你想在 ClassIsland 生态上保持现有内容，又希望及时体验上游的新功能；或者想要开箱即用，装完就能用上上游、社区与我们开发的各类新功能。</p></div>'
-          '<div class="no"><h4>可能不适合，如果……</h4><p>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</p></div></div></div></div></section>\n')
+    if mob:
+        amap = ('<div class="axmap rv"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div><div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div><div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
+                '<div class="axkeep rv"><span>你的配置</span><b>课表</b><b>自动化</b><b>插件</b><b>主题</b></div>')
+        h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2>' + amap + '<div class="rel">'
+              '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
+              '<p>名字里的 Fabric，取自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来；正如 ClassIsland 的 Island，来自 iOS 的灵动岛。</p>'
+              '<a class="btn glass" href="/about.html">了解更多</a></div>'
+              '<div class="fit2 rv d1"><div><h4>适合你，如果……</h4><p>你想在 ClassIsland 生态上保持现有内容，又希望及时体验上游的新功能；或者想要开箱即用，装完就能用上上游、社区与我们开发的各类新功能。</p></div>'
+              '<div class="no"><h4>可能不适合，如果……</h4><p>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</p></div></div></div></div></section>\n')
+    else:
+        h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2><div class="n5-rel">'
+              '<div class="n5-rl"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
+              '<p>名字里的 Fabric，取自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来；正如 ClassIsland 的 Island，来自 iOS 的灵动岛。</p>'
+              '<a class="n5-ln" href="/about.html">了解更多' + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' + '</a></div>'
+              '<dl class="n5-fit"><div><dt>适合你，如果……</dt><dd>你想在 ClassIsland 生态上保持现有内容，又希望及时体验上游的新功能；或者想要开箱即用，装完就能用上上游、社区与我们开发的各类新功能。</dd></div>'
+              '<div><dt>可能不适合，如果……</dt><dd>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</dd></div></dl></div></div></section>\n')
 
     h += '<section class="sec" id="faqs"><div class="wrap"><h2 class="claim rv">常见问题</h2><div class="faq faqhome rv">' + faq_html() + '</div></div></section>\n'
     if mob:

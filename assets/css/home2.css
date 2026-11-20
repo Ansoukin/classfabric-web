@@ -30,10 +30,14 @@
 .n5-tx h3{margin:var(--s-1) 0 var(--s-3);font-size:var(--fs-4);line-height:1.14;letter-spacing:-.035em;font-weight:780;text-wrap:balance}
 .n5-tx>p{margin:0;color:var(--muted);font-size:var(--fs-2);line-height:1.85}
 .n5-tx .subs{margin-top:var(--s-4);gap:var(--s-2)}
-.n5-tx .sub-i{padding:var(--s-2) 0 var(--s-2) var(--s-3);grid-template-columns:30px 1fr;gap:var(--s-3)}
-.n5-tx .sub-i p{font-size:var(--fs-1);line-height:1.65}
-.n5-tx .sub-i svg{width:22px;height:22px}
-.n5-tx button.sub-i{text-align:left;cursor:pointer;color:inherit;font:inherit;width:100%}
+.n5-tx .sub-i svg{width:22px;height:22px;color:var(--accent)}
+:root .n5-tx .sub-i{display:grid;grid-template-columns:30px 1fr;gap:var(--s-3);width:100%;padding:var(--s-2) var(--s-3);border:0;border-left:2px solid var(--line);border-radius:0 var(--r-s) var(--r-s) 0;background:none;box-shadow:none;text-align:left;cursor:pointer;color:inherit;font:inherit;transition:border-color var(--t-base) var(--ease-out),background-color var(--t-base) var(--ease-out)}
+:root .n5-tx .sub-i:hover{border-left-color:var(--accent)}
+:root .n5-tx .sub-i.on{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+:root .n5-tx .sub-i h4{margin:0 0 var(--s-1);font-size:var(--fs-2);color:var(--fg)}
+:root .n5-tx .sub-i p{margin:0;font-size:var(--fs-1);line-height:1.65;color:var(--muted)}
+:root .n5-t .chip,:root .cd .chips-row .chip{padding:var(--s-2) var(--s-3);border:1px solid var(--stroke);border-radius:var(--r-s);background:var(--card);color:var(--fg);font-size:var(--fs-1)}
+:root .n5-t .chip.on,:root .cd .chips-row .chip.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card));color:var(--fg)}
 .n5-flow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3);margin-top:var(--s-4);font-size:var(--fs-3);font-weight:750;letter-spacing:-.02em}
 .n5-flow>span{display:inline-flex;align-items:center;gap:var(--s-2)}
 .n5-flow b{color:var(--accent)}
@@ -176,16 +180,16 @@
 .n5-wide,.n5-ths{content-visibility:auto;contain-intrinsic-size:auto 620px}
 .n5-mix{contain-intrinsic-size:auto 800px}
 .n5-ths{contain-intrinsic-size:auto 470px}
-.sec:has(.faq),.sec:has(.stp4),.sec:has(.axmap){content-visibility:auto}
-.sec:has(.stp4){contain-intrinsic-size:auto 440px}
-.sec:has(.axmap){contain-intrinsic-size:auto 730px}
+.sec:has(.faq),.sec:has(.n5-st),.sec:has(.n5-rel){content-visibility:auto}
+.sec:has(.n5-st){contain-intrinsic-size:auto 380px}
+.sec:has(.n5-rel){contain-intrinsic-size:auto 520px}
 .sec:has(.faq){contain-intrinsic-size:auto 510px}
 @media(max-width:1100px){
 .n5-wide{contain-intrinsic-size:auto 520px}
 .n5-mix{contain-intrinsic-size:auto 770px}
 .n5-ths{contain-intrinsic-size:auto 400px}
-.sec:has(.stp4){contain-intrinsic-size:auto 400px}
-.sec:has(.axmap){contain-intrinsic-size:auto 680px}
+.sec:has(.n5-st){contain-intrinsic-size:auto 380px}
+.sec:has(.n5-rel){contain-intrinsic-size:auto 520px}
 .sec:has(.faq){contain-intrinsic-size:auto 500px}}
 
 @media(prefers-reduced-motion:reduce){
@@ -263,9 +267,23 @@
 .cd .chips-row .chip{transition:background .35s,color .35s,border-color .35s}
 
 /* ===== 三步：去掉图标圆，序号放大成为这一块的视觉主角 ===== */
-.stp4 .top{margin-bottom:var(--s-4)}
-.stp4 .no{font-size:var(--fs-step);font-weight:var(--fw-display);letter-spacing:var(--tr-display);line-height:1;color:var(--accent);opacity:1;font-variant-numeric:tabular-nums}
-.stp4 h4{margin-bottom:var(--s-2)}
+/* 三步：细线分隔的三列，序号只是一行小字，不做大数字 */
+.n5-st{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-5);margin:0;padding:0;list-style:none}
+.n5-st li{display:flex;flex-direction:column;gap:var(--s-2);padding-top:var(--s-4);border-top:1px solid var(--line)}
+.n5-sn{color:var(--accent);font-size:var(--fs-1);font-weight:600}
+.n5-st h4{margin:0;font-size:var(--fs-3);font-weight:760;letter-spacing:-.015em;line-height:1.3}
+.n5-st p{margin:0;flex:1;color:var(--muted);font-size:var(--fs-2);line-height:1.75;text-wrap:pretty}
+.n5-sc{margin-top:var(--s-2);color:var(--faint);font-size:var(--fs-1)}
+/* 与上游的关系：左边讲清楚，右边用两条朴素的清单回答“适不适合”；不画关系图 */
+.n5-rel{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--s-7);align-items:start}
+.n5-rl p{margin:0 0 var(--s-3);font-size:var(--fs-3);line-height:1.75;text-wrap:pretty}
+.n5-rl p+p{color:var(--muted)}
+.n5-rl .n5-ln{margin-top:var(--s-2)}
+.n5-fit{display:grid;margin:0;border-top:1px solid var(--line)}
+.n5-fit>div{padding:var(--s-4) 0;border-bottom:1px solid var(--line)}
+.n5-fit dt{font-size:var(--fs-2);font-weight:700}
+.n5-fit dd{margin:var(--s-2) 0 0;color:var(--muted);font-size:var(--fs-2);line-height:1.75;text-wrap:pretty}
+@media(max-width:900px){.n5-st{grid-template-columns:1fr}.n5-rel{grid-template-columns:1fr;gap:var(--s-5)}}
 
 /* ===== 终章：整块铺满强调蓝，作为页面收束处最强的一处色彩对比 =====
    选择器加 .n5-fc 前缀：display.css 在本文件之后加载，需要更高优先级。 */
@@ -285,9 +303,14 @@
 
 /* ===== 版式节奏：不再所有章节标题都居中 =====
    常见问题：标题粘在左栏，问答在右栏；三步：标题左对齐，与下方序号同一条左边线。 */
-.sec:has(.stp4) .claim{text-align:left}
+.sec:has(.n5-st) .claim,.sec:has(.n5-rel) .claim{text-align:left}
 @media(min-width:901px){
   .sec:has(.faqhome) .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--s-7);align-items:start}
   .sec:has(.faqhome) .claim{position:sticky;top:calc(58px + var(--s-6));margin:0;text-align:left}
   .sec:has(.faqhome) .faqhome{max-width:none;margin:0}
 }
+/* 主题卡中的开关（Fluent ToggleSwitch）：只用 token */
+.n5-th .tg i{border-color:var(--muted)}
+.n5-th .tg i::after{background:var(--muted)}
+.n5-th .tg.on i{background:var(--accent);border-color:var(--accent)}
+.n5-th .tg.on i::after{background:var(--on-wall)}

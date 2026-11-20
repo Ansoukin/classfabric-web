@@ -17,7 +17,8 @@
 
 ## 2. 适用范围
 
-- 适用：站点自身的版式（章节、卡片、按钮、文字、动效），即 `home2.css`、`dl.css`、`about.css`、`nf.css`、`modal.css`、`tokens.css`。
+- 适用：站点自身的版式（章节、卡片、按钮、文字、动效），即 `home2.css`、`dl.css`、`about.css`、`nf.css`、`modal.css`、`tokens.css`、`base.css`（按钮/徽标/折叠面板/页脚/首页首屏 `.hz`，全站共用）。基础色（`--bg/--fg/--muted/--line/--g1..g3` 等）与动效 token（`--t-*`、`--ease-*`）已统一在 `tokens.css`，不再散落在 `site.css`。
+- 旧 `site.css` 现状：桌面页面渲染的非复刻元素已全部迁出（审计脚本零字面量）；仅剩手机页 `/m/` 专用的旧规则（stp4、axmap、fit2、rel、copy、thx、tu、pc、tv、blk 等）带字面量，属于遗留，改动手机页时顺手迁到 `m.css` 并换成 token，不要新增。标签页 `.n5-tx .sub-i`、`.chip` 的 token 版写在 `home2.css`（用 `:root` 前缀抬高优先级以盖过旧规则，旧规则删净后可去掉）。
 - 不适用：对真实软件界面的忠实复刻（`.vwin`、`.sapp`、`.isl`、`.vtask` 内部配色与圆角）。这些数值来自真实截图，不得"优化"。复刻色集中放在 `tokens.css` 的 `--rep-*`（岛、托盘菜单的深/浅两套），壁纸偏亮时由 `wp.js` 写入 `html[data-wpi=light]` 切换；`--rep-*` 仅限复刻组件使用，站点自身 UI 不得引用。
 
 ### 动效规范（下载页起适用）
