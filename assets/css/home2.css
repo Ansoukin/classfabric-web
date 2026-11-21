@@ -88,6 +88,7 @@
 
 /* ===== 让主界面更多样 ===== */
 .n5-mixin{padding:var(--s-5) var(--s-5) 0}
+@media(max-width:640px){.n5-mixin{padding:var(--s-3) var(--s-3) 0}}
 .n5-misl{display:grid;justify-items:center;align-content:start;gap:var(--s-2);min-height:calc(var(--fs-isl) * 6);font-size:var(--fs-isl);margin-bottom:var(--s-4)}
 .n5-misl:empty::before{content:"主界面为空，从下方组件库添加组件";display:block;margin-top:var(--s-3);padding:var(--s-2) var(--s-4);border:1px dashed var(--on-wall-line);border-radius:var(--r-s);color:var(--on-wall);background:var(--on-wall-bg);font-size:var(--fs-1)}
 .n5-row.isl{max-width:100%}

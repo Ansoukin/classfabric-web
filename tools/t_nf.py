@@ -31,7 +31,7 @@ with sync_playwright() as p:
         ev = pg.evaluate
         ck('%d/%s: no overflow, no pageerror' % (w, th), ev('document.documentElement.scrollWidth<=innerWidth') and not errs, errs[:1])
         ck('%d/%s: Bing wallpaper requested with the right size and shown' % (w, th), len(log) == 1 and size + '&mkt=zh-CN' in log[0] and ev('document.querySelector(".nf-bg").classList.contains("on") && getComputedStyle(document.querySelector(".nf-bg i")).backgroundImage.includes("api.bimg.cc/today")'), log)
-        ck('%d/%s: h1 404, kaomoji, poem (>=4 lines), signature, two buttons >=44px' % (w, th), ev('document.getElementById("nfk").textContent.length>2 && document.querySelector("h1").textContent.includes("404") && document.querySelector("h1").textContent.includes("页面不存在") && document.querySelectorAll("#nfpl .l").length>=4 && parseFloat(getComputedStyle(document.getElementById("nfpl")).fontSize)>=26 && document.querySelector(".nf-by").textContent.includes("5.5") && !document.getElementById("nfsw").hidden && [...document.querySelectorAll(".nf-b")].every(a=>a.getBoundingClientRect().height>=44)'))
+        ck('%d/%s: h1 404, kaomoji, poem (>=3 lines), signature, two buttons >=44px' % (w, th), ev('document.getElementById("nfk").textContent.length>2 && document.querySelector("h1").textContent.includes("404") && document.querySelector("h1").textContent.includes("页面不存在") && document.querySelectorAll("#nfpl .l").length>=3 && parseFloat(getComputedStyle(document.getElementById("nfpl")).fontSize)>=26 && document.querySelector(".nf-by").textContent.includes("5.5") && !document.getElementById("nfsw").hidden && [...document.querySelectorAll(".nf-b")].every(a=>a.getBoundingClientRect().height>=44)'))
         ck('%d/%s: wallpaper credit shown with title, author and a bing.com link' % (w, th), ev('(()=>{const c=document.getElementById("nfcr");return !c.hidden&&c.textContent.includes("Jeff Wallace")&&c.textContent.includes("Winter wonderland")&&/bing\\.com/.test(c.querySelector("a").href)})()'))
         ck('%d/%s: no small print (every text >=15px)' % (w, th), ev('[...document.querySelectorAll(".nf *")].filter(e=>[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())).every(e=>parseFloat(getComputedStyle(e).fontSize)>=15)'))
         c.close()
@@ -54,14 +54,14 @@ with sync_playwright() as p:
     # 全部诗：两种署名都出现，每首都不溢出 360px、至少 4 行
     c3 = b.new_context(viewport={'width': 360, 'height': 800}); pg3 = c3.new_page(); mock(pg3, fail=True)
     pg3.goto(B + '/404.html', wait_until='load'); pg3.wait_for_timeout(300)
-    seen3 = pg3.evaluate('() => { var out = {by: {}, bad: 0}; var btn = document.getElementById("nfsw"); for (var i = 0; i < 24; i++) { btn.click(); var by = document.querySelector(".nf-by").textContent; out.by[by] = (out.by[by] || 0) + 1; if (document.documentElement.scrollWidth > innerWidth || document.querySelectorAll("#nfpl .l").length < 4) out.bad++; } return out; }')
-    ck('all poems: both signatures appear, every poem fits 360px and has >=4 lines', '—— Sonnet 5.5' in seen3['by'] and '—— Haiku 5.5' in seen3['by'] and seen3['bad'] == 0, seen3)
+    seen3 = pg3.evaluate('() => { var out = {by: {}, bad: 0}; var btn = document.getElementById("nfsw"); for (var i = 0; i < 120; i++) { btn.click(); var by = document.querySelector(".nf-by").textContent; out.by[by] = (out.by[by] || 0) + 1; if (document.documentElement.scrollWidth > innerWidth || document.querySelectorAll("#nfpl .l").length < 3) out.bad++; } return out; }')
+    ck('all poems: all four signatures appear, every poem fits 360px and has >=3 lines (haiku)', all(('—— ' + m) in seen3['by'] for m in ('Sonnet 5.5', 'Haiku 5.5', 'Fable 5.2', 'Opus 5.5')) and seen3['bad'] == 0, seen3)
     c3.close()
     # 「换一首」：每次都换，颜文字跟着换
     pg.wait_for_timeout(300); seen = []
     for i in range(8):
         pg.click('#nfsw'); pg.wait_for_timeout(330); seen.append(pg.evaluate('document.getElementById("nfk").textContent+"|"+document.querySelector("#nfpl .l").textContent'))
-    ck('swap: every click changes the poem and kaomoji', all(a != b2 for a, b2 in zip(seen, seen[1:])) and pg.evaluate('document.querySelectorAll("#nfpl .l").length>=4'), seen)
+    ck('swap: every click changes the poem and kaomoji', all(a != b2 for a, b2 in zip(seen, seen[1:])) and pg.evaluate('document.querySelectorAll("#nfpl .l").length>=3'), seen)
     c.close()
     # 刷新：随机、不连续重复
     c = b.new_context(viewport={'width': 1280, 'height': 800}); pg = c.new_page(); mock(pg, fail=True); seen = []

@@ -31,6 +31,22 @@
   window.addEventListener('resize', fitVd);
   window.addEventListener('load', fitVd);
   fitVd();
+  /* 首页「让主界面更多样」里的设置窗口：容器比设计宽度窄时，整体按比例缩小（和其它复刻一致），而不是把窗口压窄后让内容竖向挤压；点击/拖动靠 getBoundingClientRect 折算，缩放下依然准确 */
+  function fitMix() {
+    var DW = 520;
+    $$('.n5-mwin,.n5-fitapp').forEach(function (b) {
+      var f = b.firstElementChild; if (!f) return;
+      f.style.width = ''; f.style.transform = ''; b.style.height = '';
+      var cs = getComputedStyle(b), pl = parseFloat(cs.paddingLeft) || 0, pr = parseFloat(cs.paddingRight) || 0, pv = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+      var w = b.clientWidth - pl - pr; if (!w || w >= DW) return;
+      var s = w / DW;
+      f.style.width = DW + 'px'; f.style.transformOrigin = '0 0'; f.style.transform = 'scale(' + s + ')';
+      b.style.height = (f.offsetHeight * s + (cs.boxSizing === 'border-box' ? pv : 0)) + 'px';
+    });
+  }
+  window.addEventListener('resize', fitMix);
+  window.addEventListener('load', fitMix);
+  fitMix();
   window.addEventListener('resize', fitAll);
   window.addEventListener('load', fitAll);
   fitAll();

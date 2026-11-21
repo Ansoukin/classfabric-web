@@ -128,7 +128,7 @@ def custom(bigmq, panel_wall):
     out += themes()
     out += split('#插件', '丰富的插件生态', '支持通过安装插件扩展应用功能，在应用内的插件市场即可浏览、搜索与安装。ClassIsland 的插件可直接使用，ClassFabric 还让插件详情页能预览更多内容。')
     out += plugins()
-    plg = panel_wall('<div style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="plugins" data-h="640"></div></div>', '20%', '20%', '230%', '')
+    plg = panel_wall('<div class="n5-fitapp" style="padding:3.5% 3%"><div class="app" data-app="settings" data-start="plugins" data-h="640"></div></div>', '20%', '20%', '230%', '')
     out += '<div class="n5-wide crop rv">' + plg + '</div>'
     return out + '</section>\n'
 
