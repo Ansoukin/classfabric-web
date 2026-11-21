@@ -210,9 +210,10 @@
   .hz{height:215vh;min-height:0;display:block;padding:0;overflow:clip;background:none!important}
   .hz-pin{position:sticky;top:0;width:auto;margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:56px}
   .hz-bg{display:block;position:absolute;inset:76px 2.6vw 36px;z-index:0;overflow:hidden;border-radius:var(--r-l);transform-origin:50% 100%;
-    background:radial-gradient(54% 40% at 50% 56%,color-mix(in srgb,var(--scrim) 78%,transparent),color-mix(in srgb,var(--scrim) 40%,transparent) 55%,transparent 80%),
-      linear-gradient(180deg,color-mix(in srgb,var(--scrim) 28%,transparent),transparent 34%,color-mix(in srgb,var(--scrim) 34%,transparent)),var(--wall-base) var(--wpl,url(../img/wall.webp)) 50% 30%/cover no-repeat;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--scrim) 28%,transparent),transparent 34%,color-mix(in srgb,var(--scrim) 34%,transparent)),var(--wall-base) var(--wpl,url(../img/wall.webp)) 50% 30%/cover no-repeat;
     animation:hzbg linear both;animation-timeline:scroll(root);animation-range:0 95vh}
+  /* 标题可读性遮罩跟标题一起淡出，避免文字消失后壁纸上留下灰斑（仅 opacity，合成器线程） */
+  .hz-bg::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 18%,color-mix(in srgb,var(--scrim) 58%,transparent) 44%,color-mix(in srgb,var(--scrim) 58%,transparent) 68%,transparent 92%);animation:hzsc linear both;animation-timeline:scroll(root);animation-range:0 46vh}
   .hz-bg .vtask{position:absolute;z-index:2}
   .hz+.mani{padding-top:clamp(50px,7vw,100px)}
   .hz-isl{position:absolute;top:clamp(88px,11vh,116px);left:0;right:0;z-index:2;margin:0;transform-origin:50% 0;animation:hzisl linear both;animation-timeline:scroll(root);animation-range:0 95vh}
@@ -224,6 +225,7 @@
   .hz-txt{position:relative;z-index:2;margin-top:clamp(40px,6vh,80px);animation:hztx linear both;animation-timeline:scroll(root);animation-range:0 46vh}
   /* 只动 transform（合成器线程）：卡片本身就是终态大小，起点放大并下移到刚好盖满视口，滚动时缩回；不再逐帧动画 clip-path（主线程整屏重绘） */
   @keyframes hzbg{from{transform:translateY(36px) scale(1.22)}to{transform:none}}
+  @keyframes hzsc{to{opacity:0}}
   @keyframes hzisl{to{transform:scale(1.28)}}
   @keyframes hzr2{from{opacity:0;transform:translateY(var(--s-3))}to{opacity:1;transform:none}}
   @keyframes hztx{to{opacity:0;transform:translateY(-7vh) scale(.97);pointer-events:none}}
