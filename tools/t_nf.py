@@ -18,6 +18,7 @@ def mock(pg, fail=False, log=None):
         if log is not None: log.append(r.request.url)
         r.abort() if fail else r.fulfill(status=200, content_type='image/webp', body=IMG)
     pg.route('https://api.bimg.cc/today**', api)
+    pg.route('https://api.bimg.cc/all**', lambda r: r.abort() if fail else r.fulfill(status=200, content_type='application/json', headers={'access-control-allow-origin': '*'}, body='{"code":200,"data":[{"title":"Winter wonderland","copyright":"Banff National Park, Alberta, Canada (© Jeff Wallace/Getty Images)","copyrightlink":"https://www.bing.com/search?q=Banff"}]}'))
 ck('seo: noindex, no canonical / hreflang / JSON-LD / og:url', 'noindex,follow' in src and not any(k in src for k in ('rel="canonical"', 'hreflang', 'ld+json', 'og:url')))
 ck('seo: one h1; fallback poem + signature in the HTML; swap button hidden until JS', src.count('<h1') == 1 and 'Sonnet 5.5' in src and 'nf-pl' in src and 'id="nfsw" type="button" hidden' in src)
 ck('seo: 404 is not in the sitemap, production host', '404.html' not in rd('sitemap.xml') and 'https://cf.ansoukin.top/' in rd('sitemap.xml') and 'cf.ansoukin.top/sitemap.xml' in rd('robots.txt'))
@@ -31,6 +32,7 @@ with sync_playwright() as p:
         ck('%d/%s: no overflow, no pageerror' % (w, th), ev('document.documentElement.scrollWidth<=innerWidth') and not errs, errs[:1])
         ck('%d/%s: Bing wallpaper requested with the right size and shown' % (w, th), len(log) == 1 and size + '&mkt=zh-CN' in log[0] and ev('document.querySelector(".nf-bg").classList.contains("on") && getComputedStyle(document.querySelector(".nf-bg i")).backgroundImage.includes("api.bimg.cc/today")'), log)
         ck('%d/%s: h1 404, kaomoji, poem (>=4 lines), signature, two buttons >=44px' % (w, th), ev('document.getElementById("nfk").textContent.length>2 && document.querySelector("h1").textContent.includes("404") && document.querySelector("h1").textContent.includes("页面不存在") && document.querySelectorAll("#nfpl .l").length>=4 && parseFloat(getComputedStyle(document.getElementById("nfpl")).fontSize)>=26 && document.querySelector(".nf-by").textContent.includes("5.5") && !document.getElementById("nfsw").hidden && [...document.querySelectorAll(".nf-b")].every(a=>a.getBoundingClientRect().height>=44)'))
+        ck('%d/%s: wallpaper credit shown with title, author and a bing.com link' % (w, th), ev('(()=>{const c=document.getElementById("nfcr");return !c.hidden&&c.textContent.includes("Jeff Wallace")&&c.textContent.includes("Winter wonderland")&&/bing\\.com/.test(c.querySelector("a").href)})()'))
         ck('%d/%s: no small print (every text >=15px)' % (w, th), ev('[...document.querySelectorAll(".nf *")].filter(e=>[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())).every(e=>parseFloat(getComputedStyle(e).fontSize)>=15)'))
         c.close()
     # 接口失败 → 站内壁纸
@@ -46,8 +48,10 @@ with sync_playwright() as p:
     t2 = pg2.evaluate('({on:document.querySelectorAll("#nfpl .c.on").length,all:document.querySelectorAll("#nfpl .c").length,bar:document.querySelector(".nf-act").getBoundingClientRect().top,k:document.querySelector(".nf-k").getBoundingClientRect().top,by:getComputedStyle(document.querySelector(".nf-by")).opacity,label:document.getElementById("nfpl").getAttribute("aria-label"),text:[...document.querySelectorAll("#nfpl .l")].map(e=>e.textContent).join("")})')
     ck('typewriter: all characters shown, signature visible, aria-label has the whole poem', t2['on'] == t2['all'] and t2['by'] == '1' and t2['label'] == t2['text'] and len(t2['label']) > 40, t2)
     ck('typewriter: layout does not move while typing', abs(t1['bar'] - t2['bar']) < 1 and abs(t1['k'] - t2['k']) < 1, (t1, t2))
+    pg2.click('#nfsw'); sw_by = pg2.evaluate('(()=>{const e=document.querySelector(".nf-by");return [getComputedStyle(e).opacity,document.querySelector(".nf-in").classList.contains("done")]})()')
+    ck('swap poem: signature hidden immediately (never before the typewriter)', sw_by == ['0', False], sw_by)
     c2.close()
-    # 11 首全部：两种署名都出现，每首都不溢出 360px、至少 4 行
+    # 全部诗：两种署名都出现，每首都不溢出 360px、至少 4 行
     c3 = b.new_context(viewport={'width': 360, 'height': 800}); pg3 = c3.new_page(); mock(pg3, fail=True)
     pg3.goto(B + '/404.html', wait_until='load'); pg3.wait_for_timeout(300)
     seen3 = pg3.evaluate('() => { var out = {by: {}, bad: 0}; var btn = document.getElementById("nfsw"); for (var i = 0; i < 24; i++) { btn.click(); var by = document.querySelector(".nf-by").textContent; out.by[by] = (out.by[by] || 0) + 1; if (document.documentElement.scrollWidth > innerWidth || document.querySelectorAll("#nfpl .l").length < 4) out.bad++; } return out; }')

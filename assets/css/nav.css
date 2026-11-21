@@ -61,7 +61,11 @@ body:has(.hz,.nf) .nav:not(.solid):not(.open){--nav-fg:var(--on-wall-soft);--nav
 @view-transition{navigation:auto}
 .nav{view-transition-name:cf-nav}
 ::view-transition-group(cf-nav){animation:none}
-::view-transition-old(root),::view-transition-new(root){animation-duration:var(--t-slow);animation-timing-function:var(--ease-out)}
+/* 旧页立即撤下、新页只做淡入：新旧叠加才会出现“残影”；导航栏新旧快照也不做交叉淡化 */
+::view-transition-old(root),::view-transition-old(cf-nav){animation:none;opacity:0}
+::view-transition-new(cf-nav){animation:none}
+::view-transition-new(root){animation:cf-vtin var(--t-base) var(--ease-out) both}
+@keyframes cf-vtin{from{opacity:0}}
 @media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
 
 /* 跳到正文：键盘用户的第一个 Tab 停靠点，聚焦时才出现（WCAG 2.4.1 绕过块） */

@@ -23,6 +23,7 @@
 .nf-by{margin:var(--s-4) 0 0;font-size:var(--fs-3);color:var(--on-wall-soft)}
 .js .nf-by{opacity:0}
 .js .nf-in.done .nf-by{opacity:1}
+.js .nf-in.rst .nf-by{transition:none}
 .nf-act{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3);margin-top:var(--s-5)}
 .nf-b{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:44px;padding:0 var(--s-3);border:1px solid transparent;border-radius:var(--r-m);background:transparent;color:var(--on-wall);font:600 var(--fs-2)/1.2 var(--ui);text-decoration:none;cursor:pointer;transition:background var(--t-base) var(--ease-out)}
 .nf-b svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -51,3 +52,9 @@
   .nf-pl .c.cur::after{animation:nf-caret calc(var(--t-slow) * 2.4) steps(1) infinite}
   .js .nf-by{transition:opacity calc(var(--t-slow) * 2) var(--ease-out)}
 }
+
+/* 壁纸署名：Bing 每日壁纸的标题与作者（来自接口 copyright 字段），位于按钮下方；取不到就不显示 */
+.nf-cr{margin:var(--s-5) 0 0;max-width:46em;font-size:var(--fs-2);line-height:1.6;color:var(--on-wall-soft)}
+.nf-cr a{color:inherit;text-decoration:underline;text-underline-offset:.2em;text-decoration-color:color-mix(in srgb,var(--on-wall) 45%,transparent)}
+.nf-cr a:hover{color:var(--on-wall)}
+.nf-cr a:focus-visible{outline:2px solid var(--on-wall);outline-offset:2px}

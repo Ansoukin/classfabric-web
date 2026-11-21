@@ -26,7 +26,7 @@ with sync_playwright() as p:
         return ctx, pg, errs
     ev = lambda pg, s: pg.evaluate(s)
 
-    ctx, pg, errs = mk()
+    ctx, pg, errs = mk(w=700)
     ids = ev(pg, '[...document.querySelectorAll("#abNav a")].map(a=>a.getAttribute("href").slice(1))')
     ck('7 anchors, all targets exist', len(ids) == 7 and all(ev(pg, '!!document.getElementById("%s")' % i) for i in ids), ids)
     ck('no diagram / stage in header', ev(pg, '!document.querySelector(".ab-stage,.ab-rel,.ab-node,.ab-lane")'))
@@ -56,6 +56,11 @@ with sync_playwright() as p:
     ck('mobile: nav scrolls horizontally', ev(pg, 'document.querySelector("#abNav").scrollWidth>document.querySelector("#abNav").clientWidth'))
     ck('mobile: nav links >=44px tall', ev(pg, '[...document.querySelectorAll("#abNav a")].every(a=>a.getBoundingClientRect().height>=44)'))
     ck('mobile: sections single column', ev(pg, 'getComputedStyle(document.querySelector(".ab-sec")).gridTemplateColumns.split(" ").length===1'))
+    ctx.close()
+
+    ctx, pg, errs = mk(w=1440)
+    ck('desktop: only the site nav, in-page bar hidden', ev(pg, 'getComputedStyle(document.querySelector(".ab-bar")).display==="none"'))
+    ck('desktop: anchor lands below site nav', (pg.click('.ab-link'), pg.wait_for_timeout(1200), ev(pg, 'document.querySelector("#switch").getBoundingClientRect().top>=56'))[2])
     ctx.close()
 
     for w in (360, 390, 1024, 1440, 1920):

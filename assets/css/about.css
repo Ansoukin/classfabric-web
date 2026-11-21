@@ -4,7 +4,10 @@
    列表 = 分组列表（--card + 1px --stroke + 细分隔线），与下载页的文件列表同构；没有渐变、光晕、图标方块、卡片上浮。
    动效：只动 transform / opacity；时长只用 --t-*，进入用 --ease-out；全部包在 prefers-reduced-motion:no-preference 里。 */
 
-.ab-wrap{--ab-top:calc(58px + var(--s-6));overflow-x:clip}
+.ab-wrap{--ab-top:58px;overflow-x:clip}
+/* 桌面只保留站点导航栏；页内锚点栏（SelectorBar）仅手机使用 */
+.ab-bar{display:none}
+@media(max-width:720px){.ab-wrap{--ab-top:calc(58px + var(--s-6))}.ab-bar{display:block}}
 .ab-w{width:min(960px,100% - var(--s-4) * 2);margin-inline:auto}
 
 /* —— 题头 —— */

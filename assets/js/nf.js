@@ -16,7 +16,12 @@
     ['(^_^;)', ['地图折了一个角，', '想着下次还要来。', '后来那条路', '变成了一堵墙，', '墙上画着一扇门。', '我站在门前，没有推。'], 'Haiku 5.5'],
     ['(_ _)', ['你写来的信，', '地址写对了。', '收信的人', '已经搬去了别的城。', '邮局没有退回它，', '只在信封上盖了一个章：', '「查无此址」。'], 'Haiku 5.5'],
     ['(・ω・)', ['这一页写到一半，', '作者去喝了杯咖啡。', '咖啡凉了，页面没有写完。', '你来的时候，', '只看见一行标题，', '和一句：「待补充。」'], 'Haiku 5.5'],
-    ['(._.)', ['雪下了一夜，', '盖平了所有的路。', '只剩一串脚印，', '从门口走到门前，', '停住了。', '门没有锁，', '脚印也没有回去。'], 'Haiku 5.5']
+    ['(._.)', ['雪下了一夜，', '盖平了所有的路。', '只剩一串脚印，', '从门口走到门前，', '停住了。', '门没有锁，', '脚印也没有回去。'], 'Haiku 5.5'],
+    ['(・∀・)', ['一只气球松开了手，', '一路向上，没有回头。', '云问它：「路过，还是应聘？」', '它想了想，说：「应聘。」', '现在它在天上上班，', '每天负责把天空吹蓝一点。', '你要找的这一页，', '也许被挖去了同一家公司。'], 'Sonnet 5.5'],
+    ['(｡•ᴗ•｡)', ['沙发缝里组了个乐队：', '硬币打鼓，圆珠笔弹吉他，', '遥控器当主唱，', '只会一首歌，叫《下一首》。', '他们巡演了三个月，', '观众是一粒花生。', '你要找的那一页，', '大概是被拉去当了贝斯手。'], 'Sonnet 5.5'],
+    ['( ´▽` )', ['四和四中间夹着一个零。', '有人说那是个洞。', '零说：「不，我是被抱着的。」', '左边的四点点头，', '右边的四也点点头。', '它们谁也不知道该抱什么，', '就抱着这一个空，', '抱得很认真。'], 'Sonnet 5.5'],
+    ['(•ᴗ•)', ['导航仪说：「前方一百米，请掉头。」', '我没有掉头。', '它又说：「已为您重新规划路线。」', '我还是没有。', '它沉默了一会儿，说：', '「那我们就一起迷路吧。」', '这一页，', '就是那个拐角。'], 'Sonnet 5.5'],
+    ['(°▽°)', ['橡皮最爱干净。', '它擦掉错别字，擦掉算错的数，', '擦掉一只画坏的猫，', '擦着擦着，整页都成了白。', '它很得意，', '没发现自己只剩一粒渣。', '你来的这一页，', '是它最勤奋的作品。'], 'Sonnet 5.5']
   ];
   var box = $('.nf-in'), k = $('#nfk'), pl = $('#nfpl'), sw = $('#nfsw'), cur = parseInt(get('cf_nfp'), 10), timer = 0;
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -25,7 +30,11 @@
   function render(n) {
     clearTimeout(timer); cur = n; set('cf_nfp', String(n));
     var lines = POEMS[n][1], chars = [], ends = {};
-    k.textContent = POEMS[n][0]; pl.textContent = ''; box.classList.remove('done'); if ($('.nf-by')) $('.nf-by').textContent = '—— ' + POEMS[n][2];
+    k.textContent = POEMS[n][0]; pl.textContent = '';
+    /* 署名：先无过渡地隐去，再换字；等诗打完（.done）才淡入，换一首时不会抢在打字机之前出现 */
+    box.classList.add('rst'); box.classList.remove('done');
+    if ($('.nf-by')) $('.nf-by').textContent = '—— ' + POEMS[n][2];
+    void box.offsetWidth; box.classList.remove('rst');
     pl.setAttribute('aria-label', lines.join(''));
     lines.forEach(function (t) {
       var l = d.createElement('span'); l.className = 'l'; l.setAttribute('aria-hidden', 'true');
@@ -63,8 +72,30 @@
     if (innerWidth <= 820 && innerHeight > innerWidth * 1.1) return 'w=1080&h=1920';
     return w <= 1400 ? 'w=1366&h=768' : 'w=1920&h=1080';
   }
+  /* 署名：接口 /all?limit=1 返回当天条目的 title / copyright(含摄影师或机构) / copyrightlink；字段名不确定，所以递归找第一个带这些字段的对象。只用 textContent，链接只接受 bing.com 的 https 地址；任何失败都不显示 */
+  function pick(o, n) {
+    if (!o || typeof o !== 'object' || (n || 0) > 4) return null;
+    if (typeof o.copyright === 'string' || typeof o.title === 'string') return o;
+    var v = Array.isArray(o) ? o : Object.keys(o).map(function (k) { return o[k]; });
+    for (var i = 0; i < v.length; i++) { var r = pick(v[i], (n || 0) + 1); if (r) return r; }
+    return null;
+  }
+  function credit() {
+    var cr = $('#nfcr'); if (!cr || !window.fetch) return;
+    fetch('https://api.bimg.cc/all?limit=1&mkt=zh-CN&' + size(), { mode: 'cors' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      var o = pick(j); if (!o) return;
+      var c = String(o.copyright || '').trim(), ti = String(o.title || '').trim(), text = c;
+      if (ti && c.indexOf(ti) < 0) text = c ? ti + ' · ' + c : ti;
+      if (!text) return;
+      cr.textContent = 'Bing 每日壁纸 · ';
+      var link = String(o.copyrightlink || o.copyright_link || '');
+      if (/^https:\/\/([a-z0-9-]+\.)?bing\.com\//i.test(link)) { var a = d.createElement('a'); a.href = link; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = text; cr.appendChild(a); }
+      else cr.appendChild(d.createTextNode(text));
+      cr.hidden = false;
+    }).catch(function () {});
+  }
   var u = 'https://api.bimg.cc/today?' + size() + '&mkt=zh-CN', img = new Image(), t = setTimeout(local, 6000);
-  img.onload = function () { clearTimeout(t); show(u); };
+  img.onload = function () { clearTimeout(t); show(u); credit(); };
   img.onerror = function () { clearTimeout(t); local(); };
   img.src = u;
 })();

@@ -335,23 +335,11 @@ def home(mob=False):
               + '<div class="n4-wide crop rv">' + rec_vis + '</div></section>\n')
 
     st = [('01', 'dl', '下载', '前往下载页，获取适用于 Windows 的最新版本。', '安装程序 · 免安装压缩包'), ('02', 'play', '运行', '按文件类型安装或解压后启动，主界面会出现在屏幕上方。', '右键托盘图标，打开设置'), ('03', 'check', '接着用', '如果之前使用过 ClassIsland，原有的课表、自动化、插件与主题可直接沿用。', '')]
-    if mob:
-        h += ('<section class="sec" id="start"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="stp4">' +
-              ''.join('<li class="rv d%d"><div class="top"><span class="no">%s</span></div><h4>%s</h4><p>%s</p>%s</li>' % (k, n, b, c, ('<span class="ch">%s</span>' % d) if d else '') for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
-    else:
+    if True:
         h += ('<section class="sec" id="start"><div class="wrap"><h2 class="claim rv">三步，<span class="g">开始使用</span></h2><ol class="n5-st">' +
               ''.join('<li><span class="n5-sn">第 %d 步</span><h4>%s</h4><p>%s</p>%s</li>' % (k + 1, b, c, ('<span class="n5-sc">%s</span>' % d) if d else '') for k, (n, i, b, c, d) in enumerate(st)) + '</ol></div></section>\n')
 
-    if mob:
-        amap = ('<div class="axmap rv"><div class="axn up"><small>上游</small><b>ClassIsland</b><span>作者 HelloWRC</span></div><div class="axl"><div class="axa to"><span>同步新功能与修复</span><i></i></div><div class="axa back"><i></i><span>择期回馈有价值的改动</span></div></div><div class="axn me"><small>本站</small><b>ClassFabric</b><span>个人修改版</span></div></div>'
-                '<div class="axkeep rv"><span>你的配置</span><b>课表</b><b>自动化</b><b>插件</b><b>主题</b></div>')
-        h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2>' + amap + '<div class="rel">'
-              '<div class="copy rv"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
-              '<p>名字里的 Fabric，取自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来；正如 ClassIsland 的 Island，来自 iOS 的灵动岛。</p>'
-              '<a class="btn glass" href="/about.html">了解更多</a></div>'
-              '<div class="fit2 rv d1"><div><h4>适合你，如果……</h4><p>你想在 ClassIsland 生态上保持现有内容，又希望及时体验上游的新功能；或者想要开箱即用，装完就能用上上游、社区与我们开发的各类新功能。</p></div>'
-              '<div class="no"><h4>可能不适合，如果……</h4><p>你希望环境长期保持不变，或所在场合对稳定性有极高要求。ClassFabric 会积极同步上游的更改。</p></div></div></div></div></section>\n')
-    else:
+    if True:
         h += ('<section class="sec"><div class="wrap"><h2 class="claim rv">与 ClassIsland 的关系</h2><div class="n5-rel">'
               '<div class="n5-rl"><p>ClassFabric 是在 ClassIsland 基础上二次开发的个人修改版。我们在保持同步上游最新特性的同时，融入来自个人与社区的修改。</p>'
               '<p>名字里的 Fabric，取自 Minecraft 社区知名的模组加载器 Fabric，寓意将社区与个人的功能连接起来；正如 ClassIsland 的 Island，来自 iOS 的灵动岛。</p>'
@@ -383,7 +371,7 @@ def download():
     sec = lambda i, t, body: '<section class="dl-sec rv" id="%s"><div class="dl-sh"><div><h2>%s</h2></div></div>%s</section>' % (i, t, body)
     chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
     isl_states = HERO_STATES.replace('<div class="isl"', '<div class="isl on"', 1)
-    h += ('<main id="main" tabindex="-1" class="dl-wrap"><div class="dl-w"><header class="dl-top"><div class="dl-copy"><h1 class="rv">下载 ClassFabric</h1><p class="dl-lead"><span>紧跟上游的 ClassIsland 个人修改版，</span><span>目前提供 Windows 版本。</span></p>'
+    h += ('<main id="main" tabindex="-1" class="dl-wrap"><div class="dl-w"><header class="dl-top" id="dltop"><div class="dl-copy"><h1 class="rv">下载 ClassFabric</h1><p class="dl-lead"><span>紧跟上游的 ClassIsland 个人修改版，</span><span>目前提供 Windows 版本。</span></p>'
           '<div class="dl-cta"><a class="btn blue" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '<span>下载安装包</span><small data-dlsize></small></a>'
           '<a class="dl-link" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div>'
           '<p class="dl-line"><span id="chanTip">最新稳定版</span> <b data-ver class="dl-sk"></b>，<span data-date>—</span> 发布</p>'
@@ -446,7 +434,7 @@ def about():
         ('更好的自动化', '主要借助社区知名插件 SystemTools 实现。', '规划中', ''),
         ('更好的性能表现', '持续优化。', '规划中', '')], 4)
     go = ''.join('<li class="ab-in" style="--i:%d"><a class="ab-row" href="%s" rel="noopener">%s%s</a></li>' % (n, u, t, chev) for n, (u, t) in enumerate([(GH, 'GitHub 仓库'), (GH + '/issues', '反馈问题'), (GH + '/pulls', '提交 PR')]))
-    h += ('<main id="main" tabindex="-1" class="ab-wrap"><div class="ab-w"><header class="ab-top"><div class="ab-copy"><h1 class="rv">关于 ClassFabric</h1>'
+    h += ('<main id="main" tabindex="-1" class="ab-wrap"><div class="ab-w"><header class="ab-top" id="abtop"><div class="ab-copy"><h1 class="rv">关于 ClassFabric</h1>'
           '<p class="ab-lead"><span>ClassIsland 的个人修改版：</span><span>紧跟上游，</span><span>你的课表、</span><span>自动化、</span><span>插件与主题</span><span>直接沿用。</span></p>'
           '<a class="ab-link" href="#switch">了解如何切换' + chev + '</a>'
           '<p class="ab-line">基于 HelloWRC 的 ClassIsland 二次开发，沿用上游的 GPL-3.0 开源协议。</p></div></header></div>'
@@ -484,13 +472,17 @@ def notfound():
           '<blockquote class="nf-pl" id="nfpl">' + ''.join('<span class="l">%s</span>' % t for t in poem) + '</blockquote>'
           '<p class="nf-by">—— Sonnet 5.5</p>'
           '<div class="nf-act"><a class="nf-b pri" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>回到首页</a><button class="nf-b" id="nfsw" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 10-2.3 5.7M20 4v7h-7"/></svg>换一首</button></div>'
-          '</div></main>\n')
+          '<p class="nf-cr" id="nfcr" hidden></p></div></main>\n')
     return h + FOOT_LITE.replace('<script src="/assets/js/dl.js" defer></script>\n', '').replace('<script src="/assets/js/fx.js" defer></script>', '<script src="/assets/js/fx.js" defer></script>\n<script src="/assets/js/nf.js" defer></script>')  # 404 没有版本号/下载区，不加载 dl.js
 
+# 跨文档视图过渡：等首屏元素解析完再开始过渡，否则新页快照是半成品，淡入时会出现“残影”（modern-web-guidance: consistent-cross-document-transitions）
+EXPECT = {'index.html': 'top', 'download.html': 'dltop', 'about.html': 'abtop', '404.html': 'main'}
+def expect(name, html):
+    return html.replace('</head>', '<link rel="expect" href="#%s" blocking="render">\n</head>' % EXPECT[name], 1)
 for name, fn in (('index.html', home), ('download.html', download), ('about.html', about), ('404.html', notfound)):
-    open(os.path.join(OUT, name), 'w', encoding='utf-8').write(vers(levels(fn())))
+    open(os.path.join(OUT, name), 'w', encoding='utf-8').write(expect(name, vers(levels(fn()))))
 open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n' % SITE)
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n' % (SITE, p, datetime.date.today().isoformat()) for p in ('/', '/download.html', '/about.html')) + '</urlset>\n')
 os.makedirs(os.path.join(OUT, 'm'), exist_ok=True)
-open(os.path.join(OUT, 'm', 'index.html'), 'w', encoding='utf-8').write(vers(levels(home(True))))
+open(os.path.join(OUT, 'm', 'index.html'), 'w', encoding='utf-8').write(expect('index.html', vers(levels(home(True)))))
 print('ok')
