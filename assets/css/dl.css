@@ -146,7 +146,7 @@ a.dl-file:hover .dl-go{border-color:var(--accent);color:var(--accent);background
 @media(max-width:900px){
   .dl-top{grid-template-columns:minmax(0,1fr);gap:var(--s-5);padding:calc(var(--s-7) + var(--s-2)) 0 var(--s-6)}
   .dl-stage{aspect-ratio:4/3}
-  .dl-st-l2 .isl-stack{font-size:calc(100cqw / 50)}
+  .dl-st-l2 .isl-stack{font-size:calc(100cqw / 58)}
 }
 @media(max-width:720px){
   .dl-wrap{padding-bottom:var(--s-7)}
