@@ -57,3 +57,8 @@
 2. 对照 token 表与用户参考图逐项自检，再汇报。
 3. `python3 tools/lint_tokens.py` 必须通过。
 4. 版本号只在用户明确要求时修改。V1.0.6 的推送必须得到用户明确同意。
+
+## 设计工具（新会话先确认）
+- Taste Skill（Leonxlnx/taste-skill，skill 名 `design-taste-frontend`，v2.5.x）：设计"字典"，改版式/动效/文案前先读相关章节。检查：`ls ~/.agents/skills/design-taste-frontend/SKILL.md`；缺失时 `git clone --depth 1 --filter=blob:none --sparse https://github.com/Leonxlnx/taste-skill /tmp/ts && git -C /tmp/ts sparse-checkout set skills/taste-skill && mkdir -p ~/.agents/skills && cp -r /tmp/ts/skills/taste-skill ~/.agents/skills/design-taste-frontend && ln -s ~/.agents/skills/design-taste-frontend ~/.claude/skills/design-taste-frontend`（需 Node 22+ 与 Chromium）。
+- Modern Web Guidance：`npx -y modern-web-guidance@latest search "<需求>"` → `retrieve "<id>"`；最终回复末尾列 `### Modern Web Guidance`。
+- 两者都不能压过本文件第 3 节：任何设计都不得偏离 Fluent Design 与既定 token。
