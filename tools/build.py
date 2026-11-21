@@ -143,8 +143,8 @@ def navbar(cur, secs=None):
 
 import hashlib, datetime
 
-SITE_VER = '1.0.8'
-RELEASE_DATE = '2026-11-16'
+SITE_VER = '1.0.9'
+RELEASE_DATE = '2026-11-21'
 
 def build_id():
     h = hashlib.sha1()
@@ -372,7 +372,7 @@ def download():
     chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
     isl_states = HERO_STATES.replace('<div class="isl"', '<div class="isl on"', 1)
     h += ('<main id="main" tabindex="-1" class="dl-wrap"><div class="dl-w"><header class="dl-top" id="dltop"><div class="dl-copy"><h1 class="rv">下载 ClassFabric</h1><p class="dl-lead"><span>紧跟上游的 ClassIsland 个人修改版，</span><span>目前提供 Windows 版本。</span></p>'
-          '<div class="dl-cta"><a class="btn blue" href="' + REL + '" data-dl rel="noopener">' + ic('dl') + '<span>下载安装包</span><small data-dlsize></small></a>'
+          '<div class="dl-cta"><a class="btn blue" href="' + REL + '" data-dl rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="dl-ar"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5"/></g><path d="M5 20h14"/></svg><span>下载安装包</span><small data-dlsize></small></a>'
           '<a class="dl-link" href="' + GH + '/releases" data-releaselink rel="noopener">更新日志</a></div>'
           '<p class="dl-line"><span id="chanTip">最新稳定版</span> <b data-ver class="dl-sk"></b>，<span data-date>—</span> 发布</p>'
           '<p class="dl-line">适用于 Windows 10 及更高版本（<span data-archs>x64</span>），免费开源，GPL-3.0。</p>'
@@ -401,11 +401,11 @@ FAQ = [
 ]
 
 def faq_html():
+    # 原生 <details>（modern-web-guidance: accordion）：不套标题、不互斥，第一项默认展开
     chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
-    out = '<div class="acc" data-acc>'
+    out = '<div class="acc">'
     for i, (q, a) in enumerate(FAQ):
-        out += ('<div class="acc-i"><h3><button type="button" id="fqb%d" aria-expanded="false" aria-controls="fqp%d"><span>%s</span>%s</button></h3>'
-                '<div class="acc-p" id="fqp%d" role="region" aria-labelledby="fqb%d"><div><p>%s</p></div></div></div>') % (i, i, q, chev, i, i, a)
+        out += '<details class="acc-i"%s><summary><span>%s</span>%s</summary><div class="acc-p"><p>%s</p></div></details>' % (' open' if i == 0 else '', q, chev, a)
     return out + '</div>'
 
 
@@ -443,7 +443,7 @@ def about():
                 '<p>在保持积极同步上游最新特性的同时，融入来自个人与社区的修改，例如多语言、云功能、更好的自动化、更好的性能表现与更多功能。其中一部分已经完成，另一部分仍处于规划阶段，详见下文「进展」。</p>'
                 '<p>ClassIsland 的作者是 HelloWRC。ClassFabric 沿用上游的 GPL-3.0 开源协议，软件的「关于」页中也保留了上游的版权声明。</p>')
           + sec('switch', '从 ClassIsland 切换，需要做什么', '<p class="ab-q">不需要复杂的前期工作。</p><p>ClassFabric 的底层代码与上游保持一致，只需下载并安装，原有的课表、自动化、插件与主题即可接着使用。</p><ol class="ab-steps">' + steps + '</ol>'
-                '<div class="ab-info">' + ic('info') + '<p>我们正在把底层代码尽量还原到与上游一致，同时保持界面中显示的名称为 ClassFabric，目的就是让切换对你「无感」。</p></div>')
+                '<div class="ab-info">' + ic('info') + '<p>我们仍在继续让底层代码向上游靠拢，界面上则保留 ClassFabric 这个名字。这样你切换过来，看到的是熟悉的界面，原来的设置也照常能用，几乎感觉不到变化。</p></div>')
           + sec('fit', '适合谁，不适合谁', '<div class="ab-fit"><div class="yes"><h3>' + ic('check') + '适合</h3><ul><li>想在 ClassIsland 生态上保持现有内容，又希望及时体验上游新功能的人</li><li>希望开箱即用，装完就能体验上游、社区与我们开发的各类新功能的人</li></ul></div>'
                 '<div class="no"><h3>' + ic('info') + '不太适合</h3><ul><li>希望环境长期保持不变的人</li><li>对稳定性有极高要求的场合</li></ul><p>ClassFabric 会积极同步上游的更改，版本变化相对频繁。</p></div></div>')
           + sec('progress', '进展', '<h3 class="ab-gh">已经做了</h3><ul class="ab-list">' + done + '</ul><p>想了解具体改动，可以查看 <a href="' + GH + '/commits/main" rel="noopener">GitHub 提交记录</a>。</p>'

@@ -13,7 +13,7 @@
 | 字号 | 5 档：`--fs-1` 13 / `--fs-2` 15 / `--fs-3` 17–21 / `--fs-4` 26–44 / `--fs-5` 40–96。复刻界面内部用 `em`。 |
 | 间距 | 4/8 倍数：`--s-1`…`--s-8`（4、8、16、24、32、48、64、96）。 |
 | 文字色 | `--fg`、`--muted`、`--faint`；壁纸之上用 `--on-wall*`。 |
-| 动效 | 时长 `--t-base`/`--t-slow`，缓动 `--ease-out`；数字类实时读数的刷新间隔 `--tick`（2s，刻意放慢）。 |
+| 动效 | 时长 `--t-base`/`--t-slow`，缓动 `--ease-out`（FAQ 手风琴另有 `--ease-spring`）；数字类实时读数的刷新间隔 `--tick`（2s，刻意放慢）。 |
 
 ## 2. 适用范围
 
@@ -24,7 +24,7 @@
 ### 动效规范（下载页起适用）
 
 - 只动 `transform` / `opacity`（含独立的 `translate`/`scale` 属性）；不动画 `box-shadow`、`filter`、布局属性（折叠高度用 `grid-template-rows` 或 `::details-content` + `interpolate-size`）。
-- 时长只用 `--t-fast` / `--t-base` / `--t-slow`（入场可用其倍数 `calc(var(--t-slow) * 2)`）；进入用 `--ease-out`，退出用 `--ease-in`。不新增曲线。
+- 时长只用 `--t-fast` / `--t-base` / `--t-slow`（入场可用其倍数 `calc(var(--t-slow) * 2)`）；进入用 `--ease-out`，退出用 `--ease-in`。不新增曲线；唯一例外是 `--ease-spring`（`linear()` 弹簧曲线，仅用于关于页/首页 FAQ 的原生 `<details>` 手风琴展开，由用户明确要求；其余动效不得使用回弹）。FAQ 用原生 `<details>` + `::details-content`，不写 JS。
 - 每个动效回答一个问题：让用户知道发生了什么（入场编排、点击反馈、选中指示）。装饰性循环动效不做。
 - 全部放进 `@media(prefers-reduced-motion:no-preference)`；滚动联动放进 `@supports(animation-timeline:scroll())`；离屏/页面隐藏时暂停。
 - 禁止 3D 倾斜、光斑跟随、光晕、粒子。

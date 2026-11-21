@@ -95,13 +95,20 @@
     var cr = $('#nfcr'); if (!cr || !window.fetch) return;
     fetch('https://api.bimg.cc/all?limit=1&mkt=zh-CN&' + size(), { mode: 'cors' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       var o = pick(j); if (!o) return;
-      var c = String(o.copyright || '').trim(), ti = String(o.title || '').trim(), text = c;
-      if (ti && c.indexOf(ti) < 0) text = c ? ti + ' · ' + c : ti;
-      if (!text) return;
-      cr.textContent = 'Bing 每日壁纸 · ';
+      var c = String(o.copyright || '').trim(), ti = String(o.title || '').trim();
+      /* copyright 形如「地点 (© 摄影师/机构)」：拆成 地点 + 作者，作者一行内不换行 */
+      var m = c.match(/^(.*?)\s*[（(]\s*©\s*([^)）]*?)\s*[)）]\s*$/), place = m ? m[1] : c, by = m ? m[2] : '';
+      var head = ti || place; if (!head) return;
       var link = String(o.copyrightlink || o.copyright_link || '');
-      if (/^https:\/\/([a-z0-9-]+\.)?bing\.com\//i.test(link)) { var a = d.createElement('a'); a.href = link; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = text; cr.appendChild(a); }
-      else cr.appendChild(d.createTextNode(text));
+      var ok = /^https:\/\/([a-z0-9-]+\.)?bing\.com\//i.test(link);
+      cr.textContent = '';
+      function add(tag, cls, text, par) { var e = d.createElement(tag); if (cls) e.className = cls; e.textContent = text; (par || cr).appendChild(e); return e; }
+      var h = add(ok ? 'a' : 'span', 'h', head);
+      if (ok) { h.href = link; h.target = '_blank'; h.rel = 'noopener noreferrer'; }
+      var meta = add('span', 'm', '');
+      add('span', '', 'Bing 每日壁纸', meta);
+      if (ti && place && place !== ti) add('span', '', place, meta);
+      if (by) add('span', 'by', '© ' + by, meta);
       cr.hidden = false;
     }).catch(function () {});
   }

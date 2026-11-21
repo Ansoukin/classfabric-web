@@ -43,7 +43,7 @@ with sync_playwright() as p:
     pg.evaluate('document.getElementById("progress").scrollIntoView()'); pg.wait_for_timeout(1200)
     ck('progress bar reaches 40%', ev(pg, '(()=>{const e=document.querySelector(".ab-pb i");const m=getComputedStyle(e).transform;return m==="none"||Math.abs(parseFloat(m.split(",")[0].replace("matrix(",""))-1)<.02})()'))
     ck('progress list has rows', ev(pg, 'document.querySelectorAll("#progress .ab-list>li").length===9'))
-    ck('faq kept (6 items)', ev(pg, 'document.querySelectorAll("#faq .acc-i").length===6'))
+    ck('faq kept (6 items)', ev(pg, 'document.querySelectorAll("#faq details.acc-i").length===6'))
     ck('no pageerror', not errs, errs)
     ctx.close()
 

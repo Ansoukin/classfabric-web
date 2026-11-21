@@ -196,7 +196,8 @@ a.dl-file:hover .dl-go{border-color:var(--accent);color:var(--accent);background
   @keyframes dl-mh{0%,60%{opacity:0}62.5%,69%{opacity:1}72%,100%{opacity:0}}
   @keyframes dl-draw{to{stroke-dashoffset:0}}
   @keyframes dl-bar{to{transform:none}}
-  @keyframes dl-dip{40%{transform:translateY(3px)}}
+  /* 下载图标：箭头落入托盘、淡出，再从上方回到原位（托盘不动）；只动 transform / opacity */
+  @keyframes dl-arrow{0%{transform:none;opacity:1}38%{transform:translateY(var(--s-2));opacity:0}39%{transform:translateY(calc(var(--s-2) * -1));opacity:0}100%{transform:none;opacity:1}}
   @keyframes dl-px-bg{to{translate:0 -3%}}
   @keyframes dl-px-isl{to{scale:1.12}}
 
@@ -220,7 +221,7 @@ a.dl-file:hover .dl-go{border-color:var(--accent);color:var(--accent);background
   .js .rv:not(.in) .dl-in{animation-play-state:paused}
 
   /* C. 点击下载：图标变 ✓（描边绘制）+ 底部进度线扫过 */
-  .dl-cta .btn:hover svg{animation:dl-dip calc(var(--t-slow) * 1.5) var(--ease-out)}
+  .dl-cta .btn:is(:hover,:focus-visible) .dl-ar{animation:dl-arrow calc(var(--t-slow) * 2) var(--ease-out)}
   .dl-cta .btn.done svg path{stroke-dasharray:24;stroke-dashoffset:24;animation:dl-draw var(--t-base) var(--ease-out) forwards}
   .dl-cta .btn.done::after{animation:dl-bar var(--dl-done) linear forwards}
 

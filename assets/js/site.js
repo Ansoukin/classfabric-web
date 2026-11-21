@@ -344,40 +344,6 @@
     if (img.complete && img.naturalWidth === 0) fallback();
   });
 })();
-
-(function () {
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* 时长与缓动取自 tokens.css（--t-base / --ease-out），不再用弹簧过冲 */
-  var rs = getComputedStyle(document.documentElement);
-  var T = Math.round(parseFloat(rs.getPropertyValue('--t-base')) * 1000) || 220, EASE = rs.getPropertyValue('--ease-out').trim() || 'ease-out';
-  Array.prototype.forEach.call(document.querySelectorAll('[data-acc]'), function (acc) {
-    var items = Array.prototype.slice.call(acc.querySelectorAll('.acc-i'));
-    function panel(it) { return it.querySelector('.acc-p'); }
-    function set(it, open, animate) {
-      if (it.classList.contains('open') === open && !animate) return;
-      var p = panel(it), from = p.getBoundingClientRect().height;
-      it.classList.toggle('open', open);
-      it.querySelector('button').setAttribute('aria-expanded', open);
-      p.style.height = open ? 'auto' : '0px';
-      var to = open ? p.scrollHeight : 0;
-      if (reduce || !p.animate) return;
-      if (p._a) p._a.cancel();
-      p.style.height = to + 'px';
-      p._a = p.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: T, easing: EASE });
-      p._a.onfinish = function () { p.style.height = open ? 'auto' : '0px'; p._a = null; };
-            if (inner && inner.animate) inner.animate(open ? [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1 }, { opacity: 0 }], { duration: open ? 420 : 160, easing: 'ease-out', fill: 'backwards' });
-    }
-    function openOnly(it) { items.forEach(function (x) { if (x !== it) set(x, false); }); set(it, true); }
-    items.forEach(function (it) {
-      var btn = it.querySelector('button');
-      btn.addEventListener('click', function () {
-        if (it.classList.contains('open')) set(it, false); else openOnly(it);
-      });
-    });
-    items[0].classList.add('open'); items[0].querySelector('button').setAttribute('aria-expanded', true); panel(items[0]).style.height = 'auto';
-  });
-})();
-
 /* Win11 SelectorBar / Pivot 的滑动指示条：选中项（aria-selected 或 aria-current）下方的强调色短横随选中滑动。
    el 为容器，cls 为指示条类名；role=tablist 时启用方向键与 roving tabindex。返回重新定位函数。 */
 window.cfBar = function (el, cls) {

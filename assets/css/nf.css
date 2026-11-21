@@ -53,8 +53,13 @@
   .js .nf-by{transition:opacity calc(var(--t-slow) * 2) var(--ease-out)}
 }
 
-/* 壁纸署名：Bing 每日壁纸的标题与作者（来自接口 copyright 字段），位于按钮下方；取不到就不显示 */
-.nf-cr{margin:var(--s-5) 0 0;max-width:46em;font-size:var(--fs-2);line-height:1.6;color:var(--on-wall-soft)}
-.nf-cr a{color:inherit;text-decoration:underline;text-underline-offset:.2em;text-decoration-color:color-mix(in srgb,var(--on-wall) 45%,transparent)}
-.nf-cr a:hover{color:var(--on-wall)}
-.nf-cr a:focus-visible{outline:2px solid var(--on-wall);outline-offset:2px}
+/* 壁纸署名：Bing 每日壁纸的标题、地点与作者（来自接口 copyright 字段）。一行 flex 排版：标题（带 bing.com 来源链接）+ 来源 + 地点 + 作者，各段不拆词，放不下就整段换行；取不到就不显示 */
+.nf-cr{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 var(--s-4);max-width:46em;margin:var(--s-4) 0 0;font-size:var(--fs-2);line-height:1.6;color:var(--on-wall-soft)}
+.nf-cr[hidden]{display:none}
+.nf-cr .h{color:var(--on-wall);font-weight:600;text-decoration:none;text-underline-offset:.2em;transition:text-decoration-color var(--t-base) var(--ease-out)}
+.nf-cr a.h{text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--on-wall) 35%,transparent)}
+.nf-cr a.h:hover{text-decoration-color:var(--on-wall)}
+.nf-cr a.h:focus-visible{outline:2px solid var(--on-wall);outline-offset:2px;border-radius:var(--r-s)}
+.nf-cr .m{display:contents}
+.nf-cr .m>span{max-width:100%}
+.nf-cr .by{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
