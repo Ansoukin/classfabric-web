@@ -401,11 +401,11 @@ FAQ = [
 ]
 
 def faq_html():
-    # 原生 <details>（modern-web-guidance: accordion）：不套标题、不互斥，第一项默认展开
     chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
-    out = '<div class="acc">'
+    out = '<div class="acc" data-acc>'
     for i, (q, a) in enumerate(FAQ):
-        out += '<details class="acc-i"%s><summary><span>%s</span>%s</summary><div class="acc-p"><p>%s</p></div></details>' % (' open' if i == 0 else '', q, chev, a)
+        out += ('<div class="acc-i"><h3><button type="button" id="fqb%d" aria-expanded="false" aria-controls="fqp%d"><span>%s</span>%s</button></h3>'
+                '<div class="acc-p" id="fqp%d" role="region" aria-labelledby="fqb%d"><div><p>%s</p></div></div></div>') % (i, i, q, chev, i, i, a)
     return out + '</div>'
 
 
